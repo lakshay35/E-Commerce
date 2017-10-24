@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import logic.UserController;
+import object.User;
+
 /**
  * Servlet implementation class BookstoreServlet
  */
@@ -27,7 +30,7 @@ public class BookstoreServlet extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		super.init(config);
 	}
 
 	/**
@@ -35,9 +38,13 @@ public class BookstoreServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String signup = request.getParameter("signup");
+		if (signup != null)
+		{
+			registerUser(request, response);
+		}
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -45,5 +52,35 @@ public class BookstoreServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+
+	private void registerUser(HttpServletRequest request, HttpServletResponse response) {
+		String fname = request.getParameter("first_name");
+		String lname = request.getParameter("last_name");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String passConfirmation = request.getParameter("password_confirmation");
+		
+		UserController userCtrl = new UserController();
+		
+		if (password.equals(passConfirmation))
+		{
+			User newUser = new User(fname, lname, email, password);
+			int check = userCtrl.CreateNewUser(newUser);
+			if (check == 1)
+			{
+			System.out.println("Success");
+			}
+			else
+			{
+				System.out.println("Failure");
+			}
+		}
+		else
+		{
+			System.out.println("Different Passwords");
+		}
+	}
+
 
 }
