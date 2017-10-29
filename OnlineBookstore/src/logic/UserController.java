@@ -9,4 +9,17 @@ public class UserController {
 		return value;
 	}
 
+	public int checkLogin(String email, String pass) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		int value = user.checkLogin(email, pass);
+		return value;
+	}
+
+	public User GetUserInfo(String email, String pass) {
+		User user = new User();
+		user = user.getUserInfo(email, pass);
+		return user;
+	}
+
 }
