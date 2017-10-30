@@ -22,4 +22,13 @@ public class UserController {
 		return user;
 	}
 
+
+	public int verifyAccount(String attribute) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		int value = user.verify(attribute);
+		return value;
+	}
+
+
 }

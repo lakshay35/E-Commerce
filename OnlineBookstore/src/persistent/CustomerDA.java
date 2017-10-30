@@ -8,11 +8,11 @@ import object.User;
 
 public class CustomerDA {
 	
-	public int createNewCustomer(String fname, String lname, String email, String password)
+	public int createNewCustomer(String fname, String lname, String email, String password, int code)
 	{
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword) VALUES"
-				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "')";
+		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword, userCode) VALUES"
+				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "')";
 		System.out.println(query);
 		int value = DbAccessImpl.create(con, query);
 		return value;

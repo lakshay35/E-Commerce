@@ -22,6 +22,8 @@ public class UserDA {
 				user.setEmail(set.getString("email"));
 				user.setUserId(set.getInt("userID"));
 				user.setUserType(set.getString("userType"));
+				user.setCode(set.getInt("userCode"));
+				user.setStatus(set.getString("status"));
 			}
 			else
 			{
@@ -33,6 +35,13 @@ public class UserDA {
 			user = null;
 		}
 		return user;
+	}
+
+	public int verifyAccount(String attribute) {
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "UPDATE user SET status = 'verified' WHERE email = '" + attribute + "'";
+		int value = DbAccessImpl.update(con, query);
+		return value;
 	}
 
 }

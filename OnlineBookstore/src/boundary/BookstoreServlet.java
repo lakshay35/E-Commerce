@@ -1,6 +1,7 @@
 package boundary;
 
 import java.io.IOException;
+import java.util.Random;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import com.google.gson.Gson;
 
 import logic.UserController;
 import object.User;
+import persistent.EmailUtility;
 
 /**
  * Servlet implementation class BookstoreServlet
@@ -21,6 +23,12 @@ import object.User;
 @WebServlet("/BookstoreServlet")
 public class BookstoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+
+    final String host = "smtp.gmail.com";
+    final String user = "ecommerce4050@gmail.com";
+    final String pass = "ecommercecsci4050";
+    final String port = "587";
 
     /**
      * Default constructor. 
@@ -44,20 +52,63 @@ public class BookstoreServlet extends HttpServlet {
 		String signup = request.getParameter("signup");
 		String login = request.getParameter("login");
 		String getName = request.getParameter("name");
+		String verify = request.getParameter("verify");
+		
 		if (signup != null)
 		{
 			registerUser(request, response);
 		}
 		else if (login != null)
 		{
+			System.out.println("Gets Request.");
 			loginUser(request, response);
 		}
 		else if (getName != null)
 		{
 			retrieveName(request, response);
 		}
+		else if (verify != null)
+		{
+			verifyAccount(request, response);
+		}
 	}
 	
+	private void verifyAccount(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String code = request.getParameter("code");
+		HttpSession session = request.getSession(false);
+		UserController userCtrl = new UserController();
+		
+		if (code.equals(session.getAttribute("userCode").toString()))
+		{
+			int check = userCtrl.verifyAccount((String)session.getAttribute("email"));
+			if (check == 1)
+			{
+				try {
+					response.sendRedirect("Customer.html");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				try {
+					response.sendRedirect("verifycode.html");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
+			try {
+				response.sendRedirect("verifycode.html");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void retrieveName(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		Gson g = new Gson();
@@ -95,19 +146,35 @@ public class BookstoreServlet extends HttpServlet {
 					session.setAttribute("lName", user.getLname());
 					session.setAttribute("email", user.getEmail());
 					session.setAttribute("userType", user.getUserType());
+					session.setAttribute("userCode", user.getCode());
+					session.setAttribute("status", user.getStatus());
+					session.setAttribute("loggedin", "false");
 				}
-				if (session.getAttribute("userType").equals("Customer"))
+				String stat = (String)session.getAttribute("status");
+				if (stat.equals("verified"))
 				{
-					try {
-						response.sendRedirect("Customer.html");
-					} catch (IOException e) {
-						e.printStackTrace();
+					session.setAttribute("loggedin", "true");
+					if (session.getAttribute("userType").equals("Customer"))
+					{
+						try {
+							response.sendRedirect("Customer.html");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else
+					{
+						try {
+							response.sendRedirect("login.html");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
-				else
+				else if (stat.equals("unverified"))
 				{
 					try {
-						response.sendRedirect("login.html");
+						response.sendRedirect("verifycode.html");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -137,11 +204,22 @@ public class BookstoreServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
+	private int createCode()
+	{
+		int value;
+		do
+		{
+			value = (int)Math.floor(Math.random()*9999 + 1000);
+		}
+		while (!(value >= 1000 && value <= 9999));
+		return value;
+	}
 
 	private void registerUser(HttpServletRequest request, HttpServletResponse response) {
 		String fname = request.getParameter("first_name");
@@ -154,10 +232,18 @@ public class BookstoreServlet extends HttpServlet {
 		
 		if (password.equals(passConfirmation))
 		{
-			User newUser = new User(fname, lname, email, password);
+			int code = createCode();
+			User newUser = new User(fname, lname, email, password, code);
 			int check = userCtrl.CreateNewUser(newUser);
 			if (check == 1)
 			{
+
+		        try {
+		            EmailUtility.sendConfirmation(newUser.getEmail(), host, user, pass, port, code);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+
 				try {
 					response.sendRedirect("login.html");
 				} catch (IOException e) {

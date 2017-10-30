@@ -12,6 +12,8 @@ public class User {
 	String password;
 	int userId;
 	String userType;
+	int code;
+	String status;
 	
 	public String getUserType() {
 		return userType;
@@ -29,12 +31,29 @@ public class User {
 		this.userId = userId;
 	}
 
-	public User(String first, String last, String email, String pass)
+	public User(String first, String last, String email, String pass, int code)
 	{
 		setFname(first);
 		setLname(last);
 		setEmail(email);
 		setPassword(pass);
+		setCode(code);
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public User() {
@@ -75,7 +94,7 @@ public class User {
 
 	public int createNewUser() {
 		CustomerDA da = new CustomerDA();
-		int value = da.createNewCustomer(fname, lname, email, password);
+		int value = da.createNewCustomer(fname, lname, email, password, code);
 		return value;
 	}
 
@@ -105,5 +124,12 @@ public class User {
 		UserDA da = new UserDA();
 		User user = da.getUserInfo(email2, pass);
 		return user;
+	}
+
+	public int verify(String attribute) {
+		// TODO Auto-generated method stub
+		UserDA da = new UserDA();
+		int value = da.verifyAccount(attribute);
+		return value;
 	}
 }
