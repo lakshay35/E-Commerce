@@ -97,6 +97,7 @@ CREATE TABLE `book` (
   `buyingPrice` double DEFAULT NULL,
   `sellingPrice` double DEFAULT NULL,
   `supplierID` int(10) unsigned DEFAULT NULL,
+  `description` text,
   PRIMARY KEY (`isbn`),
   KEY `supplierID` (`supplierID`),
   CONSTRAINT `book_ibfk_1` FOREIGN KEY (`supplierID`) REFERENCES `supplier` (`supplierID`)
@@ -109,7 +110,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES (1234112,'Fantasy','Brad','Alice','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',1,'Me',2017,15,0,1,2.11,NULL),(60254920,'Children','Maurice Sendak','Where the Wild Things Are','https://images-na.ssl-images-amazon.com/images/I/61lRoIlve8L._SY434_BO1,204,203,200_.jpg',1,'Harper Collins',2012,82,22,5,8,NULL),(1234567892,'Fantasy','Lewis Carrol','Alice in Wonderland','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',12,'Random House Books for Young Readers',2009,50,0,2,10,NULL),(1450517161,'Historical','Herman Melville','Moby Dick','https://images-na.ssl-images-amazon.com/images/I/51-3tPs3VdL.jpg',13,'Dover Publications',2012,50,0,8.5,10.5,NULL);
+INSERT INTO `book` VALUES (1234112,'Fantasy','Brad','Alice','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',1,'Me',2017,15,0,1,2.11,NULL,'Hey there'),(60254920,'Children','Maurice Sendak','Where the Wild Things Are','https://images-na.ssl-images-amazon.com/images/I/61ulN35aErL._SY452_BO1,204,203,200_.jpg',1,'Harper Collins',2012,12,6,1,5,NULL,'A kid meets a bunch of monsters in the woods. Stuff happens.'),(1222222222,'Fiction','Edgar Rice Burroughs','Tarzan of the Apes','https://images-na.ssl-images-amazon.com/images/I/61beB3RAzbL.jpg',1,'Dover Publications',2012,25,12,5,6,NULL,'It is Tarzan. Everybody already knows what this book is about.'),(1234567892,'Fantasy','Lewis Carrol','Alice in Wonderland','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',12,'Random House Books for Young Readers',2009,50,0,2,10,NULL,'Hey there'),(1450517161,'Historical','Herman Melville','Moby Dick','https://images-na.ssl-images-amazon.com/images/I/51-3tPs3VdL.jpg',13,'Dover Publications',2012,50,0,8.5,10.5,NULL,'Hey there');
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,4 +340,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-04 15:54:44
+-- Dump completed on 2017-11-04 19:51:21
