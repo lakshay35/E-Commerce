@@ -1,6 +1,8 @@
 package boundary;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.SimpleHash;
 import logic.AdminController;
+import object.Book;
 
 /**
  * Servlet implementation class AdminServlet
@@ -18,6 +24,9 @@ import logic.AdminController;
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private String templateDir = "/WEB-INF/templates";
+	
+	private TemplateProcessor process;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,6 +41,7 @@ public class AdminServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
 		super.init(config);
+		process = new TemplateProcessor(templateDir, getServletContext());
 	}
 
 	/**
@@ -40,11 +50,33 @@ public class AdminServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String addbook = request.getParameter("addbook");
+		String browse = request.getParameter("browse");
 		
 		if (addbook != null)
 		{
 			addBook(request, response);
 		}
+		else if (browse != null)
+		{
+			browseBooks(request, response);
+		}
+	}
+
+	private void browseBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		AdminController aCtrl = new AdminController();
+		
+		List<Book> bookList = aCtrl.browseBooks();
+		root.put("books", bookList);
+		for (Book book : bookList)
+		{
+			book.printBook();
+			System.out.println("-----------------------");
+		}
+		String templateName = "adminBrowse.ftl";
+		process.processTemplate(templateName, root, request, response);
 	}
 
 	private void addBook(HttpServletRequest request, HttpServletResponse response) {
@@ -61,14 +93,20 @@ public class AdminServlet extends HttpServlet {
 		String sellprice = request.getParameter("sellprice");
 		String edition = request.getParameter("edition");
 		String url = request.getParameter("picture");
+		String description = request.getParameter("description");
 		
 		AdminController aCtrl = new AdminController();
 		System.out.println(thresh);
 		int check = aCtrl.addNewBook(title, author, Integer.parseInt(edition), category, Integer.parseInt(isbn), publisher, Integer.parseInt(year), 
-				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url);
+				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url, description);
 		if (check >= 1)
 		{
 			System.out.println("Success");
+			try {
+				response.sendRedirect("AddBook.html");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		else
 		{
@@ -79,20 +117,6 @@ public class AdminServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		/*HttpSession sess = request.getSession(false);
-		System.out.println("Hey this is " + sess.getAttribute("fName"));
-		System.out.println();
-		System.out.println(title);
-		System.out.println(author);
-		System.out.println(category);
-		System.out.println(isbn);
-		System.out.println(publisher);
-		System.out.println(year);
-		System.out.println(thresh);
-		System.out.println(quantity);
-		System.out.println(buyprice);
-		System.out.println(sellprice);
-		System.out.println(url);*/
 	}
 
 	/**

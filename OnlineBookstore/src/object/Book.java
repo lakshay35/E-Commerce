@@ -15,10 +15,19 @@ public class Book {
 	private String picture;
 	private Double buyingPrice;
 	private Double sellingPrice;
+	private String description;
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Book(int isbn, String cat, String author, String title, int edition, 
 			String publisher, int year, int thresh, int quantity, Double buyingPrice, Double 
-			sellingPrice, String url)
+			sellingPrice, String url, String description)
 	{
 		setIsbn(isbn);
 		setCategory(cat);
@@ -32,6 +41,7 @@ public class Book {
 		setSellingPrice(sellingPrice);
 		setPicture(url);
 		setThreshold(thresh);
+		setDescription(description);
 	}
 	
 	public int getIsbn() {
@@ -109,9 +119,23 @@ public class Book {
 
 	public int addBook() {
 		int value = BookDA.addBookToDA(isbn, category, author, title, edition, publisher, year, quantity, threshold, picture,
-				buyingPrice, sellingPrice);
+				buyingPrice, sellingPrice, description);
 		return value;
 	}
 	
-	
+	public void printBook() {
+		System.out.println(title);
+		System.out.println(author);
+		System.out.println(description);
+		System.out.println(category);
+		System.out.println(isbn);
+		System.out.println(publisher);
+		System.out.println(year);
+		System.out.println(edition);
+		System.out.println(threshold);
+		System.out.println(quantity);
+		System.out.println(buyingPrice);
+		System.out.println(sellingPrice);
+		System.out.println(picture);
+	}
 }

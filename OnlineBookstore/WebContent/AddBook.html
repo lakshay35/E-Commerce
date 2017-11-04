@@ -46,6 +46,11 @@
             <li class="nav-item">
               <a class="nav-link" href="AddBook.html">Add Book</a>
             </li>
+             <li class="nav-item"> 
+            <form action="AdminServlet" method="post">
+              <input type="submit" name="browse" id="browse" value="Browse Books"/>
+              </form>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
@@ -56,11 +61,13 @@
         </div>
       </div>
     </nav>
-     
+    <br/>
+    <br/>
+    <br/>
     <div class="container">
       <div style="
     display: inline-block;
-    position: fixed;
+    /*position: absolute;*/
     top: 0;
     bottom: 0;
     left: 0;
@@ -149,6 +156,10 @@
 							
 			    			<div class="form-group">
 			    				<input type="url" name="picture" id="picture" class="form-control input-sm" placeholder="Cover URL">
+			    			</div>
+			    			
+			    			<div class="form-group">
+			    				<textarea name="description" id="description" class="form-control input-sm" placeholder="Description"></textarea>
 			    			</div>
 			    			
 			    			<input type="submit" value="Add Book" name="addbook" class="btn btn-info btn-block">

@@ -1,9 +1,13 @@
 package object;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.Connection;
 
+import persistent.BookDA;
 import persistent.CustomerDA;
 import persistent.DbAccessImpl;
 import persistent.UserDA;
@@ -138,5 +142,36 @@ public class User {
 		UserDA da = new UserDA();
 		int value = da.verifyAccount(attribute);
 		return value;
+	}
+
+	public List<Book> browseBooks() {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = BookDA.browseBooks(con);
+		List<Book> temp = new ArrayList<Book>();
+		if (set != null)
+		{
+			try {
+				while (set.next())
+				{
+					Book book = new Book(set.getInt("isbn"), set.getString("category"), 
+							set.getString("authorName"), set.getString("title"), 
+							set.getInt("edition"), set.getString("publisher"), 
+							set.getInt("publicationYear"), set.getInt("minThreshold"), 
+							set.getInt("qtyInStock"), set.getDouble("buyingPrice"), 
+							set.getDouble("sellingPrice"), set.getString("picture"), 
+							set.getString("description"));
+					temp.add(book);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+		return temp;
 	}
 }
