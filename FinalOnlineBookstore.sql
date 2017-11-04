@@ -84,11 +84,11 @@ DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `book` (
-  `isbn` int(11) NOT NULL,
+  `isbn` int(45) NOT NULL,
   `category` varchar(45) DEFAULT NULL,
   `authorName` varchar(45) DEFAULT NULL,
   `title` varchar(45) DEFAULT NULL,
-  `picture` blob,
+  `picture` text,
   `edition` int(11) DEFAULT NULL,
   `publisher` varchar(45) DEFAULT NULL,
   `publicationYear` int(11) DEFAULT NULL,
@@ -109,6 +109,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
+INSERT INTO `book` VALUES (1234112,'Fantasy','Brad','Alice','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',1,'Me',2017,15,0,1,2.11,NULL),(60254920,'Children','Maurice Sendak','Where the Wild Things Are','https://images-na.ssl-images-amazon.com/images/I/61lRoIlve8L._SY434_BO1,204,203,200_.jpg',1,'Harper Collins',2012,82,22,5,8,NULL),(1234567892,'Fantasy','Lewis Carrol','Alice in Wonderland','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',12,'Random House Books for Young Readers',2009,50,0,2,10,NULL),(1450517161,'Historical','Herman Melville','Moby Dick','https://images-na.ssl-images-amazon.com/images/I/51-3tPs3VdL.jpg',13,'Dover Publications',2012,50,0,8.5,10.5,NULL);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,8 +315,9 @@ CREATE TABLE `user` (
   `userPassword` varchar(45) DEFAULT NULL,
   `userCode` int(11) DEFAULT NULL,
   `status` varchar(45) DEFAULT 'unverified',
+  `subscribed` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -324,7 +326,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (9,'Brad','Reeves',NULL,'bkr02962@uga.edu',NULL,'Customer','pass',8714,'verified'),(10,'Brad','Reeves',NULL,'reevesbk@gmail.com',NULL,'Customer','pass',8103,'verified');
+INSERT INTO `user` VALUES (9,'Brad','Reeves',NULL,'bkr02962@uga.edu',NULL,'Customer','pass',8714,'verified',0),(13,'Bradley','Reeves',NULL,'reeves@gmail.com',NULL,'Customer','pass',3007,'unverified',0),(14,'Bradley','Reeves',NULL,'reevesbk@gmail.com',NULL,'SystemAdmin','pass',3618,'verified',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -337,4 +339,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-30 19:46:57
+-- Dump completed on 2017-11-04 15:54:44
