@@ -1,10 +1,7 @@
 package persistent;
 
-import java.sql.ResultSet;
 
 import com.mysql.jdbc.Connection;
-
-import object.User;
 
 public class CustomerDA {
 	
@@ -15,13 +12,7 @@ public class CustomerDA {
 				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "')";
 		System.out.println(query);
 		int value = DbAccessImpl.create(con, query);
+		DbAccessImpl.disconnect(con);;
 		return value;
-	}
-
-	public ResultSet checkLogin(String email2, String pass) {
-		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
-		ResultSet set = DbAccessImpl.retrieve(con, query);
-		return set;
 	}
 }

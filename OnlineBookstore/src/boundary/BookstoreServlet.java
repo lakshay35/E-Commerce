@@ -1,7 +1,6 @@
 package boundary;
 
 import java.io.IOException;
-import java.util.Random;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -158,6 +157,14 @@ public class BookstoreServlet extends HttpServlet {
 					{
 						try {
 							response.sendRedirect("Customer.html");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else if (session.getAttribute("userType").equals("SystemAdmin"))
+					{
+						try {
+							response.sendRedirect("Admin.html");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

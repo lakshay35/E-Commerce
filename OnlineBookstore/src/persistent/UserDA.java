@@ -8,8 +8,7 @@ import object.User;
 
 public class UserDA {
 
-	public User getUserInfo(String email2, String pass) {
-		Connection con = (Connection) DbAccessImpl.connect();
+	public User getUserInfo(String email2, String pass, Connection con) {
 		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
 		ResultSet set = DbAccessImpl.retrieve(con, query);
 		User user = new User();
@@ -41,7 +40,14 @@ public class UserDA {
 		Connection con = (Connection) DbAccessImpl.connect();
 		String query = "UPDATE user SET status = 'verified' WHERE email = '" + attribute + "'";
 		int value = DbAccessImpl.update(con, query);
+		DbAccessImpl.disconnect(con);
 		return value;
+	}
+	
+	public ResultSet checkLogin(String email2, String pass, Connection con) {
+		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
+		ResultSet set = DbAccessImpl.retrieve(con, query);
+		return set;
 	}
 
 }

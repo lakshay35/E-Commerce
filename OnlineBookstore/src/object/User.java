@@ -2,7 +2,10 @@ package object;
 
 import java.sql.ResultSet;
 
+import com.mysql.jdbc.Connection;
+
 import persistent.CustomerDA;
+import persistent.DbAccessImpl;
 import persistent.UserDA;
 
 public class User {
@@ -99,9 +102,10 @@ public class User {
 	}
 
 	public int checkLogin(String email2, String pass) {
-		CustomerDA da = new CustomerDA();
+		UserDA da = new UserDA();
 		int value = 0;
-		ResultSet set = da.checkLogin(email2, pass);
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = da.checkLogin(email2, pass, con);
 		try
 		{
 		if (set.next())
@@ -117,12 +121,15 @@ public class User {
 		{
 			System.out.println(ex);
 		}
+		DbAccessImpl.disconnect(con);
 		return value;
 	}
 
 	public User getUserInfo(String email2, String pass) {
 		UserDA da = new UserDA();
-		User user = da.getUserInfo(email2, pass);
+		Connection con = (Connection) DbAccessImpl.connect();
+		User user = da.getUserInfo(email2, pass, con);
+		DbAccessImpl.disconnect(con);
 		return user;
 	}
 
