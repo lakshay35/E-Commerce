@@ -10,6 +10,7 @@ import com.mysql.jdbc.Connection;
 import persistent.BookDA;
 import persistent.CustomerDA;
 import persistent.DbAccessImpl;
+import persistent.EmailUtility;
 import persistent.UserDA;
 
 public class User {
@@ -46,6 +47,7 @@ public class User {
 		setPassword(pass);
 		setCode(code);
 	}
+
 
 	public int getCode() {
 		return code;
@@ -173,5 +175,37 @@ public class User {
 			return null;
 		}
 		return temp;
+	}
+
+	public int changePassword(String email2, String oldPassword, String newPassword) {
+		// TODO Auto-generated method stub
+		UserDA da = new UserDA();
+		int value = da.changePassword(email2, oldPassword, newPassword);
+		return value;
+	}
+
+	public int recoverPassword(String email2, String host, String user2, String port, String pass) {
+		// TODO Auto-generated method stub
+		String letters = "ABCDE#FGHIJKLab$cdefghMNO%PQ@RSTU&VWXYZ!ijklmnop567qrstuvwxyz1234890";
+        StringBuilder sb = new StringBuilder();
+        int value;
+        for(int i = 0; i < 8; i++) {
+            double index = Math.random() * letters.length();
+            sb.append(letters.charAt((int)index));
+        }
+        String newPass = sb.toString();
+        
+        UserDA da = new UserDA();
+        
+        try
+        {
+        	EmailUtility.sendNewPassword(email2, host, user2, pass, port, newPass);
+        	value = da.recoverPassword(email2, newPass);
+        }
+        catch (Exception e)
+        {
+        	value = 0;
+        }
+		return value;
 	}
 }

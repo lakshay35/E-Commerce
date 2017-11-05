@@ -55,4 +55,38 @@ public class EmailUtility {
          */
         Transport.send(message);
     }
+    
+    public static void sendNewPassword(String userEmail, String host, String senderEmail, String senderPassword, String port, String newPass) throws Exception {
+        String subject = "Account Confirmation - Welcome";
+        String messageText = "Hello user, your new Password is " + newPass + ". Please go ahead and change your password.";
+
+
+        Properties props = new Properties();
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.auth", "true");
+
+        Authenticator authenticator = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        };
+
+
+        Session session = Session.getInstance(props, authenticator);
+
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(senderEmail));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+        message.setSentDate(new Date());
+        message.setSubject(subject);
+        message.setText(messageText);
+
+
+        Transport.send(message);
+    }
+
 }

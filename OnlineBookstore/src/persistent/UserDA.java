@@ -1,6 +1,7 @@
 package persistent;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.mysql.jdbc.Connection;
 
@@ -48,6 +49,55 @@ public class UserDA {
 		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
 		ResultSet set = DbAccessImpl.retrieve(con, query);
 		return set;
+	}
+
+	public int changePassword(String email2, String oldPassword, String newPassword) {
+
+
+        Connection con = (Connection) DbAccessImpl.connect();
+        String query = "SELECT * FROM USER WHERE email = '" + email2 + "'";
+        ResultSet set = DbAccessImpl.retrieve(con, query);
+        int id = 0;
+        int value;
+        try {
+        	if (set.next())
+        	{
+        		id = set.getInt("userID");
+        		query = "UPDATE user SET userPassword = '" + newPassword + "' WHERE userID = " + id;
+                value = DbAccessImpl.update(con, query);
+        	}
+        	else
+        	{
+        		value = 0;
+        	}
+        } catch (Exception e) {
+            value = 0;
+            e.printStackTrace();
+        }
+        DbAccessImpl.disconnect(con);
+        return value;
+	}
+
+	public int recoverPassword(String email2, String newPass) {
+		// TODO Auto-generated method stub
+
+        Connection con = (Connection) DbAccessImpl.connect();
+        String query = "SELECT * FROM user WHERE email = '" + email2 + "'";
+        ResultSet set = DbAccessImpl.retrieve(con, query);
+        int id;
+        int value = 0;
+        try {
+			if (set.next())
+			{
+				id = set.getInt("userID");
+	        	query = "UPDATE user SET userPassword = '" + newPass + "' WHERE userID = '" + id + "'";
+	        	value = DbAccessImpl.update(con, query);
+			}
+		} catch (SQLException e) {
+			
+		}
+        DbAccessImpl.disconnect(con);
+		return value;
 	}
 
 }

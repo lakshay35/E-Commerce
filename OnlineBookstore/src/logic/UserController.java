@@ -30,5 +30,18 @@ public class UserController {
 		return value;
 	}
 
+	public int changePassword(String email, String oldPassword, String newPassword) {
+		User user = new User();
+		int value = user.changePassword(email, oldPassword, newPassword);
+		return value;
+	}
+
+	public int recoverPassword(String email, String host, String user2, String port, String pass) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		int value = user.recoverPassword(email, host, user2, port, pass);
+		return value;
+	}
+
 
 }

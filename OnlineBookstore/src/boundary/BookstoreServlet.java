@@ -52,6 +52,8 @@ public class BookstoreServlet extends HttpServlet {
 		String login = request.getParameter("login");
 		String getName = request.getParameter("name");
 		String verify = request.getParameter("verify");
+		String newPass = request.getParameter("newPassword");
+		String forgotPass = request.getParameter("forgotPass");
 		
 		if (signup != null)
 		{
@@ -70,8 +72,61 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			verifyAccount(request, response);
 		}
+		else if (newPass != null)
+		{
+			changePassword(request, response);
+		}
+		else if (forgotPass != null)
+		{
+			recoverPassword(request, response);
+		}
 	}
 	
+	private void recoverPassword(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String email = request.getParameter("email");
+		UserController userCtrl = new UserController();
+		int check = userCtrl.recoverPassword(email, host, user, port, pass);
+		if (check == 0)
+		{
+			System.out.println("error");
+		}
+		else
+		{
+			System.out.println("Success");
+			try {
+				response.sendRedirect("login.html");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void changePassword(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+        String oldPassword = request.getParameter("oldPassword");
+        String newPassword = request.getParameter("newPassword");
+
+        HttpSession session = request.getSession(false);
+        
+        UserController userCtrl = new UserController();
+        int check = userCtrl.changePassword((String)session.getAttribute("email"), oldPassword, newPassword);
+        if (check == 0)
+        {
+        	System.out.println("Failed to change password");
+        }
+        else
+        {
+        	System.out.println("Success");
+			try {
+				response.sendRedirect("login.html");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+	}
+
 	private void verifyAccount(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String code = request.getParameter("code");
