@@ -22,7 +22,7 @@ public class BookDA {
 
 	public static ResultSet browseBooks(Connection con) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * from book";
+		String query = "SELECT * from book ORDER BY title  ASC";
 		ResultSet set = null;
 		set = DbAccessImpl.retrieve(con, query);
 		return set;
