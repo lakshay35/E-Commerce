@@ -87,8 +87,8 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" value="${book.getIsbn()}">View Info</a>
-              <a href="#" class="btn btn-primary" value="${book.getIsbn()}">Add to Cart</a>
+              <a href="#" class="btn btn-primary" id="view" value="${book.getIsbn()}">View Info</a>
+              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()}">Add to Cart</a>
             </div>
           </div>
         </div>

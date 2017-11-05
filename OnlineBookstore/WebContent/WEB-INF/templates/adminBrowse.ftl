@@ -84,8 +84,8 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" value="${book.getIsbn()}">Edit Book</a>
-              <a href="#" class="btn btn-primary" value="${book.getIsbn()}">Delete Book</a>
+              <a href="#" class="btn btn-primary" id="edit" value="${book.getIsbn()}">Edit Book</a>
+              <a href="#" class="btn btn-primary" id="delete" value="${book.getIsbn()}">Delete Book</a>
             </div>
           </div>
         </div>
