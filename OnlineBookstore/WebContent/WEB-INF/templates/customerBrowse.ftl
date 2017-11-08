@@ -18,6 +18,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/heroic-features.css" rel="stylesheet">
+    <link href="css/browsebutton.css" rel="stylesheet">
 
   </head>
 
@@ -51,7 +52,7 @@
             </li>
             <li class="nav-item"> 
             <form action="CustomerServlet" method="post">
-              <input type="submit" name="browse" id="browse" value="Browse Books"/>
+              <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
             </li>
               <li class="nav-item">
@@ -64,7 +65,7 @@
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-					<a class="nav-link" href="index.html">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>

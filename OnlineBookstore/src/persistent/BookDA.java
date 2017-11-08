@@ -28,4 +28,25 @@ public class BookDA {
 		return set;
 	}
 	
+	public static ResultSet getBookInfo(int isbn, Connection con) {
+		String query = "SELECT * from book WHERE isbn = '" + isbn + "'";
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
+
+	public static int editBookDA(int isbn, String category, String author, String title, int edition, String publisher,
+			int year, int quantity, int threshold, String picture, Double buyingPrice, Double sellingPrice,
+			String description) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "UPDATE book SET category = '" + category + "', authorName = '" +  author + "', title = '" + title 
+				+ "', picture = '" + picture + "', edition = '" + edition + "', publisher = '" + publisher + "', publicationYear = '"
+				+ year + "', qtyInStock = '" + quantity + "', minThreshold = '" + threshold + "', buyingPrice = '" + buyingPrice + "',"
+				+ " sellingPrice = '" + sellingPrice + "', description = '" + description + "' WHERE isbn = '" + isbn + "'";
+		System.out.println(query);
+		int value = DbAccessImpl.update(con, query);
+		return value;
+	}
+	
 }

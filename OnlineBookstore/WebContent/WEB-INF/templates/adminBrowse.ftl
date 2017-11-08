@@ -11,13 +11,14 @@
     <title>Online Book Store</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
-	<script src="js/customerhome.js" type="text/javascript"></script>
+	<script src="js/admin.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/heroic-features.css" rel="stylesheet">
+    <link href="css/browsebutton.css" rel="stylesheet">
 
   </head>
 
@@ -54,14 +55,14 @@
             </li>
             <li class="nav-item"> 
             <form action="AdminServlet" method="post">
-              <input type="submit" name="browse" id="browse" value="Browse Books"/>
+              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-					<a class="nav-link" href="index.html">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
@@ -84,8 +85,10 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" id="edit" value="${book.getIsbn()}">Edit Book</a>
-              <a href="#" class="btn btn-primary" id="delete" value="${book.getIsbn()}">Delete Book</a>
+            <form action="AdminServlet" method="post">
+              <button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</a>
+              <button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</a>
+            </form>
             </div>
           </div>
         </div>

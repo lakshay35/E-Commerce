@@ -6,7 +6,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Add Book</title>
+    <title>Edit Book</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,9 +48,6 @@
             <li class="nav-item">
               <a class="nav-link" href="AddBook.html">Add Book</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="AddPromo.html">Add Promo</a>
-            </li>
              <li class="nav-item"> 
             <form action="AdminServlet" method="post">
               <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
@@ -85,24 +82,20 @@
         <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
         	<div class="panel panel-default">
         		<div class="panel-heading">
-			    		<h3 class="panel-title">Add a Book</h3>
+			    		<h3 class="panel-title">Edit Book</h3>
 			 			</div>
 			 			<div class="panel-body">
 			    		<form role="form" action="AdminServlet" method="post">
+			    		<input type="hidden" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN" value="${book.getIsbn()?c}">
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="title" id="title" class="form-control input-sm" placeholder="Title">
+			                <input type="text" name="title" id="title" class="form-control input-sm" placeholder="Title" value="${book.getTitle()}">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="author" id="author" class="form-control input-sm" placeholder="Author Name">
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="edition" id="edition" class="form-control input-sm" placeholder="Edition">
+			    						<input type="text" name="author" id="author" class="form-control input-sm" placeholder="Author Name" value="${book.getAuthor()}">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -110,25 +103,12 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="category" id="category" class="form-control input-sm" placeholder="Category">
+			    						<input type="text" name="edition" id="edition" class="form-control input-sm" placeholder="Edition" value="${book.getEdition()}">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN">
-			    					</div>
-			    				</div>
-			    			</div>
-							
-							<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="publisher" id="publisher" class="form-control input-sm" placeholder="Publisher">
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year">
+			                <input type="text" name="category" id="category" class="form-control input-sm" placeholder="Category" value="${book.getCategory()}">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -136,12 +116,12 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="number" name="threshold" id="threshold" class="form-control input-sm" placeholder="Minimum Threshold">
+			                <input type="text" name="publisher" id="publisher" class="form-control input-sm" placeholder="Publisher" value="${book.getPublisher()}">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="number" name="quantity" id="quantity" class="form-control input-sm" placeholder="Quantity">
+			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year" value="${book.getYear()?c}">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -149,25 +129,38 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price">
+			                <input type="number" name="threshold" id="threshold" class="form-control input-sm" placeholder="Minimum Threshold" value="${book.getThreshold()?c}">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price">
+			    						<input type="number" name="quantity" id="quantity" class="form-control input-sm" placeholder="Quantity" value="${book.getQuantity()?c}">
+			    					</div>
+			    				</div>
+			    			</div>
+							
+							<div class="row">
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price" value="${book.getBuyingPrice()?c}">
+			    					</div>
+			    				</div>
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price" value="${book.getSellingPrice()?c}">
 			    					</div>
 			    				</div>
 			    			</div>
 							
 			    			<div class="form-group">
-			    				<input type="url" name="picture" id="picture" class="form-control input-sm" placeholder="Cover URL">
+			    				<input type="url" name="picture" id="picture" class="form-control input-sm" placeholder="Cover URL" value="${book.getPicture()}">
 			    			</div>
 			    			
 			    			<div class="form-group">
-			    				<textarea name="description" id="description" class="form-control input-sm" placeholder="Description"></textarea>
+			    				<textarea name="description" id="description" class="form-control input-sm" placeholder="Description">${book.getDescription()}</textarea>
 			    			</div>
 			    			
-			    			<input type="submit" value="Add Book" name="addbook" class="btn btn-info btn-block">
+			    			<input type="submit" value="Edit Book" name="submitedit" class="btn btn-info btn-block">
 			    		
 			    		</form>
 			    	</div>

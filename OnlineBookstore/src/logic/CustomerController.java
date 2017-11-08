@@ -3,17 +3,15 @@ package logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import object.Book;
+import entity.IBook;
 import object.Customer;
-import object.SystemAdmin;
-import object.User;
 
 public class CustomerController {
 	
-	public List<Book> browseBooks() {
+	public List<IBook> browseBooks() {
 		// TODO Auto-generated method stub
-		List<Book> returnList = new ArrayList<Book>();
-		User customer = new Customer();
+		List<IBook> returnList = new ArrayList<IBook>();
+		Customer customer = new Customer();
 		returnList = customer.browseBooks();
 		return returnList;
 	}

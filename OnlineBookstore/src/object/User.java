@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.mysql.jdbc.Connection;
 
+import entity.IBook;
 import persistent.BookDA;
 import persistent.CustomerDA;
 import persistent.DbAccessImpl;
@@ -146,17 +147,17 @@ public class User {
 		return value;
 	}
 
-	public List<Book> browseBooks() {
+	public List<IBook> browseBooks() {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
 		ResultSet set = BookDA.browseBooks(con);
-		List<Book> temp = new ArrayList<Book>();
+		List<IBook> temp = new ArrayList<IBook>();
 		if (set != null)
 		{
 			try {
 				while (set.next())
 				{
-					Book book = new Book(set.getInt("isbn"), set.getString("category"), 
+					IBook book = new Book(set.getInt("isbn"), set.getString("category"), 
 							set.getString("authorName"), set.getString("title"), 
 							set.getInt("edition"), set.getString("publisher"), 
 							set.getInt("publicationYear"), set.getInt("minThreshold"), 

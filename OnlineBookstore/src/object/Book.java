@@ -1,8 +1,15 @@
 package object;
 
-import persistent.BookDA;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class Book {
+import com.mysql.jdbc.Connection;
+
+import entity.IBook;
+import persistent.BookDA;
+import persistent.DbAccessImpl;
+
+public class Book implements IBook{
 	private int isbn;
 	private String category;
 	private String author;
@@ -25,6 +32,10 @@ public class Book {
 		this.description = description;
 	}
 
+	public Book() {
+		
+	}
+	
 	public Book(int isbn, String cat, String author, String title, int edition, 
 			String publisher, int year, int thresh, int quantity, Double buyingPrice, Double 
 			sellingPrice, String url, String description)
@@ -121,6 +132,42 @@ public class Book {
 		int value = BookDA.addBookToDA(isbn, category, author, title, edition, publisher, year, quantity, threshold, picture,
 				buyingPrice, sellingPrice, description);
 		return value;
+	}
+	
+	public int editBook() {
+		int value = BookDA.editBookDA(isbn, category, author, title, edition, publisher, year, quantity, threshold, picture,
+				buyingPrice, sellingPrice, description);
+		return value;
+	}
+	
+	public int getBookInfo(int isbn) {
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = BookDA.getBookInfo(isbn, con);
+		int check = 0;
+		try {
+			if (set.next())
+			{
+				setIsbn(set.getInt("isbn"));
+				setCategory(set.getString("category"));
+				setAuthor(set.getString("authorName"));
+				setTitle(set.getString("title"));
+				setEdition(set.getInt("edition"));
+				setPublisher(set.getString("publisher"));
+				setYear(set.getInt("publicationYear"));
+				setQuantity(set.getInt("qtyInStock"));
+				setBuyingPrice(set.getDouble("buyingPrice"));
+				setSellingPrice(set.getDouble("sellingPrice"));
+				setPicture(set.getString("picture"));
+				setThreshold(set.getInt("minThreshold"));
+				setDescription(set.getString("description"));
+				check = 1;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DbAccessImpl.disconnect(con);
+		return check;
 	}
 	
 	public void printBook() {

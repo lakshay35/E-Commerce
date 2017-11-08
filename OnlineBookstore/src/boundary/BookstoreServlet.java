@@ -54,6 +54,9 @@ public class BookstoreServlet extends HttpServlet {
 		String verify = request.getParameter("verify");
 		String newPass = request.getParameter("newPassword");
 		String forgotPass = request.getParameter("forgotPass");
+		String checkLogin = request.getParameter("checkLogin");
+		String logout = request.getParameter("logout");
+		String changePass = request.getParameter("changePass");
 		
 		if (signup != null)
 		{
@@ -80,8 +83,51 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			recoverPassword(request, response);
 		}
+		else if (checkLogin != null)
+		{
+			checkSession(request, response);
+		}
+		else if (logout != null)
+		{
+			logout(request, response);
+		}
+		else if (changePass != null)
+		{
+			changePassword(request, response);
+		}
 	}
 	
+	private void logout(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		System.out.println("Logging out.");
+		HttpSession session = request.getSession(false);
+		if (session != null)
+		{
+			session.invalidate();
+		}
+	}
+
+	private void checkSession(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(false);
+		Gson gson = new Gson();
+		int check;
+		if (session != null)
+		{
+			check = 1;
+		}
+		else
+		{
+			check = 0;
+		}
+		response.setContentType("application/json");
+		try {
+			response.getWriter().write(gson.toJson(check));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void recoverPassword(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String email = request.getParameter("email");
@@ -109,19 +155,25 @@ public class BookstoreServlet extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
 
         HttpSession session = request.getSession(false);
-        
+        System.out.println(oldPassword);
+        System.out.println(newPassword);
+        System.out.println(session.getAttribute("email"));
         UserController userCtrl = new UserController();
         int check = userCtrl.changePassword((String)session.getAttribute("email"), oldPassword, newPassword);
         if (check == 0)
         {
-        	System.out.println("Failed to change password");
+        	try {
+				response.sendError(500);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
         }
         else
         {
-        	System.out.println("Success");
-			try {
-				response.sendRedirect("login.html");
+        	try {
+				response.getWriter().write("Success");
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
@@ -167,15 +219,17 @@ public class BookstoreServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		Gson g = new Gson();
 		HttpSession session = request.getSession(false);
-		String name = (String)session.getAttribute("fName");
-		System.out.println(g.toJson(name));
-		response.setContentType("application/json");
-		try {
-			response.getWriter().write(g.toJson(name));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (session != null)
+		{
+			String name = (String)session.getAttribute("fName");
+			System.out.println(g.toJson(name));
+			response.setContentType("application/json");
+			try {
+				response.getWriter().write(g.toJson(name));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) {

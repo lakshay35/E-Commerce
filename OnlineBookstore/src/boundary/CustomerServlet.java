@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import entity.IBook;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
@@ -64,7 +65,7 @@ public class CustomerServlet extends HttpServlet {
 		SimpleHash root = new SimpleHash(df.build());
 		CustomerController custCtrl = new CustomerController();
 		
-		List<Book> bookList = custCtrl.browseBooks();
+		List<IBook> bookList = custCtrl.browseBooks();
 		root.put("books", bookList);
 		String templateName = "customerBrowse.ftl";
 		process.processTemplate(templateName, root, request, response);

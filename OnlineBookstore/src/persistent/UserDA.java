@@ -55,16 +55,25 @@ public class UserDA {
 
 
         Connection con = (Connection) DbAccessImpl.connect();
-        String query = "SELECT * FROM USER WHERE email = '" + email2 + "'";
+        String query = "SELECT * FROM user WHERE email = '" + email2 + "'";
         ResultSet set = DbAccessImpl.retrieve(con, query);
         int id = 0;
         int value;
         try {
         	if (set.next())
         	{
-        		id = set.getInt("userID");
-        		query = "UPDATE user SET userPassword = '" + newPassword + "' WHERE userID = " + id;
-                value = DbAccessImpl.update(con, query);
+        		System.out.println(oldPassword);
+        		System.out.println(newPassword);
+        		if (oldPassword.equals(set.getString("userPassword")))
+        		{
+	        		id = set.getInt("userID");
+	        		query = "UPDATE user SET userPassword = '" + newPassword + "' WHERE userID = " + id;
+	                value = DbAccessImpl.update(con, query);
+        		}
+        		else
+        		{
+        			value = 0;
+        		}
         	}
         	else
         	{
