@@ -3,6 +3,8 @@ package persistent;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -88,5 +90,45 @@ public class EmailUtility {
 
         Transport.send(message);
     }
+
+    /*
+    Sends an email to all users about the new Promotion
+    Author: Lakshay Sharma
+    */
+        public static void sendPromotion(String userEmail, String host, String senderPassword, String port, int promoID, String name, double percent, String expiration, ArrayList<String> emailList) throws Exception {
+          String subject = "New Offer! Ends soon!";
+          String body = "Hello,\n\nWe would like to invite you to consider our new promotion while you shop at xyz.com. The offer details can be found below:\n\nPromoID: " + promoID + " Name: " + name + " Percent Discount: " + percent +
+           " Expiration Date: " + expiration + "\n\nHope you enjoy your time at xyz.com and don't forget to use our new code.";
+
+           Properties properties = new Properties();
+           properties.put("mail.smtp.host", host);
+           properties.put("mail.smtp.port", port);
+           properties.put("mail.smtp.starttls.enable", true);
+           properties.put("mail.smtp.auth", true);
+
+           Authenticator authenticator = new Authenticator() {
+               @Override
+               protected PasswordAuthentication getPasswordAuthentication() {
+                   return new PasswordAuthentication(userEmail, senderPassword);
+               }
+           };
+
+           Session session = Session.getInstance(properties, authenticator);
+
+           InternetAddress[] toAddresses = new InternetAddress[emailList.size()];
+           for(int i = 0; i < emailList.size(); i++) {
+             toAddresses[i] = new InternetAddress(emailList.get(i));
+           }
+
+           Message message = new MimeMessage(session);
+           message.setFrom(new InternetAddress(userEmail));
+           message.setRecipients(Message.RecipientType.TO, toAddresses);
+           message.setSentDate(new Date());
+           message.setSubject(subject);
+           message.setText(body);
+
+           Transport.send(message);
+
+        }
 
 }

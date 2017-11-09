@@ -1,6 +1,7 @@
 package boundary;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -16,6 +17,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
 import logic.AdminController;
+import object.User;
 
 /**
  * Servlet implementation class AdminServlet
@@ -27,6 +29,12 @@ public class AdminServlet extends HttpServlet {
 	private String templateDir = "/WEB-INF/templates";
 	
 	private TemplateProcessor process;
+	
+	final String host = "smtp.gmail.com";
+    final String user = "ecommerce4050@gmail.com";
+    final String pass = "ecommercecsci4050";
+    final String port = "587";
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -54,6 +62,10 @@ public class AdminServlet extends HttpServlet {
 		String editbook = request.getParameter("editbook");
 		String submitedit = request.getParameter("submitedit");
 		String addpromotion = request.getParameter("addpromotion");
+		String viewUsers = request.getParameter("viewUsers");
+		String authorizeUser = request.getParameter("authorizeUser");
+		String suspendUser = request.getParameter("suspendUser");
+		String unsuspendUser = request.getParameter("unsuspendUser");
 		
 		if (addbook != null)
 		{
@@ -75,9 +87,101 @@ public class AdminServlet extends HttpServlet {
 		{
 			addPromotion(request, response);
 		}
-
+		else if (viewUsers != null)
+		{
+			viewUsers(request, response);
+		}
+		else if (authorizeUser != null)
+		{
+			authorizeUser(request, response);
+		}
+		else if (suspendUser != null)
+		{
+			suspendUser(request, response);
+		}
+		else if (unsuspendUser != null)
+		{
+			unsuspendUser(request, response);
+		}
 	}
 	
+	private void unsuspendUser(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		int userID = Integer.parseInt(request.getParameter("id"));
+		
+		AdminController aCtrl = new AdminController();
+		
+		int check = aCtrl.unsuspendUser(userID);
+		
+		if (check > 0)
+		{
+			System.out.println("Unsuspended");
+			viewUsers(request, response);
+		}
+		else
+		{
+			System.out.println("Failure");
+		}
+	}
+
+	private void suspendUser(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		int userID = Integer.parseInt(request.getParameter("id"));
+		
+		AdminController aCtrl = new AdminController();
+		
+		int check = aCtrl.suspendUser(userID);
+		
+		if (check > 0)
+		{
+			System.out.println("Suspended");
+			viewUsers(request, response);
+		}
+		else
+		{
+			System.out.println("Failure");
+		}
+	}
+
+	private void authorizeUser(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String tempvalue = request.getParameter("authorizeDrop");
+		String tempUserID = request.getParameter("id");
+		System.out.println(tempvalue);
+		System.out.println(tempUserID);
+		int value = Integer.parseInt(tempvalue);
+		int userID = Integer.parseInt(tempUserID);
+		AdminController aCtrl = new AdminController();
+		
+		int check = aCtrl.authorizeUser(userID, value);
+		if (check == -1)
+		{
+			System.out.println("N/A");
+		}
+		else if (check == 0)
+		{
+			System.out.println("Failure");
+		}
+		else
+		{
+			System.out.println("Success");
+			viewUsers(request, response);
+		}
+	}
+
+	private void viewUsers(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		AdminController aCtrl = new AdminController();
+		
+		List<User> userList = aCtrl.viewUsers();
+		
+		root.put("userList", userList);
+		String templateName = "viewUsers.ftl";
+		process.processTemplate(templateName, root, request, response);
+	}
+
 	private void addPromotion(HttpServletRequest request, HttpServletResponse response) {
 		String promoID = request.getParameter("promoID");
 		String name = request.getParameter("promoName");
@@ -86,7 +190,7 @@ public class AdminServlet extends HttpServlet {
 		System.out.println(expiration);
 		AdminController aCtrl = new AdminController();
 		System.out.println(name);
-		int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration);
+		int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration, user, host, pass, port);
 		if(check >= 1) {
 			System.out.println("Success");
 			try {

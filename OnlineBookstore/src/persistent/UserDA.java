@@ -109,4 +109,11 @@ public class UserDA {
 		return value;
 	}
 
+	public static ResultSet getUsers(Connection con) {
+		// TODO Auto-generated method stub
+		String query = "SELECT userID, userType, fName, lName, email, status FROM user";
+		ResultSet set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
+
 }

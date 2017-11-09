@@ -295,6 +295,14 @@ public class BookstoreServlet extends HttpServlet {
 						e.printStackTrace();
 					}
 				}
+				else if (stat.equals("suspended"))
+				{
+					try {
+						response.sendRedirect("login.html");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			else
 			{

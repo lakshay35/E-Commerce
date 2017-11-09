@@ -1,4 +1,5 @@
 package object;
+import persistent.EmailUtility;
 import persistent.PromotionDA;
 
 public class Promotion {
@@ -14,8 +15,16 @@ public class Promotion {
 		setExpiration(expiration);
 	}
 	
-	public int addPromo() {
+	public int addPromo(String userEmail, String host, String senderPassword, String port) {
 		int value = PromotionDA.addPromoToDA(promoID, name, percent, expiration);
+		
+		if(value > 0) {
+            try {
+                EmailUtility.sendPromotion(userEmail, host, senderPassword, port, promoID, name, percent, expiration, PromotionDA.getEmailList());
+            } catch( Exception e) {
+                e.printStackTrace();
+            }
+        }
 		return value;
 	}
 	

@@ -12,7 +12,7 @@ public abstract class DbAccessConfiguration {
 	
 	protected static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
 	
-	protected static final String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/onlinebookstoredb";
+	protected static final String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/onlinebookstoredb?useSSL=false";
 	
 	protected static final String DB_CONNECTION_USERNAME = "root";
 	

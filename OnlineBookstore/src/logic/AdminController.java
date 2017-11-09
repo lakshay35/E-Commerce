@@ -7,6 +7,7 @@ import entity.IBook;
 import object.Book;
 import object.Promotion;
 import object.SystemAdmin;
+import object.User;
 
 public class AdminController {
 
@@ -49,10 +50,33 @@ public class AdminController {
 		return value;
 	}
 		
-	public int addPromotion(int promoID, String name, double percent, String expiration) {
+	public int addPromotion(int promoID, String name, double percent, String expiration, String userEmail, String host, String senderPassword, 
+			String port) {
 		Promotion newPromo = new Promotion(promoID, name, percent, expiration);
-		int value = newPromo.addPromo();
+		int value = newPromo.addPromo(userEmail, host, senderPassword, port);
 		return value;
+	}
+
+	public List<User> viewUsers() {
+		SystemAdmin admin = new SystemAdmin();
+		return admin.viewUsers();
+	}
+
+	public int authorizeUser(int userID, int value) {
+		// TODO Auto-generated method stub
+		SystemAdmin admin = new SystemAdmin();
+		return admin.authorizeUser(userID, value);
+	}
+
+	public int suspendUser(int userID) {
+		// TODO Auto-generated method stub
+		SystemAdmin admin = new SystemAdmin();
+		return admin.suspendUser(userID);
+	}
+
+	public int unsuspendUser(int userID) {
+		SystemAdmin admin = new SystemAdmin();
+		return admin.unsuspendUser(userID);
 	}
 
 }
