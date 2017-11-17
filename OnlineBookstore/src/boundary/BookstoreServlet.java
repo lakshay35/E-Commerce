@@ -259,6 +259,8 @@ public class BookstoreServlet extends HttpServlet {
 			}
 		}
 	}
+	
+	// Logs the user in by creating a session.
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
@@ -267,13 +269,16 @@ public class BookstoreServlet extends HttpServlet {
 		
 		UserController userCtrl = new UserController();
 		
+		// Checks username and password
 		int check = userCtrl.checkLogin(email, pass);
 		
 		if (check == 1)
 		{
+			// Gets user info
 			User user = userCtrl.GetUserInfo(email, pass);
 			if (user != null)
 			{
+				// Creates a session for the user
 				HttpSession session = request.getSession();
 				synchronized(session) {
 					session.setMaxInactiveInterval(-1);
@@ -287,9 +292,14 @@ public class BookstoreServlet extends HttpServlet {
 					session.setAttribute("loggedin", "false");
 				}
 				String stat = (String)session.getAttribute("status");
+				
+				// Checks status of user
+				
 				if (stat.equals("verified"))
 				{
 					session.setAttribute("loggedin", "true");
+					
+					// Opens home pages depending on userType.
 					if (session.getAttribute("userType").equals("Customer"))
 					{
 						try {
@@ -389,6 +399,8 @@ public class BookstoreServlet extends HttpServlet {
 		return value;
 	}
 
+	// Registers the user
+	
 	private void registerUser(HttpServletRequest request, HttpServletResponse response) {
 		String fname = request.getParameter("first_name");
 		String lname = request.getParameter("last_name");
@@ -409,17 +421,23 @@ public class BookstoreServlet extends HttpServlet {
 		
 		UserController userCtrl = new UserController();
 		
+		// Checks password
+		
 		if (password.equals(passConfirmation))
 		{
+			// Checks if the email is already taken.
 			boolean checkEmail = userCtrl.checkEmail(email);
 			if (checkEmail == false)
 			{
+				// Create verification code.
 				int code = createCode();
+				// Store user info
 				User newUser = new User(fname, lname, email, password, code, sub);
+				// Create new row in the database
 				int check = userCtrl.CreateNewUser(newUser);
 				if (check == 1)
 				{
-	
+					// Sends an email with the verification to the user.
 			        try {
 			            EmailUtility.sendConfirmation(newUser.getEmail(), host, user, pass, port, code);
 			        } catch (Exception e) {
