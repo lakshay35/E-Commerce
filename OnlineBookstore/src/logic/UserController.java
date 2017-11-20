@@ -1,6 +1,8 @@
 package logic;
 
 import object.User;
+import object.UserProfile;
+import persistent.UserDA;
 
 public class UserController {
 
@@ -43,5 +45,15 @@ public class UserController {
 		return value;
 	}
 
+	public boolean checkEmail(String email) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		return user.checkEmail(email);
+	}
+
+	public UserProfile viewProfile(String email) {
+		UserDA da = new UserDA();
+        return da.getDetails(email);
+    }
 
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
 
 import object.User;
+import object.UserProfile;
 
 public class UserDA {
 
@@ -116,4 +117,29 @@ public class UserDA {
 		return set;
 	}
 
+	public static ResultSet checkEmail(Connection con, String email2) {
+		// TODO Auto-generated method stub
+		String query = "SELECT email FROM user WHERE email = '" + email2 + "'";
+		ResultSet set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
+
+	public UserProfile getDetails(String email) {
+        Connection con = (Connection) DbAccessImpl.connect();
+        String query = "SELECT * FROM user WHERE email = '" + email + "'";
+        ResultSet rs = DbAccessImpl.retrieve(con, query);
+
+        UserProfile userProfile = null;
+
+        try {
+			if(rs.next()) {
+			    userProfile = new UserProfile(rs.getString("fname"), rs.getString("lname"), rs.getString("phone"), rs.getString("email"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return userProfile;
+    }
 }

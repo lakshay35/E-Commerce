@@ -12,8 +12,12 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.SimpleHash;
 import logic.UserController;
 import object.User;
+import object.UserProfile;
 import persistent.EmailUtility;
 
 /**
@@ -23,6 +27,9 @@ import persistent.EmailUtility;
 public class BookstoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private String templateDir = "/WEB-INF/templates";
+	
+	private TemplateProcessor process;
 
     final String host = "smtp.gmail.com";
     final String user = "ecommerce4050@gmail.com";
@@ -41,6 +48,7 @@ public class BookstoreServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		process = new TemplateProcessor(templateDir, getServletContext());
 	}
 
 	/**
@@ -57,6 +65,8 @@ public class BookstoreServlet extends HttpServlet {
 		String checkLogin = request.getParameter("checkLogin");
 		String logout = request.getParameter("logout");
 		String changePass = request.getParameter("changePass");
+		String viewProfile = request.getParameter("viewProfile");
+
 		
 		if (signup != null)
 		{
@@ -95,7 +105,25 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			changePassword(request, response);
 		}
+		else if(viewProfile != null) {
+            viewProfile(request, response);
+        }
 	}
+	
+	private void viewProfile(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        String email = (String)session.getAttribute("email");
+        UserController userCtrl = new UserController();
+        UserProfile profile = userCtrl.viewProfile(email);
+        System.out.println(profile.getFname());
+        Gson gson = new Gson();
+        try {
+			response.getWriter().write(gson.toJson(profile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 	
 	private void logout(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
@@ -231,6 +259,8 @@ public class BookstoreServlet extends HttpServlet {
 			}
 		}
 	}
+	
+	// Logs the user in by creating a session.
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
@@ -239,13 +269,16 @@ public class BookstoreServlet extends HttpServlet {
 		
 		UserController userCtrl = new UserController();
 		
+		// Checks username and password
 		int check = userCtrl.checkLogin(email, pass);
 		
 		if (check == 1)
 		{
+			// Gets user info
 			User user = userCtrl.GetUserInfo(email, pass);
 			if (user != null)
 			{
+				// Creates a session for the user
 				HttpSession session = request.getSession();
 				synchronized(session) {
 					session.setMaxInactiveInterval(-1);
@@ -259,9 +292,14 @@ public class BookstoreServlet extends HttpServlet {
 					session.setAttribute("loggedin", "false");
 				}
 				String stat = (String)session.getAttribute("status");
+				
+				// Checks status of user
+				
 				if (stat.equals("verified"))
 				{
 					session.setAttribute("loggedin", "true");
+					
+					// Opens home pages depending on userType.
 					if (session.getAttribute("userType").equals("Customer"))
 					{
 						try {
@@ -274,6 +312,22 @@ public class BookstoreServlet extends HttpServlet {
 					{
 						try {
 							response.sendRedirect("Admin.html");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else if (session.getAttribute("userType").equals("Shipping"))
+					{
+						try {
+							response.sendRedirect("Shipmentview_d.html");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else if (session.getAttribute("userType").equals("Manager"))
+					{
+						try {
+							response.sendRedirect("Manager_d.html");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -345,48 +399,87 @@ public class BookstoreServlet extends HttpServlet {
 		return value;
 	}
 
+	// Registers the user
+	
 	private void registerUser(HttpServletRequest request, HttpServletResponse response) {
 		String fname = request.getParameter("first_name");
 		String lname = request.getParameter("last_name");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String passConfirmation = request.getParameter("password_confirmation");
+		String subscribe = request.getParameter("sub");
+		
+		Boolean sub = null;
+		if (subscribe != null)
+		{
+			sub = true;
+		}
+		else
+		{
+			sub = false;
+		}
 		
 		UserController userCtrl = new UserController();
 		
+		// Checks password
+		
 		if (password.equals(passConfirmation))
 		{
-			int code = createCode();
-			User newUser = new User(fname, lname, email, password, code);
-			int check = userCtrl.CreateNewUser(newUser);
-			if (check == 1)
+			// Checks if the email is already taken.
+			boolean checkEmail = userCtrl.checkEmail(email);
+			if (checkEmail == false)
 			{
-
-		        try {
-		            EmailUtility.sendConfirmation(newUser.getEmail(), host, user, pass, port, code);
-		        } catch (Exception e) {
-		            e.printStackTrace();
-		        }
-
-				try {
-					response.sendRedirect("login.html");
-				} catch (IOException e) {
-					e.printStackTrace();
+				// Create verification code.
+				int code = createCode();
+				// Store user info
+				User newUser = new User(fname, lname, email, password, code, sub);
+				// Create new row in the database
+				int check = userCtrl.CreateNewUser(newUser);
+				if (check == 1)
+				{
+					// Sends an email with the verification to the user.
+			        try {
+			            EmailUtility.sendConfirmation(newUser.getEmail(), host, user, pass, port, code);
+			        } catch (Exception e) {
+			            e.printStackTrace();
+			        }
+	
+					try {
+						response.sendRedirect("RegistrationConfirmation.html");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+					SimpleHash root = new SimpleHash(df.build());
+					
+					root.put("check", 3);
+					String templateName = "registrationError.ftl";
+					process.processTemplate(templateName, root, request, response);
 				}
 			}
 			else
 			{
-				try {
-					response.sendRedirect("registation.html");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				System.out.println("Email already in use.");
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				
+				root.put("check", 0);
+				String templateName = "registrationError.ftl";
+				process.processTemplate(templateName, root, request, response);
 			}
 		}
 		else
 		{
 			System.out.println("Different Passwords");
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			
+			root.put("check", 1);
+			String templateName = "registrationError.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 

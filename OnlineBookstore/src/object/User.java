@@ -23,7 +23,16 @@ public class User {
 	String userType;
 	int code;
 	String status;
+	Boolean subscribed;
 	
+	public Boolean getSubscribed() {
+		return subscribed;
+	}
+
+	public void setSubscribed(Boolean subscribed) {
+		this.subscribed = subscribed;
+	}
+
 	public String getUserType() {
 		return userType;
 	}
@@ -70,6 +79,16 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
+	public User(String fname2, String lname2, String email2, String password2, int code2, Boolean subscribe) {
+		// TODO Auto-generated constructor stub
+		setFname(fname2);
+		setLname(lname2);
+		setEmail(email2);
+		setPassword(password2);
+		setCode(code2);
+		setSubscribed(subscribe);
+	}
+
 	public String getFname() {
 		return fname;
 	}
@@ -104,7 +123,7 @@ public class User {
 
 	public int createNewUser() {
 		CustomerDA da = new CustomerDA();
-		int value = da.createNewCustomer(fname, lname, email, password, code);
+		int value = da.createNewCustomer(fname, lname, email, password, code, subscribed);
 		return value;
 	}
 
@@ -208,5 +227,27 @@ public class User {
         	value = 0;
         }
 		return value;
+	}
+
+	public boolean checkEmail(String email2) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = null;
+		set = UserDA.checkEmail(con, email2);
+		boolean check = true;
+		try {
+			if (set.next())
+			{
+				check = true;
+			}
+			else
+			{
+				check = false;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return check;
 	}
 }
