@@ -194,6 +194,7 @@ public class User {
 		{
 			return null;
 		}
+		DbAccessImpl.disconnect(con);
 		return temp;
 	}
 
@@ -249,5 +250,35 @@ public class User {
 			e.printStackTrace();
 		}
 		return check;
+	}
+	
+	public List<IBook> searchBooks(String cat, String term) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = BookDA.searchBooks(con, cat, term);
+		List<IBook> temp = new ArrayList<IBook>();
+			try {
+				while (set.next())
+				{
+					IBook book = new Book(set.getInt("isbn"), set.getString("category"), 
+							set.getString("authorName"), set.getString("title"), 
+							set.getInt("edition"), set.getString("publisher"), 
+							set.getInt("publicationYear"), set.getInt("minThreshold"), 
+							set.getInt("qtyInStock"), set.getDouble("buyingPrice"), 
+							set.getDouble("sellingPrice"), set.getString("picture"), 
+							set.getString("description"));
+					temp.add(book);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
+		DbAccessImpl.disconnect(con);
+		return temp;
+	}
+
+	public int saveProfile(String email2, String fname2, String lname2, String phone) {
+		// TODO Auto-generated method stub
+		return UserDA.saveProfile(email2, fname2, lname2, phone);
 	}
 }

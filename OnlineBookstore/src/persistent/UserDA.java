@@ -142,4 +142,11 @@ public class UserDA {
 
         return userProfile;
     }
+	
+	public static int saveProfile(String email, String fname, String lname, String phone) {
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "UPDATE user SET " + " fName = " + "'" + fname + "', " + " lName = " + "'" + lname + "', " + " phone = " + "'" + phone + "' WHERE email = " + "'" + email +"'";
+		System.out.println(query);
+		return DbAccessImpl.update(con, query);
+	}
 }

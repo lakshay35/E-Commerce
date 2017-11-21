@@ -1,6 +1,8 @@
 package boundary;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
+import entity.IBook;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
@@ -66,7 +69,9 @@ public class BookstoreServlet extends HttpServlet {
 		String logout = request.getParameter("logout");
 		String changePass = request.getParameter("changePass");
 		String viewProfile = request.getParameter("viewProfile");
-
+		String browse = request.getParameter("browse");
+		String searchBooks = request.getParameter("searchBooks");
+		String saveProfile = request.getParameter("saveProfile");
 		
 		if (signup != null)
 		{
@@ -108,6 +113,102 @@ public class BookstoreServlet extends HttpServlet {
 		else if(viewProfile != null) {
             viewProfile(request, response);
         }
+		else if (browse != null)
+		{
+			browseBooks(request, response);
+		}
+		else if (searchBooks != null)
+		{
+			searchBooks(request, response);
+		}
+		else if (saveProfile != null)
+		{
+			saveProfile(request, response);
+		}
+	}
+	
+	private void saveProfile(HttpServletRequest request, HttpServletResponse response) {
+
+		HttpSession session = request.getSession(false);
+
+		String email = (String)session.getAttribute("email");
+
+		String fname = request.getParameter("fname");
+
+		String lname = request.getParameter("lname");
+
+		String phone = request.getParameter("phone");
+
+		UserController userCtrl = new UserController();
+
+		int check = userCtrl.saveProfile(email, fname, lname, phone);
+
+		if(check == 1)
+		{
+			System.out.println("Success");
+			try {
+				response.getWriter().write("Success");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Failure");
+			try {
+				response.getWriter().write("Failure");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String term = request.getParameter("term");
+		int temp = Integer.parseInt(request.getParameter("category"));
+		String cat = "";
+		UserController userCtrl = new UserController();
+		
+		List<IBook> bookList = new ArrayList<IBook>();
+		
+		if (temp == 0)
+		{
+			cat = "isbn";
+		}
+		else if (temp == 1)
+		{
+			cat = "authorName";
+		}
+		else if (temp == 2)
+		{
+			cat = "title";
+		}
+		
+		bookList = userCtrl.searchBooks(cat, term);
+		
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		
+		root.put("books", bookList);
+		root.put("searchTerm", term);
+		String templateName = "userSearch.ftl";
+		process.processTemplate(templateName, root, request, response);
+	}
+	
+	private void browseBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		UserController uCtrl = new UserController();
+		
+		List<IBook> bookList = uCtrl.browseBooks();
+		root.put("books", bookList);
+
+		String templateName = "userBrowse.ftl";
+		process.processTemplate(templateName, root, request, response);
 	}
 	
 	private void viewProfile(HttpServletRequest request, HttpServletResponse response) {
