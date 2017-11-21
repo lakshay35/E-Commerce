@@ -5,6 +5,7 @@ import java.util.List;
 
 import entity.IBook;
 import object.Address;
+import object.CreditCard;
 import object.Customer;
 
 public class CustomerController {
@@ -40,5 +41,24 @@ public class CustomerController {
 		Address add = new Address();
 		add.setId(id);
 		return add.deleteAddress();
+	}
+
+	public int addCard(String number, String expire, String type, int userID) {
+		// TODO Auto-generated method stub
+		CreditCard card = new CreditCard(number, expire, type);
+		return card.addCard(userID);
+	}
+
+	public List<CreditCard> viewCards(int userID) {
+		// TODO Auto-generated method stub
+		Customer cust = new Customer();
+		return cust.viewCards(userID);
+	}
+
+	public int deleteCard(int id) {
+		// TODO Auto-generated method stub
+		CreditCard card = new CreditCard();
+		card.setId(id);
+		return card.deleteCard();
 	}
 }

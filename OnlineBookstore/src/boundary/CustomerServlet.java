@@ -1,7 +1,11 @@
 package boundary;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -18,6 +22,7 @@ import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
 import logic.CustomerController;
 import object.Address;
+import object.CreditCard;
 
 /**
  * Servlet implementation class CustomerServlet
@@ -57,6 +62,9 @@ public class CustomerServlet extends HttpServlet {
 		String addAddress = request.getParameter("addAddress");
 		String editAddress = request.getParameter("editAddress");
 		String deleteAddress = request.getParameter("deleteAddress");
+		String addCard = request.getParameter("addCard");
+		String viewCards = request.getParameter("viewCreditCard");
+		String deleteCard = request.getParameter("deleteCard");
 		
 		if (browse != null)
 		{
@@ -77,6 +85,84 @@ public class CustomerServlet extends HttpServlet {
 		else if (deleteAddress != null)
 		{
 			deleteAddress(request, response);
+		}
+		else if (addCard != null)
+		{
+			addCard(request, response);
+		}
+		else if (viewCards != null)
+		{
+			viewCards(request, response, "");
+		}
+		else if (deleteCard != null)
+		{
+			deleteCard(request, response);
+		}
+	}
+
+	private void deleteCard(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		int id = Integer.parseInt(request.getParameter("deleteCard"));
+		
+		CustomerController custCtrl = new CustomerController();
+		
+		int check = custCtrl.deleteCard(id);
+		if (check == 1)
+		{
+			viewCards(request, response, "Successfully deleted this card.");
+		}
+		else
+		{
+			viewCards(request, response, "Failed to delete this card.");
+		}
+		
+	}
+
+	private void viewCards(HttpServletRequest request, HttpServletResponse response, String message) {
+		// TODO Auto-generated method stub
+		HttpSession sess = request.getSession(false);
+		
+		int userID = (int)sess.getAttribute("userID");
+		List<CreditCard> cardList = new ArrayList<CreditCard>();
+		
+		CustomerController custCtrl = new CustomerController();
+		
+		cardList = custCtrl.viewCards(userID);
+		
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		root.put("cardList", cardList);
+		root.put("message", message);
+		String templateName = "creditcardPage.ftl";
+		process.processTemplate(templateName, root, request, response);
+	}
+
+	private void addCard(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String number = request.getParameter("number");
+		String type = request.getParameter("type");
+		
+		long timeStamp = Long.parseLong(request.getParameter("expiration"));
+		Date date = Date.from( Instant.ofEpochSecond( timeStamp ) );
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(date); 
+		c.add(Calendar.DATE, 1);
+		date = c.getTime();
+		String dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
+		
+		CustomerController custCtrl = new CustomerController();
+		
+		HttpSession sess = request.getSession(false);
+		int userID = (int)sess.getAttribute("userID");
+		int check = custCtrl.addCard(number, dateTime, type, userID);
+		
+		if (check == 1)
+		{
+			viewCards(request, response, "Successfully added a credit card to your account.");
+		}
+		else
+		{
+			viewCards(request, response, "Failed to add the credit card to your account.");
 		}
 	}
 
