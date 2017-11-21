@@ -16,4 +16,30 @@ $(document).ready(function() {
       alert("error occured");
     }
   });
+  
+  $("#save").click(function() {
+	  console.log("Fucking work");
+	  $.ajax({
+	  method : "post",
+	  url : "BookstoreServlet",
+	  data : {
+	  "saveProfile" : "saveProfile",
+	  "fname" : $("#fname").val(),
+	  "lname" : $("#lname").val(),
+	  "phone" : $("#phone").val()
+	  },
+
+	  success: function(responseText) {
+		  if(responseText == "Success") {
+			  //update div or redirect
+		  } else {
+		  // return error message
+		  	}
+		  },
+	  error: function() {
+		  alert("error occured");
+	  }
+	  });
+  });
+  
 });

@@ -15,10 +15,11 @@
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	
+
     <!-- Custom styles for this template -->
     <link href="css/heroic-features.css" rel="stylesheet">
-	<link href="css/browsebutton.css" rel="stylesheet">
+    <link href="css/browsebutton.css" rel="stylesheet">
+
   </head>
 
   <body>
@@ -33,7 +34,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="CustomerServlet" method="post">
+					<form class="form-inline" action="AdminServlet" method="post">
 						<input type="text" name="term" class="form-control" placeholder="Search here"/>
 						<select class="form-control" name="category" id="dropDown_search">
 							<option value="0">ISBN</option>
@@ -44,97 +45,55 @@
 					</form>
 				</li>
             <li class="nav-item active">
-              <a class="nav-link" href="Customer.html">Home
+              <a class="nav-link" href="Admin.html">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            <li class="nav-item"> 
-            <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton"  name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
-            </li>
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+              <a class="nav-link" href="AddBook.html">Add Book</a>
+            </li>
+            <li class="nav-item"> 
+            <form action="AdminServlet" method="post">
+              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
+              </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-					<a class="nav-link logout" href="#">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
       </div>
     </nav>
 
+	<br/>
+	<br/>
     <!-- Page Content -->
     <div class="container">
-
-      <!-- Jumbotron Header -->
-      <header class="jumbotron my-4">
-        <h1 class="display-3">Book Store!</h1>
-        <p class="lead">We have all types of books. From romance to mystery to an action filled book, we got you covered.</p>
-        <a href="registation.html" class="btn btn-primary btn-lg">Sign Up!</a>
-      </header>
-
+	<p>Showing results for: ${searchTerm}</p>
       <!-- Page Features -->
-      <div class="row text-center">
-
+      <div class="row text-center" id="bookRow">
+      	<#if books?has_content>
+		<#list books as book>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
+            <img class="card-img-top" src="${book.getPicture()}" alt="${book.getTitle()}">
             <div class="card-body">
-              <h4 class="card-title">Book 1</h4>
-              <p class="card-text">Description of the book.</p>
+              <h4 class="card-title">${book.getTitle()}</h4>
+              <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
+            	<button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
+              	<button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 2</h4>
-              <p class="card-text">Description of the Book</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 3</h4>
-              <p class="card-text">Description of the Book.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 4</h4>
-              <p class="card-text">Description of the book.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
+		</#list>
+		<#else>
+		<p>No results found.</p>
+		</#if>
       </div>
       <!-- /.row -->
 

@@ -35,15 +35,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="BookstoreServlet" method="post">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
+					<form class="form-inline" action="AdminServlet" method="post">
+						<input type="text" name="term" class="form-control" placeholder="Search here"/>
+						<select class="form-control" name="category" id="dropDown_search">
+							<option value="0">ISBN</option>
+							<option value="1">Author</option>
+							<option value="2">Title</option>
 						</select>
-						<button type="submit" class="form-control">Search</button>
+						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
 				</li>
             <li class="nav-item active">
