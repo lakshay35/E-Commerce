@@ -87,9 +87,17 @@
               <h4 class="card-title">${book.getTitle()}</h4>
               <p class="card-text">${book.getDescription()}</p>
             </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+            </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" id="view" value="${book.getIsbn()}">View Info</a>
-              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()}">Add to Cart</a>
+              <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
+              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()?c}">Add to Cart</a>
             </div>
           </div>
         </div>

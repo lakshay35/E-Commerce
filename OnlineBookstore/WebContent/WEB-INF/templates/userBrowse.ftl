@@ -11,7 +11,7 @@
     <title>Online Book Store</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
-	
+	<script src="js/user.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -80,8 +80,16 @@
               <h4 class="card-title">${book.getTitle()}</h4>
               <p class="card-text">${book.getDescription()}</p>
             </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+            </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" id="view" value="${book.getIsbn()}">View Info</a>
+              <button class="btn btn-primary view" id="view" value="${book.getIsbn()?c}">View Info</button>
             </div>
           </div>
         </div>

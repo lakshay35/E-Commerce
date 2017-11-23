@@ -11,14 +11,25 @@ $(document).ready(function() {
       $("#lname").val(responseText.lname);
       $("#email").val(responseText.email);
       $("#phone").val(responseText.phone);
+      if (responseText.subscribe == true)
+    	  {
+    	  	$("#sub").prop("checked", true);
+    	  }
+      else
+    	  {
+    	  	$("#sub").prop("checked", false);
+    	  }
     },
     error : function() {
       alert("error occured");
     }
   });
   
-  $("#save").click(function() {
-	  console.log("Fucking work");
+});
+
+$(document).on('click', "#save", function() {
+	console.log("check");
+		var temp = $("#sub").is(':checked');
 	  $.ajax({
 	  method : "post",
 	  url : "BookstoreServlet",
@@ -26,12 +37,13 @@ $(document).ready(function() {
 	  "saveProfile" : "saveProfile",
 	  "fname" : $("#fname").val(),
 	  "lname" : $("#lname").val(),
-	  "phone" : $("#phone").val()
+	  "phone" : $("#phone").val(),
+	  "sub" : temp
 	  },
 
 	  success: function(responseText) {
 		  if(responseText == "Success") {
-			  //update div or redirect
+			  $(".fa-coffee").val("Successfully updated your profile.");
 		  } else {
 		  // return error message
 		  	}
@@ -40,6 +52,4 @@ $(document).ready(function() {
 		  alert("error occured");
 	  }
 	  });
-  });
-  
 });

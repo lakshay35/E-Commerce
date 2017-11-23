@@ -7,7 +7,7 @@ $(document).ready(function loadPage() {
 		}, dataType: "json",
 		async:"false",
 		success: function(responseText) {
-			if (responseText == 1)
+			if (responseText == "Customer")
 				{
 					$.ajax({
 						type: "POST",
@@ -51,4 +51,16 @@ $(document).on('click', ".address", function () {
 	$("#city").val($(this).find(".cityAddress").attr("value"));
 	$("#state").val($(this).find(".stateAddress").attr("value"));
 	$("#zip").val($(this).find(".zipAddress").attr("value"));
+});
+
+$(document).on('click', ".view", function () {
+	var isbn = $(this).val();
+	if ($('#' + isbn).is(':visible'))
+		{
+			$('#' + isbn).hide(1000);
+		}
+	else
+		{
+			$('#' + isbn).show(1000);
+		}
 });
