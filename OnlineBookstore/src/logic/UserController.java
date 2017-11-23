@@ -74,8 +74,8 @@ public class UserController {
 		return returnList;
 	}
 	
-	public int saveProfile(String email, String fname, String lname, String phone) {
+	public int saveProfile(String email, String fname, String lname, String phone, Boolean subscribe) {
 		User user = new User();
-		return user.saveProfile(email, fname, lname, phone);
+		return user.saveProfile(email, fname, lname, phone, subscribe);
 	}
 }

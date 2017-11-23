@@ -5,7 +5,18 @@ public class UserProfile {
   String fname;
   String lname;
   String phone;
-  public String getFname() {
+  Boolean subscribe;
+  
+  
+  public Boolean getSubscribe() {
+	return subscribe;
+}
+
+public void setSubscribe(Boolean subscribe) {
+	this.subscribe = subscribe;
+}
+
+public String getFname() {
 	return fname;
 }
 

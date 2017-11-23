@@ -12,7 +12,7 @@ import object.Address;
 
 public class CustomerDA {
 	
-	public int createNewCustomer(String fname, String lname, String email, String password, int code, Boolean subscribe)
+	public int createNewCustomer(String fname, String lname, String email, String password, int code, Boolean subscribe, String phone)
 	{
 		int sub = 0;
 		if (subscribe == true)
@@ -24,8 +24,8 @@ public class CustomerDA {
 			sub = 0;
 		}
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword, userCode, subscribed) VALUES"
-				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "', '" + sub + "')";
+		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword, userCode, subscribed, phone) VALUES"
+				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "', '" + sub + "', '" + phone + "')";
 		System.out.println(query);
 		int value = DbAccessImpl.create(con, query);
 		DbAccessImpl.disconnect(con);;

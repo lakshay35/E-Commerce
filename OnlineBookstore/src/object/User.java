@@ -24,7 +24,16 @@ public class User {
 	int code;
 	String status;
 	Boolean subscribed;
+	String phone;
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Boolean getSubscribed() {
 		return subscribed;
 	}
@@ -89,6 +98,17 @@ public class User {
 		setSubscribed(subscribe);
 	}
 
+	public User(String fname2, String lname2, String email2, String password2, int code2, Boolean sub, String phone) {
+		// TODO Auto-generated constructor stub
+		setFname(fname2);
+		setLname(lname2);
+		setEmail(email2);
+		setPassword(password2);
+		setCode(code2);
+		setSubscribed(sub);
+		setPhone(phone);
+	}
+
 	public String getFname() {
 		return fname;
 	}
@@ -123,7 +143,7 @@ public class User {
 
 	public int createNewUser() {
 		CustomerDA da = new CustomerDA();
-		int value = da.createNewCustomer(fname, lname, email, password, code, subscribed);
+		int value = da.createNewCustomer(fname, lname, email, password, code, subscribed, phone);
 		return value;
 	}
 
@@ -277,8 +297,8 @@ public class User {
 		return temp;
 	}
 
-	public int saveProfile(String email2, String fname2, String lname2, String phone) {
+	public int saveProfile(String email2, String fname2, String lname2, String phone, Boolean subscribe) {
 		// TODO Auto-generated method stub
-		return UserDA.saveProfile(email2, fname2, lname2, phone);
+		return UserDA.saveProfile(email2, fname2, lname2, phone, subscribe);
 	}
 }

@@ -138,10 +138,23 @@ public class BookstoreServlet extends HttpServlet {
 		String lname = request.getParameter("lname");
 
 		String phone = request.getParameter("phone");
+		
+		String sub = request.getParameter("sub");
+		
+		Boolean subscribe = null;
+		System.out.println(sub);
+		if (sub.equals("true"))
+		{
+			subscribe = true;
+		}
+		else
+		{
+			subscribe = false;
+		}
 
 		UserController userCtrl = new UserController();
 
-		int check = userCtrl.saveProfile(email, fname, lname, phone);
+		int check = userCtrl.saveProfile(email, fname, lname, phone, subscribe);
 
 		if(check == 1)
 		{
@@ -216,6 +229,10 @@ public class BookstoreServlet extends HttpServlet {
         String email = (String)session.getAttribute("email");
         UserController userCtrl = new UserController();
         UserProfile profile = userCtrl.viewProfile(email);
+        session.setAttribute("subscribe", profile.getSubscribe());
+        session.setAttribute("fName", profile.getFname());
+		session.setAttribute("lName", profile.getLname());
+		session.setAttribute("email", profile.getEmail());
         System.out.println(profile.getFname());
         Gson gson = new Gson();
         try {
@@ -249,11 +266,24 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			check = 0;
 		}
+		if (check == 1)
+		{
+			String type = (String)session.getAttribute("userType");
+			response.setContentType("application/json");
+			try {
+				response.getWriter().write(gson.toJson(type));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+		{
 		response.setContentType("application/json");
 		try {
 			response.getWriter().write(gson.toJson(check));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
 		}
 	}
 
@@ -391,6 +421,7 @@ public class BookstoreServlet extends HttpServlet {
 					session.setAttribute("userCode", user.getCode());
 					session.setAttribute("status", user.getStatus());
 					session.setAttribute("loggedin", "false");
+					session.setAttribute("subscribe", user.getSubscribed());
 				}
 				String stat = (String)session.getAttribute("status");
 				
@@ -509,6 +540,7 @@ public class BookstoreServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String passConfirmation = request.getParameter("password_confirmation");
 		String subscribe = request.getParameter("sub");
+		String phone = request.getParameter("phoneNumber");
 		
 		Boolean sub = null;
 		if (subscribe != null)
@@ -533,7 +565,7 @@ public class BookstoreServlet extends HttpServlet {
 				// Create verification code.
 				int code = createCode();
 				// Store user info
-				User newUser = new User(fname, lname, email, password, code, sub);
+				User newUser = new User(fname, lname, email, password, code, sub, phone);
 				// Create new row in the database
 				int check = userCtrl.CreateNewUser(newUser);
 				if (check == 1)
