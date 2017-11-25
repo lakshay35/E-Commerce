@@ -34,15 +34,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="BookstoreServlet" method="post">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
+					<form class="form-inline" action="CustomerServlet" method="post">
+						<input type="text" name="term" class="form-control" placeholder="Search here"/>
+						<select class="form-control" name="category" id="dropDown_search">
+							<option value="0">ISBN</option>
+							<option value="1">Author</option>
+							<option value="2">Title</option>
 						</select>
-						<button type="submit" class="form-control">Search</button>
+						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
 				</li>
             <li class="nav-item active">
@@ -87,9 +86,17 @@
               <h4 class="card-title">${book.getTitle()}</h4>
               <p class="card-text">${book.getDescription()}</p>
             </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+            </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary" id="view" value="${book.getIsbn()}">View Info</a>
-              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()}">Add to Cart</a>
+              <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
+              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()?c}">Add to Cart</a>
             </div>
           </div>
         </div>

@@ -15,10 +15,11 @@
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	
+
     <!-- Custom styles for this template -->
     <link href="css/heroic-features.css" rel="stylesheet">
-	<link href="css/browsebutton.css" rel="stylesheet">
+    <link href="css/browsebutton.css" rel="stylesheet">
+
   </head>
 
   <body>
@@ -50,7 +51,7 @@
             </li>
             <li class="nav-item"> 
             <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton"  name="browse" id="browse" value="Browse Books">Browse Books</button>
+              <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
             </li>
               <li class="nav-item">
@@ -63,78 +64,47 @@
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-					<a class="nav-link logout" href="#">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
       </div>
     </nav>
 
+	<br/>
+	<br/>
     <!-- Page Content -->
     <div class="container">
-
-      <!-- Jumbotron Header -->
-      <header class="jumbotron my-4">
-        <h1 class="display-3">Book Store!</h1>
-        <p class="lead">We have all types of books. From romance to mystery to an action filled book, we got you covered.</p>
-        <a href="registation.html" class="btn btn-primary btn-lg">Sign Up!</a>
-      </header>
-
+	<p>Showing results for: ${searchTerm}</p>
       <!-- Page Features -->
-      <div class="row text-center">
-
+      <div class="row text-center" id="bookRow">
+      	<#if books?has_content>
+		<#list books as book>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
+            <img class="card-img-top" src="${book.getPicture()}" alt="${book.getTitle()}">
             <div class="card-body">
-              <h4 class="card-title">Book 1</h4>
-              <p class="card-text">Description of the book.</p>
+              <h4 class="card-title">${book.getTitle()}</h4>
+              <p class="card-text">${book.getDescription()}</p>
+            </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
+              <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
+              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()?c}">Add to Cart</a>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 2</h4>
-              <p class="card-text">Description of the Book</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 3</h4>
-              <p class="card-text">Description of the Book.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Book 4</h4>
-              <p class="card-text">Description of the book.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Buy!</a>
-            </div>
-          </div>
-        </div>
-
+		</#list>
+		<#else>
+		<p>No results for the search term found.</p>
+		</#if>
       </div>
       <!-- /.row -->
 

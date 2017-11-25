@@ -7,7 +7,7 @@ $(document).ready(function loadPage() {
 		}, dataType: "json",
 		async:"false",
 		success: function(responseText) {
-			if (responseText == 1)
+			if (responseText == "SystemAdmin")
 				{
 					$.ajax({
 						type: "POST",

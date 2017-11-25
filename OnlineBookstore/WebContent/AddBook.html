@@ -29,15 +29,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-					<form class="form-inline" action="BookstoreServlet" method="post">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
+					<form class="form-inline" action="AdminServlet" method="post">
+						<input type="text" name="term" class="form-control" placeholder="Search here"/>
+						<select class="form-control" name="category" id="dropDown_search">
+							<option value="0">ISBN</option>
+							<option value="1">Author</option>
+							<option value="2">Title</option>
 						</select>
-						<button type="submit" class="form-control">Search</button>
+						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
 			</li>
             <li class="nav-item active">
@@ -102,7 +101,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="edition" id="edition" class="form-control input-sm" placeholder="Edition">
+			    						<input type="number" name="edition" id="edition" class="form-control input-sm" placeholder="Edition">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -115,7 +114,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN">
+			    						<input type="number" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -128,7 +127,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year">
+			    						<input type="number" name="year" id="year" class="form-control input-sm" placeholder="Publication Year">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -149,12 +148,12 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price">
+			                <input type="number" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price">
+			    						<input type="number" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price">
 			    					</div>
 			    				</div>
 			    			</div>
