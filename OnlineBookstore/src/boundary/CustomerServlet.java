@@ -21,6 +21,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
 import logic.CustomerController;
+import logic.UserController;
 import object.Address;
 import object.CreditCard;
 
@@ -65,6 +66,7 @@ public class CustomerServlet extends HttpServlet {
 		String addCard = request.getParameter("addCard");
 		String viewCards = request.getParameter("viewCreditCard");
 		String deleteCard = request.getParameter("deleteCard");
+		String searchBooks = request.getParameter("searchBooks");
 		
 		if (browse != null)
 		{
@@ -98,6 +100,43 @@ public class CustomerServlet extends HttpServlet {
 		{
 			deleteCard(request, response);
 		}
+		else if (searchBooks != null)
+		{
+			searchBooks(request, response);
+		}
+	}
+
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String term = request.getParameter("term");
+		int temp = Integer.parseInt(request.getParameter("category"));
+		String cat = "";
+		UserController userCtrl = new UserController();
+		
+		List<IBook> bookList = new ArrayList<IBook>();
+		
+		if (temp == 0)
+		{
+			cat = "isbn";
+		}
+		else if (temp == 1)
+		{
+			cat = "authorName";
+		}
+		else if (temp == 2)
+		{
+			cat = "title";
+		}
+		
+		bookList = userCtrl.searchBooks(cat, term);
+		
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		
+		root.put("books", bookList);
+		root.put("searchTerm", term);
+		String templateName = "customerSearch.ftl";
+		process.processTemplate(templateName, root, request, response);
 	}
 
 	private void deleteCard(HttpServletRequest request, HttpServletResponse response) {
