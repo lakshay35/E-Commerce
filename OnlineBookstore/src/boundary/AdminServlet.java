@@ -66,7 +66,7 @@ public class AdminServlet extends HttpServlet {
 		String suspendUser = request.getParameter("suspendUser");
 		String unsuspendUser = request.getParameter("unsuspendUser");
 		String searchBooks = request.getParameter("searchBooks");
-		
+		System.out.println("testing");
 		if (addbook != null)
 		{
 			addBook(request, response);
@@ -77,7 +77,8 @@ public class AdminServlet extends HttpServlet {
 		}
 		else if (editbook != null)
 		{
-			showEditBook(request, response);
+			int tempIsbn = Integer.parseInt(editbook);
+			showEditBook(request, response, "", tempIsbn);
 		}
 		else if (submitedit != null)
 		{
@@ -264,31 +265,27 @@ public class AdminServlet extends HttpServlet {
 		String url = request.getParameter("picture");
 		String description = request.getParameter("description");
 		
-
+		int temp = Integer.parseInt(isbn);
 		AdminController aCtrl = new AdminController();
-		System.out.println(thresh);
+		
 		int check = aCtrl.editBook(title, author, Integer.parseInt(edition), category, Integer.parseInt(isbn), publisher, Integer.parseInt(year), 
 				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url, description);
 		
 		if (check >= 1)
 		{
 			System.out.println("Success");
-			browseBooks(request, response);
+			showEditBook(request, response, "Successfully updated the information for this book.", temp);
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println("Mega fail");
+			showEditBook(request, response, "Failed to update the information for this book.", temp);
 		}
 	}
 
-	private void showEditBook(HttpServletRequest request, HttpServletResponse response) {
+	private void showEditBook(HttpServletRequest request, HttpServletResponse response, String message, int temp) {
 		// TODO Auto-generated method stub
-		int isbn = Integer.parseInt(request.getParameter("editbook"));
+		int isbn = temp;
 		
 		AdminController aCtrl = new AdminController();
 		
@@ -299,13 +296,13 @@ public class AdminServlet extends HttpServlet {
 			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 			SimpleHash root = new SimpleHash(df.build());
 			root.put("book", book);
-			book.printBook();
+			root.put("message", message);
+			
 			String templateName = "editBook.ftl";
 			process.processTemplate(templateName, root, request, response);
 		}
 		else
 		{
-			System.out.println("No such book exists.");
 			browseBooks(request, response);
 		}
 	}
@@ -344,26 +341,36 @@ public class AdminServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		
 		AdminController aCtrl = new AdminController();
-		System.out.println(thresh);
+		
 		int check = aCtrl.addNewBook(title, author, Integer.parseInt(edition), category, Integer.parseInt(isbn), publisher, Integer.parseInt(year), 
 				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url, description);
 		if (check >= 1)
 		{
 			System.out.println("Success");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "Successfully add a book to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
+		}
+		else if (check == -2)
+		{
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "A book with this ISBN has already been added to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "Failed to add a book to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 

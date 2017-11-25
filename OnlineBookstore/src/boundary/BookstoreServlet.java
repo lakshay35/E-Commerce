@@ -72,6 +72,7 @@ public class BookstoreServlet extends HttpServlet {
 		String browse = request.getParameter("browse");
 		String searchBooks = request.getParameter("searchBooks");
 		String saveProfile = request.getParameter("saveProfile");
+		String changeHome = request.getParameter("changeHome");
 		
 		if (signup != null)
 		{
@@ -125,8 +126,55 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			saveProfile(request, response);
 		}
+		else if (changeHome != null)
+		{
+			changeHome(request, response);
+		}
 	}
 	
+	private void changeHome(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		HttpSession sess = request.getSession(false);
+		String home = "index.html";
+		if (sess != null)
+		{
+			String type = (String)sess.getAttribute("userType");
+			if (type.equals("SystemAdmin"))
+			{
+				home = "Admin.html";
+			}
+			else if (type.equals("Customer"))
+			{
+				home = "Customer.html";
+			}
+			else if (type.equals("Manager"))
+			{
+				home = "Manager_d.html";
+			}
+			else if (type.equals("Shipping"))
+			{
+				home = "Shipmentview_d.html";
+			}
+			Gson gson = new Gson();
+	        try {
+				response.getWriter().write(gson.toJson(home));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			Gson gson = new Gson();
+	        try {
+				response.getWriter().write(gson.toJson(home));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void saveProfile(HttpServletRequest request, HttpServletResponse response) {
 
 		HttpSession session = request.getSession(false);
@@ -492,22 +540,22 @@ public class BookstoreServlet extends HttpServlet {
 			}
 			else
 			{
-				System.out.println("Error Null");
-				try {
-					response.sendRedirect("login.html");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				
+				root.put("message", "Sorry, we can not log you in at this time.");
+				String templateName = "loginError.ftl";
+				process.processTemplate(templateName, root, request, response);
 			}
 		}
 		else
 		{
-			System.out.println("incorrect login");
-			try {
-				response.sendRedirect("login.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			
+			root.put("message", "Email or password is incorrect.");
+			String templateName = "loginError.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 
