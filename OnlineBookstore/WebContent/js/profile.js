@@ -1,6 +1,18 @@
 $(document).ready(function() {
+	$.ajax({
+		type: "POST",
+		url: "BookstoreServlet",
+		data: {
+			"changeHome" : "changeHome"
+		}, dataType: "json",
+		async:"false",
+		success: function(responseText) {
+			$("#home").attr("href", responseText);
+		}
+	});
+	
   $.ajax({
-    method : "get",
+    method : "post",
     url : "BookstoreServlet",
     data : {
       "viewProfile" : "viewProfile"
@@ -28,28 +40,35 @@ $(document).ready(function() {
 });
 
 $(document).on('click', "#save", function() {
-	console.log("check");
+		$("#messagePara").text("");
+		if (($.trim($("#fname").val()) == '') || ($.trim($("#lname").val()) == '')
+				|| ($.trim($("#phone").val()) == ''))
+			{
+				$("#messagePara").text("No inputs other than email should be left blank.");
+			}
+		else
+			{
 		var temp = $("#sub").is(':checked');
-	  $.ajax({
-	  method : "post",
-	  url : "BookstoreServlet",
-	  data : {
-	  "saveProfile" : "saveProfile",
-	  "fname" : $("#fname").val(),
-	  "lname" : $("#lname").val(),
-	  "phone" : $("#phone").val(),
-	  "sub" : temp
-	  },
-
-	  success: function(responseText) {
-		  if(responseText == "Success") {
-			  $(".fa-coffee").val("Successfully updated your profile.");
-		  } else {
-		  // return error message
-		  	}
-		  },
-	  error: function() {
-		  alert("error occured");
-	  }
-	  });
+		$.ajax({
+		method : "post",
+		url : "BookstoreServlet",
+		data : {
+			"saveProfile" : "saveProfile",
+			"fname" : $("#fname").val(),
+			"lname" : $("#lname").val(),
+			"phone" : $("#phone").val(),
+			"sub" : temp
+		  	},	
+		  	success: function(responseText) {
+			  if(responseText == "Success") {
+				  $("#messagePara").text("Successfully updated your profile.");
+			  } else {
+				  $("#messagePara").text("Failed to update your profile.");
+			  	}
+			  },
+		  error: function() {
+			  $("#messagePara").text("Failed to update your profile.");
+		  }
+		  });
+	}
 });

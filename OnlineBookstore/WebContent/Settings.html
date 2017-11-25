@@ -50,24 +50,17 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="Customer.html">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
-            </li>
-                 <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+              <a class="nav-link" id="home" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
             <li>
-             <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">My Addresses</button>
+            	
+             <form class="nav-link" action="CustomerServlet" method="post">
+              <button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">Addresses</button>
               </form>
               </li>
               <li>
-             	<form action="CustomerServlet" method="post">
-              		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Payment Methods</button>
+             	<form class="nav-link" action="CustomerServlet" method="post">
+              		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Credit Cards</button>
               	</form>
               </li>
           </ul>
@@ -100,7 +93,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-lg-3 control-label">Email:</label>
+            <label class="col-lg-3 control-label">Email: (Cannot be changed.)</label>
             <div class="col-lg-8">
               <input class="form-control" type="email" id="email" value="">
             </div>
@@ -124,11 +117,14 @@
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>
+            <br>
+            <div class="col-md-8">
+            <p id="messagePara"></p>
+            </div>
           </div>
         </form>
       </div>
   </div>
-</div>
 <hr>
         
         <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
