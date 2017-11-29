@@ -76,7 +76,7 @@ public class BookDA {
 	public static ResultSet searchBooks(Connection con, String cat, String term) {
 		// TODO Auto-generated method stub
 		String query = "SELECT * FROM book WHERE " + cat + " LIKE '%" + term + "%' ORDER BY " + cat + " ASC";
-		
+		System.out.println(query);
 		return DbAccessImpl.retrieve(con, query);
 	}
 	

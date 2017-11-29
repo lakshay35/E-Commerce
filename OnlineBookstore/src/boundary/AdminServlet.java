@@ -131,6 +131,10 @@ public class AdminServlet extends HttpServlet {
 		{
 			cat = "title";
 		}
+		else if (temp == 3)
+		{
+			cat = "category";
+		}
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
@@ -139,7 +143,7 @@ public class AdminServlet extends HttpServlet {
 		
 		root.put("books", bookList);
 		root.put("searchTerm", term);
-		String templateName = "customerSearch.ftl";
+		String templateName = "adminSearch.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}
 	
@@ -225,26 +229,39 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("promoName");
 		String percent = request.getParameter("percentage");
 		String expiration = request.getParameter("expiration");
-		System.out.println(expiration);
+		
 		AdminController aCtrl = new AdminController();
-		System.out.println(name);
-		int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration, user, host, pass, port);
-		if(check >= 1) {
-			System.out.println("Success");
-			try {
-				response.sendRedirect("AddPromo.html");
-			} catch (IOException e) {
-				e.printStackTrace();
+		int checkPromo = aCtrl.checkPromo(Integer.parseInt(promoID));
+		
+		if (checkPromo != 1)
+		{
+			int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration, user, host, pass, port);
+			if(check >= 1) {
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				root.put("message", "Successfully added a new promotion.");
+				
+				String templateName = "AddPromo.ftl";
+				process.processTemplate(templateName, root, request, response);
+			}
+			else
+			{
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				root.put("message", "Failed to add a new promotion.");
+				
+				String templateName = "AddPromo.ftl";
+				process.processTemplate(templateName, root, request, response);
 			}
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddPromo.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "This promo code is already in use.");
+			
+			String templateName = "AddPromo.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 

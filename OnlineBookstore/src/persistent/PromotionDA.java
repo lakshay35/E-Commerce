@@ -21,7 +21,7 @@ public class PromotionDA {
 	public static ArrayList<String> getEmailList() {
         ArrayList<String> list = new ArrayList<String>();
         Connection con = (Connection) DbAccessImpl.connect();
-        String query = "SELECT email FROM user WHERE userType = 'Customer'";
+        String query = "SELECT email FROM user WHERE userType = 'Customer' AND subscribed = '1'";
         ResultSet rs = DbAccessImpl.retrieve(con, query);
         try {
 			while(rs.next()) {
@@ -34,4 +34,25 @@ public class PromotionDA {
         DbAccessImpl.disconnect(con);
         return list;
     }
+
+	public static int checkPromo(int parseInt) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		String checkQuery = "SELECT * from promotion WHERE promoID = '" + parseInt + "'";
+		ResultSet set = DbAccessImpl.retrieve(con, checkQuery);
+		try {
+			if (set.next())
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

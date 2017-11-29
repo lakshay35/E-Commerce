@@ -79,4 +79,10 @@ public class AdminController {
 		return admin.unsuspendUser(userID);
 	}
 
+	public int checkPromo(int parseInt) {
+		// TODO Auto-generated method stub
+		Promotion promo = new Promotion();
+		return promo.checkPromo(parseInt);
+	}
+
 }

@@ -247,6 +247,10 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			cat = "title";
 		}
+		else if (temp == 3)
+		{
+			cat = "category";
+		}
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
@@ -317,6 +321,7 @@ public class BookstoreServlet extends HttpServlet {
 		if (check == 1)
 		{
 			String type = (String)session.getAttribute("userType");
+			System.out.println(type);
 			response.setContentType("application/json");
 			try {
 				response.getWriter().write(gson.toJson(type));
