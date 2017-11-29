@@ -1,4 +1,22 @@
 $(document).ready(function() {
+	
+	$.ajax({
+		type: "POST",
+		url: "BookstoreServlet",
+		data: {
+			"checkLogin" : "checkLogin"
+		}, dataType: "json",
+		async:"false",
+		success: function(responseText) {
+			
+			if (responseText != "Customer")
+				{
+					$("#addressTab").remove();
+					$("#creditTab").remove();
+				}
+		}
+	});
+	
 	$.ajax({
 		type: "POST",
 		url: "BookstoreServlet",
@@ -71,4 +89,17 @@ $(document).on('click', "#save", function() {
 		  }
 		  });
 	}
+});
+
+$(document).on('click', ".logout", function () { 
+	$.ajax({
+		type: "POST",
+		url: "BookstoreServlet",
+		data: {
+		"logout" : "logout"
+		}, async:"false",
+		success: function () {
+			window.location.href = "index.html"
+		}
+	});
 });

@@ -7,6 +7,7 @@ $(document).ready(function loadPage() {
 		}, dataType: "json",
 		async:"false",
 		success: function(responseText) {
+			
 			if (responseText == "SystemAdmin")
 				{
 					$.ajax({
@@ -25,6 +26,7 @@ $(document).ready(function loadPage() {
 				}
 			else
 				{
+				
 				window.location.href = "login.html";
 				}
 		}

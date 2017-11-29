@@ -27,27 +27,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-					<form class="form-inline" action="BookstoreServlet" method="post">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
-						</select>
-						<button type="submit" class="form-control">Search</button>
-					</form>
-			</li>
             <li class="nav-item active">
               <a class="nav-link" href="Customer.html">Home
                 <span class="sr-only">(current)</span>
               </a>
-            </li>
-             <li class="nav-item"> 
-            <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -82,8 +65,9 @@
 			 			</div>
 			 			<div class="panel-body">
 			    		<div class="pre-scrollable">
+			    		<#if addressList?has_content>
 			    		<#list addressList as address>
-			    		<div class="border border-dark address">
+			    		<div class="border border-dark address" style="background-color: white; cursor: pointer;">
 			    			<input type="hidden" class="addressId" value="${address.getId()?c}"/>
 			    			<input type="hidden" class="streetAddress" value="${address.getStreet()}"/>
 			    			<input type="hidden" class="cityAddress" value="${address.getCity()}"/>
@@ -93,7 +77,15 @@
 			    			${address.getCity()}, ${address.getState()} ${address.getZip()}
 			    		</div>
 			    		</#list>
+			    		<#else>
+			    		<div class="border border-dark">You currently do not have any addresses.</div>
+			    		</#if>
 			    	</div>
+			    	<form action="CustomerServlet" method="post">
+			    		<div class="col-xs-8 col-sm-8 col-md-8">
+							<button type="submit" value="" name="deleteAddress" id="deleteButton" class="btn btn-info btn-block">Delete Address</button>
+						</div>
+			    	</form>
 	    		</div>
     		</div>
     		
@@ -108,7 +100,7 @@
     			
 			    <div class="col-xs-12 col-sm-12 col-md-12">
 			    	<div class="form-group">
-			        	<input type="text" name="street" id="street" class="form-control input-sm" placeholder="Street">
+			        	<input type="text" name="street" id="street" class="form-control input-sm" placeholder="Street" required/>
 			    	</div>
 			    </div>
 			  
@@ -116,12 +108,11 @@
 			<div class="row">
 				<div class="col-xs-4 col-sm-4 col-md-4">
 			    	<div class="form-group">
-			    		<input type="text" name="city" id="city" class="form-control input-sm" placeholder="City"/>
+			    		<input type="text" name="city" id="city" class="form-control input-sm" placeholder="City" required/>
 			    	</div>
 			    </div>
 			    <div class="col-xs-4 col-sm-4 col-md-4">
 			    	<div class="form-group">
-			    		<!-- <input type="text" name="state" id="state" class="form-control input-sm" placeholder="State"/>-->
 			    		<select class="state form-control input-sm" id="state" name="state">
 			    			<option value="AL">Alabama</option>
 							<option value="AK">Alaska</option>
@@ -179,21 +170,18 @@
 			    </div>
 			    <div class="col-xs-4 col-sm-4 col-md-4">
 			    	<div class="form-group">
-			    		<input type="text" name="zip" id="zip" class="form-control input-sm" placeholder="Zip code"/>
+			    		<input type="text" name="zip" id="zip" class="form-control input-sm" placeholder="Zip code" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
 			    	</div>
 			    </div>
 			</div>
 			<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12">
-				<div class="form-group">
+				<div class="form-group" class="col-xs-12 col-sm-12 col-md-12">
 					<div class="col-xs-5 col-sm-5 col-md-5">
 					<button type="submit" value="" name="editAddress" id="editButton" class="btn btn-info btn-block">Edit Address</button>
 					</div>
 					<div class="col-xs-5 col-sm-5 col-md-5">
 					<button type="submit" value="" name="addAddress" id="addButton" class="btn btn-info btn-block">Add Address</button>
-					</div>
-					<div class="col-xs-5 col-sm-5 col-md-5">
-					<button type="submit" value="" name="deleteAddress" id="deleteButton" class="btn btn-info btn-block">Delete Address</button>
 					</div>
 				</div>
 				<div class="form-group">

@@ -12,9 +12,11 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/customerhome.js" type="text/javascript"></script>
-     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-     <script src="js/monthpicker.js" type="text/javascript"></script>
     <script src="js/credit.js" type="text/javascript"></script>
+    
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/monthpicker.js" type="text/javascript"></script>
+    
     <!-- Custom styles for this template -->
     
     <link href="css/browsebutton.css" rel="stylesheet">
@@ -36,27 +38,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-					<form class="form-inline" action="BookstoreServlet" method="post">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
-						</select>
-						<button type="submit" class="form-control">Search</button>
-					</form>
-			</li>
+            
             <li class="nav-item active">
               <a class="nav-link" href="Customer.html">Home
                 <span class="sr-only">(current)</span>
               </a>
-            </li>
-             <li class="nav-item"> 
-            <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -93,7 +79,7 @@
 			    		<div class="pre-scrollable">
 			    		<#if cardList?has_content>
 			    		<#list cardList as card>
-			    		<div class="border border-dark credit">
+			    		<div class="border border-dark credit" style="background-color: white; cursor: pointer;">
 			    			<input type="hidden" class="creditNumber" value="${card.getNumber()}"/>
 			    			<input type="hidden" class="creditDate" value="${card.getExpirationDate()}"/>
 			    			<input type="hidden" class="creditType" value="${card.getType()}"/>
@@ -109,6 +95,11 @@
 			    		</div>
 			    		</#if>
 			    	</div>
+			    	<form action="CustomerServlet" method="post">
+			    	<div class="col-xs-8 col-sm-8 col-md-8">
+					<button type="submit" value="" name="deleteCard" id="deleteButton" class="btn btn-info btn-block">Delete Credit Card</button>
+					</div>
+					</form>
 	    		</div>
     		</div>
     		
@@ -123,10 +114,17 @@
     			
 			    <div class="col-xs-12 col-sm-12 col-md-12">
 			    	<div class="form-group">
-			        	<input type="text" name="number" id="number" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number" required>
+			        	<input type="text" name="number" id="number" minlength="16" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
 			    	</div>
 			    </div>
 			  
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-6 col-md-3">
+					<div class="form-group">
+						<input type="text" name="security" minlength="3" maxlength="3" id="security" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CSC"/>
+					</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-6 col-sm-6 col-md-6">
@@ -148,11 +146,8 @@
 			<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12">
 				<div class="form-group">
-					<div class="col-xs-5 col-sm-5 col-md-5">
-					<button type="submit" value="" name="addCard" id="addCard" class="btn btn-info btn-block">Add Credit Card</button>
-					</div>
-					<div class="col-xs-5 col-sm-5 col-md-5">
-					<button type="submit" value="" name="deleteCard" id="deleteButton" class="btn btn-info btn-block">Delete Credit Card</button>
+					<div class="col-xs-8 col-sm-8 col-md-8">
+					<button type="submit" value="temp" name="addCard" id="addCard" class="btn btn-info btn-block">Add Credit Card</button>
 					</div>
 				</div>
 				<div class="form-group">

@@ -6,7 +6,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Signin</title>
+    <title>Log In</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -41,6 +41,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>

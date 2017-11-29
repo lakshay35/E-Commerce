@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Online Book Store</title>
+    <title>Browse Books</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
 	<script src="js/admin.js" type="text/javascript"></script>
@@ -40,6 +40,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
