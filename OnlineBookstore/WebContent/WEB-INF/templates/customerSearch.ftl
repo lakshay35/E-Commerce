@@ -53,12 +53,10 @@
             <form action="CustomerServlet" method="post">
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
-            </li>&nbsp;
-          	<li class="nav-item">
-              <form role="form" action="CustomerServlet" method="post">
-              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
-              </form>
-            </li>&nbsp;
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="MyCart.html">MyCart</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="History.html">Order-History</a>
             </li>
@@ -66,7 +64,7 @@
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-				<a class="nav-link logout" id="logout" href="#">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
@@ -77,9 +75,10 @@
 	<br/>
     <!-- Page Content -->
     <div class="container">
-
+	<p>Showing results for: ${searchTerm}</p>
       <!-- Page Features -->
       <div class="row text-center" id="bookRow">
+      	<#if books?has_content>
 		<#list books as book>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
@@ -89,14 +88,15 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              	<form role="form" action="CustomerServlet" method="post">
-              		<a href="#" class="btn btn-primary" id="view" name="viewbook" value="${book.getIsbn()}">View Info</a>
-              		<button type="submit" class="btn btn-link" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
-          		</form>
+              <a href="#" class="btn btn-primary" id="view" value="${book.getIsbn()}">View Info</a>
+              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()}">Add to Cart</a>
             </div>
           </div>
         </div>
 		</#list>
+		<#else>
+		<p>No results for the search term found.</p>
+		</#if>
       </div>
       <!-- /.row -->
 

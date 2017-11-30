@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="CustomerServlet" method="post">
+					<form class="form-inline" action="AdminServlet" method="post">
 						<input type="text" name="term" class="form-control" placeholder="Search here"/>
 						<select class="form-control" name="category" id="dropDown_search">
 							<option value="0">ISBN</option>
@@ -45,28 +45,23 @@
 					</form>
 				</li>
             <li class="nav-item active">
-              <a class="nav-link" href="Customer.html">Home
+              <a class="nav-link" href="Admin.html">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            <li class="nav-item"> 
-            <form action="CustomerServlet" method="post">
-              <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
-            </li>&nbsp;
-          	<li class="nav-item">
-              <form role="form" action="CustomerServlet" method="post">
-              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
-              </form>
-            </li>&nbsp;
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+              <a class="nav-link" href="AddBook.html">Add Book</a>
+            </li>
+            <li class="nav-item"> 
+            <form action="AdminServlet" method="post">
+              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
+              </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-				<a class="nav-link logout" id="logout" href="#">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
@@ -77,9 +72,10 @@
 	<br/>
     <!-- Page Content -->
     <div class="container">
-
+	<p>Showing results for: ${searchTerm}</p>
       <!-- Page Features -->
       <div class="row text-center" id="bookRow">
+      	<#if books?has_content>
 		<#list books as book>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
@@ -89,14 +85,15 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-              	<form role="form" action="CustomerServlet" method="post">
-              		<a href="#" class="btn btn-primary" id="view" name="viewbook" value="${book.getIsbn()}">View Info</a>
-              		<button type="submit" class="btn btn-link" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
-          		</form>
+            	<button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
+              	<button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
             </div>
           </div>
         </div>
 		</#list>
+		<#else>
+		<p>No results found.</p>
+		</#if>
       </div>
       <!-- /.row -->
 
