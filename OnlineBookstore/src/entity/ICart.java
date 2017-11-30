@@ -24,5 +24,7 @@ public interface ICart {
 	public void setTotal(double total);
 	
 	public int addToCart();
+	public int deleteFromCart();
+	public int updateCart();
 	public ArrayList<Cart> getCart(int userID);
 }

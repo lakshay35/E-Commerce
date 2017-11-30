@@ -68,6 +68,7 @@ public class DbAccessImpl extends DbAccessConfiguration {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		disconnect(c);
 		return check;
 	} // create()
 	
@@ -86,6 +87,7 @@ public class DbAccessImpl extends DbAccessConfiguration {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
+		disconnect(c);
 		return check;
 	} // update()
 	
@@ -104,6 +106,7 @@ public class DbAccessImpl extends DbAccessConfiguration {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		disconnect(c);
 		return check;
 	} // delete()
 	

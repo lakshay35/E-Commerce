@@ -2,10 +2,7 @@ package persistent;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.mysql.jdbc.Connection;
 
@@ -37,4 +34,12 @@ public class PromotionDA {
         DbAccessImpl.disconnect(con);
         return list;
     }
+	
+	public static ResultSet getPromotion(int promoID) {
+		String query = "SELECT * FROM onlinebookstoredb.promotion WHERE promoID = '" + promoID + "'";
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
 }

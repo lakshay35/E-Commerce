@@ -49,9 +49,23 @@ public class CartDA {
 		return value+1;
 	}
 	
+	public static int updateCart(int userID, int isbn, int qty, double total) {
+		Connection con=(Connection) DbAccessImpl.connect();
+		String query = "UPDATE onlinebookstoredb.cart SET qty='" + qty + "', total='" + total + "' WHERE isbn='" + isbn + "' AND userID='" + userID + "'";
+		return DbAccessImpl.update(con, query);
+	}
+	
 	public static int deleteFromCartDA(int userID, int isbn) {
 		Connection con=(Connection) DbAccessImpl.connect();
 		String query = "DELETE FROM onlinebookstoredb.cart where userID = '" + userID + "'AND isbn = '" + isbn +"'";
+		System.out.println(query);
+		int value = DbAccessImpl.update(con, query);
+		return value;
+	}
+	
+	public static int deleteCartItems(int userID) {
+		Connection con=(Connection) DbAccessImpl.connect();
+		String query = "DELETE FROM onlinebookstoredb.cart where userID = '" + userID + "'";
 		System.out.println(query);
 		int value = DbAccessImpl.update(con, query);
 		return value;

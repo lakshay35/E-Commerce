@@ -22,7 +22,7 @@ public class BookDA {
 
 	public static ResultSet browseBooks(Connection con) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * from book ORDER BY title  ASC";
+		String query = "SELECT * from book ORDER BY title ASC";
 		ResultSet set = null;
 		set = DbAccessImpl.retrieve(con, query);
 		return set;
@@ -48,4 +48,12 @@ public class BookDA {
 		int value = DbAccessImpl.update(con, query);
 		return value;
 	}
+
+	public static ResultSet searchBooks(Connection con, String cat, String term) {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM book WHERE " + cat + " LIKE '%" + term + "%' ORDER BY " + cat + " ASC";
+		
+		return DbAccessImpl.retrieve(con, query);
+	}
+	
 }

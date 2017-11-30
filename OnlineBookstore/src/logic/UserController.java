@@ -1,6 +1,12 @@
 package logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import entity.IBook;
 import object.User;
+import object.UserProfile;
+import persistent.UserDA;
 
 public class UserController {
 
@@ -43,5 +49,33 @@ public class UserController {
 		return value;
 	}
 
+	public boolean checkEmail(String email) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		return user.checkEmail(email);
+	}
 
+	public UserProfile viewProfile(String email) {
+		UserDA da = new UserDA();
+        return da.getDetails(email);
+    }
+	
+	public List<IBook> searchBooks(String cat, String term) {
+		// TODO Auto-generated method stub
+		User user = new User();
+		return user.searchBooks(cat, term);
+	}
+	
+	public List<IBook> browseBooks() {
+		// TODO Auto-generated method stub
+		List<IBook> returnList = new ArrayList<IBook>();
+		User user = new User();
+		returnList = user.browseBooks();
+		return returnList;
+	}
+	
+	public int saveProfile(String email, String fname, String lname, String phone) {
+		User user = new User();
+		return user.saveProfile(email, fname, lname, phone);
+	}
 }

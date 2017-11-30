@@ -1,7 +1,5 @@
 package entity;
 
-import com.mysql.jdbc.Connection;
-
 public interface IBook {
 	
 	public String getDescription();

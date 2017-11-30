@@ -10,13 +10,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import entity.IBook;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.SimpleHash;
 import logic.AdminController;
+import logic.UserController;
 import object.User;
 
 /**
@@ -66,6 +65,7 @@ public class AdminServlet extends HttpServlet {
 		String authorizeUser = request.getParameter("authorizeUser");
 		String suspendUser = request.getParameter("suspendUser");
 		String unsuspendUser = request.getParameter("unsuspendUser");
+		String searchBooks = request.getParameter("searchBooks");
 		
 		if (addbook != null)
 		{
@@ -103,6 +103,43 @@ public class AdminServlet extends HttpServlet {
 		{
 			unsuspendUser(request, response);
 		}
+		else if (searchBooks != null)
+		{
+			searchBooks(request, response);
+		}
+	}
+	
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String term = request.getParameter("term");
+		int temp = Integer.parseInt(request.getParameter("category"));
+		String cat = "";
+		UserController userCtrl = new UserController();
+		
+		List<IBook> bookList = new ArrayList<IBook>();
+		
+		if (temp == 0)
+		{
+			cat = "isbn";
+		}
+		else if (temp == 1)
+		{
+			cat = "authorName";
+		}
+		else if (temp == 2)
+		{
+			cat = "title";
+		}
+		
+		bookList = userCtrl.searchBooks(cat, term);
+		
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		
+		root.put("books", bookList);
+		root.put("searchTerm", term);
+		String templateName = "customerSearch.ftl";
+		process.processTemplate(templateName, root, request, response);
 	}
 	
 	private void unsuspendUser(HttpServletRequest request, HttpServletResponse response) {
