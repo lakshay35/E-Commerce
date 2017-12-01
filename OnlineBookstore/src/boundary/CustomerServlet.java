@@ -3,6 +3,7 @@ package boundary;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -234,7 +235,8 @@ public class CustomerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String number = request.getParameter("number");
 		String type = request.getParameter("type");
-		
+		String ccID = request.getParameter("ccID");
+		if (ccID == null) {ccID = "000";}
 		long timeStamp = Long.parseLong(request.getParameter("expiration"));
 		Date date = Date.from( Instant.ofEpochSecond( timeStamp ) );
 		Calendar c = Calendar.getInstance(); 
@@ -246,7 +248,7 @@ public class CustomerServlet extends HttpServlet {
 		CustomerController custCtrl = new CustomerController();
 		
 		int userID = getUserId(request);
-		int check = custCtrl.addCard(number, dateTime, type, userID);
+		int check = custCtrl.addCard(number, dateTime, type, userID,Integer.parseInt(ccID));
 		
 		if (check == 1)
 		{
@@ -382,6 +384,7 @@ public class CustomerServlet extends HttpServlet {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected SimpleHash getCart(HttpServletRequest request, HttpServletResponse response) {
 		int userID = getUserId(request);
 		
@@ -398,26 +401,41 @@ public class CustomerServlet extends HttpServlet {
 		}
 		
 		String promoCode = request.getParameter("promoCode");
+		if(promoCode != null) {promoCode = promoCode.replaceAll("[^0-9]", "");}
 		ArrayList<String> promoCodeList = new ArrayList<String>();
-		if(promoCode != null) {
+		if(promoCode == null || promoCode.equals("")) {
+			promoCodeList.add("Enter Promo Code");
+		} else {
 			int promo = 0;
 			if(promoCode != "") {
 				promo = Integer.parseInt(promoCode);
 			}
 			ResultSet set = PromotionDA.getPromotion(promo);
 			try {
-				while (set.next()) {
-					double percent = Double.parseDouble(set.getString("percentage"));
-					double discount = (sum*percent)/100;
-					sum = sum - discount;
-					promoCodeList.add(promoCode);
+				if (set.next()) {
+					String expirationDate = set.getString("expiration");
+					try {
+						Date expiry = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
+						Date currentDate = new Date();
+						if(expiry.compareTo(currentDate) < 0) {
+							promoCodeList.add("PROMO CODE INVALID");
+						} else {
+							double percent = Double.parseDouble(set.getString("percentage"));
+							double discount = (sum*percent)/100;
+							sum = sum - discount;
+							promoCodeList.add(promoCode);
+						}
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					promoCodeList.add("PROMO CODE INVALID");
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else {
-			promoCodeList.add("Enter Promo Code");
 		}
 		
 		ArrayList<String> cartTotal = new ArrayList<String>();
@@ -535,6 +553,8 @@ public class CustomerServlet extends HttpServlet {
 			address.setCity(request.getParameter("newshipcity"));
 			address.setState(request.getParameter("newshipstate"));
 			address.setZip(request.getParameter("newshipzip"));
+			CustomerController custCtrl = new CustomerController();
+			custCtrl.addAddress(this.getUserId(request), request.getParameter("newshipstreet"), request.getParameter("newshipcity"), request.getParameter("newshipstate"), request.getParameter("newshipzip"));
 		}
 		else
 		{
@@ -563,6 +583,9 @@ public class CustomerServlet extends HttpServlet {
 			card.setNumber(request.getParameter("newcardnumber"));
 			card.setType(request.getParameter("newcardtype"));
 			card.setExpirationDate(request.getParameter("newcardexpiration"));
+			card.setId(Integer.parseInt(request.getParameter("newccid")));
+			CustomerController addCard = new CustomerController();
+			addCard.addCard(request.getParameter("newcardnumber"), request.getParameter("newcardexpiration"), request.getParameter("newcardtype"), getUserId(request), Integer.parseInt(request.getParameter("newccid")));
 		}
 		else
 		{
@@ -583,8 +606,7 @@ public class CustomerServlet extends HttpServlet {
 		root.put("orderTotal", orderTotalList);
 		process.processTemplate("completePurchase.ftl", root, request, response);
 	}
-	
-	
+		
 	private void completePurchase(HttpServletRequest request, HttpServletResponse response) {
 		//Get MAX order numer
 		CustomerController custCtrl = new CustomerController();
