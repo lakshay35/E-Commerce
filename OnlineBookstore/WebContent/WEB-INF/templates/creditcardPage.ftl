@@ -29,7 +29,7 @@
     
   </head>
 
-  <body>
+  <body style="display: none;">
      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" id="welcome" href="#"></a>

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+	var check;
 	$.ajax({
 		type: "POST",
 		url: "BookstoreServlet",
@@ -8,53 +8,60 @@ $(document).ready(function() {
 		}, dataType: "json",
 		async:"false",
 		success: function(responseText) {
-			
+			console.log(responseText);
 			if (responseText != "Customer")
 				{
 					$("#addressTab").remove();
 					$("#creditTab").remove();
 				}
+			if (responseText == '0')
+				{
+				check = 0;
+				window.location.href = "login.html";
+				}
+			else
+				{
+				$.ajax({
+					type: "POST",
+					url: "BookstoreServlet",
+					data: {
+						"changeHome" : "changeHome"
+					}, dataType: "json",
+					async:"false",
+					success: function(responseText) {
+						$("#home").attr("href", responseText);
+					}
+				});
+				
+			  $.ajax({
+			    method : "post",
+			    url : "BookstoreServlet",
+			    data : {
+			      "viewProfile" : "viewProfile"
+			    }, dataType : "json",
+			    success : function(responseText) {
+			      $("#fname").val(responseText.fname);
+			      console.log(responseText);
+			      $("#lname").val(responseText.lname);
+			      $("#email").val(responseText.email);
+			      $("#phone").val(responseText.phone);
+			      if (responseText.subscribe == true)
+			    	  {
+			    	  	$("#sub").prop("checked", true);
+			    	  }
+			      else
+			    	  {
+			    	  	$("#sub").prop("checked", false);
+			    	  }
+			    },
+			    error : function() {
+			      alert("error occured");
+			    }
+			  });
+			  $("body").show();
+			}
 		}
 	});
-	
-	$.ajax({
-		type: "POST",
-		url: "BookstoreServlet",
-		data: {
-			"changeHome" : "changeHome"
-		}, dataType: "json",
-		async:"false",
-		success: function(responseText) {
-			$("#home").attr("href", responseText);
-		}
-	});
-	
-  $.ajax({
-    method : "post",
-    url : "BookstoreServlet",
-    data : {
-      "viewProfile" : "viewProfile"
-    }, dataType : "json",
-    success : function(responseText) {
-      $("#fname").val(responseText.fname);
-      console.log(responseText);
-      $("#lname").val(responseText.lname);
-      $("#email").val(responseText.email);
-      $("#phone").val(responseText.phone);
-      if (responseText.subscribe == true)
-    	  {
-    	  	$("#sub").prop("checked", true);
-    	  }
-      else
-    	  {
-    	  	$("#sub").prop("checked", false);
-    	  }
-    },
-    error : function() {
-      alert("error occured");
-    }
-  });
-  
 });
 
 $(document).on('click', "#save", function() {
