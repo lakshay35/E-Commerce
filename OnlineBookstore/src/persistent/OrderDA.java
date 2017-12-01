@@ -2,14 +2,21 @@ package persistent;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.mysql.jdbc.Connection;
 
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.SimpleHash;
 import object.Address;
 import object.Order;
+import object.ReportEntry;
 
 public class OrderDA {
 
@@ -52,4 +59,91 @@ public class OrderDA {
 		return check;
 	}
 
+	public static SimpleHash getSalesReport() {
+        Connection con = (Connection) DbAccessImpl.connect();
+        Date date = new Date();
+        
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Double total = 0.0;
+        String newDate = format.format(date) + " 00:00:00";
+        newDate = "2017-11-29 00:00:00";
+        
+        String newQuery = "SELECT isbn FROM book";
+        List<Integer> bookList = new ArrayList<Integer>();
+        ResultSet set = DbAccessImpl.retrieve(con, newQuery);
+        try {
+			while (set.next())
+			{
+				bookList.add(set.getInt("isbn"));
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        ArrayList<ReportEntry> entries = new ArrayList<ReportEntry>();
+        for (int i = 0; i < bookList.size(); i++)
+        {
+        	String orderQuery = "Select orders.orderNumber, orderTotal, orderDate, book.isbn, qty, total, authorName, title FROM orders JOIN transactions ON transactions.orderNumber = orders.orderNumber JOIN book ON transactions.isbn = book.isbn WHERE orderDate ='" + newDate + "' AND transactions.isbn = '" + bookList.get(i) + "'";
+        	ResultSet newSet = DbAccessImpl.retrieve(con, orderQuery);
+        	int quantity = 0;
+        	double bookTotal = 0.0;
+        	int check = 0;
+        	Date tempDate = new Date();
+        	int tempIsbn = 0;
+        	String tempAuthor = "";
+        	String tempTitle = "";
+        	boolean checkBook = true;
+        	try {
+				if (newSet.next())
+				{
+					tempDate = newSet.getDate("orderDate");
+					System.out.println(tempDate);
+						tempIsbn = newSet.getInt("isbn");
+						tempAuthor = newSet.getString("authorName");
+						tempTitle = newSet.getString("title");
+					quantity += newSet.getInt("qty");
+					bookTotal += newSet.getDouble("total");
+				}
+				else
+				{
+					checkBook = false;
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	if (checkBook == true)
+        	{
+        	try {
+				while (newSet.next())
+				{
+					if (check == 0)
+					{
+						tempDate = newSet.getDate("orderDate");
+						System.out.println(tempDate);
+						tempIsbn = newSet.getInt("isbn");
+						tempAuthor = newSet.getString("authorName");
+						tempTitle = newSet.getString("title");
+						check++;
+					}
+					quantity += newSet.getInt("qty");
+					bookTotal += newSet.getDouble("total");
+				}
+				ReportEntry entry = new ReportEntry(tempDate, tempIsbn, quantity, bookTotal, tempAuthor, tempTitle);
+				System.out.println(entry.getOrderDate() + " date");
+				total += entry.getTotal();
+				entries.add(entry);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	}
+        }
+
+		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+		SimpleHash root = new SimpleHash(df.build());
+		root.put("entries", entries);
+		root.put("total", total);
+        return root;
+    }
 }

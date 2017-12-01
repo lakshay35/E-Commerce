@@ -19,6 +19,12 @@ public class Order {
 		
 	}
 	
+	public Order(int orderNumber, double orderTotal, Date orderDate) {
+        this.setOrderNumber(orderNumber);
+        this.setOrderTotal(orderTotal);
+        this.setDate(orderDate);
+    }
+	
 	public Order(int num, String stat, Date date, Address sAdd, Address bAdd, String pay, int conNum, int userID, double total) {
 		this.setOrderNumber(num);
 		this.setOrderStatus(stat);

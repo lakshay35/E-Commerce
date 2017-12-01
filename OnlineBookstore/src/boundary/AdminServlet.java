@@ -10,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
 import entity.IBook;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
@@ -66,7 +69,12 @@ public class AdminServlet extends HttpServlet {
 		String suspendUser = request.getParameter("suspendUser");
 		String unsuspendUser = request.getParameter("unsuspendUser");
 		String searchBooks = request.getParameter("searchBooks");
-		System.out.println("testing");
+		String deletebook = request.getParameter("deletebook");
+		String salesReport = request.getParameter("salesReport");
+		String updateQuantity = request.getParameter("updateQuantity");
+
+		String lowQty = request.getParameter("lowQty");
+		
 		if (addbook != null)
 		{
 			addBook(request, response);
@@ -108,8 +116,74 @@ public class AdminServlet extends HttpServlet {
 		{
 			searchBooks(request, response);
 		}
+		else if (deletebook != null)
+		{
+			deleteBook(request, response);
+		}
+		else if(salesReport != null) {
+            generateSalesReport(request, response);
+        }
+		else if(updateQuantity != null) 
+		{
+			updateQuantityOfBook(request, response); 
+		}
+		else if (lowQty != null) 
+		{
+			generateBookReport(request, response);
+		}
 	}
 	
+	private void updateQuantityOfBook(HttpServletRequest request, HttpServletResponse response)  {
+		AdminController adminCtrl = new AdminController();
+		String updateQuantity = request.getParameter("updateQuantity");
+		if (updateQuantity != "")
+		{
+			int check = adminCtrl.updateQuantityOfBook(Integer.parseInt(updateQuantity), Integer.parseInt(request.getParameter("isbn")));
+			System.out.println("Test " + check + "k");
+			Gson gson = new Gson();
+	        try {
+				response.getWriter().write(gson.toJson(check));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		}
+
+		private void generateBookReport(HttpServletRequest request, HttpServletResponse response) {
+		       try{
+		AdminController adminCtrl = new AdminController();
+		process.processTemplate("bookReport.ftl", adminCtrl.getBookReport(), request, response);
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+		}
+	
+	private void generateSalesReport(HttpServletRequest request, HttpServletResponse response) {
+        AdminController adminCtrl = new AdminController();
+        process.processTemplate("salesReport.ftl", adminCtrl.getSalesReport(), request, response);
+    }
+	
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		if (!request.getParameter("deletebook").equals(""))
+		{
+			System.out.println("Delete book");
+			int isbn = Integer.parseInt(request.getParameter("deletebook"));
+			AdminController aCtrl = new AdminController();
+			
+			int check = aCtrl.deleteBook(isbn);
+			if (check == 1)
+			{
+				browseBooks(request, response);
+			}
+			else
+			{
+				browseBooks(request, response);
+			}
+		}
+	}
+
 	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");

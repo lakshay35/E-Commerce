@@ -185,4 +185,12 @@ public class Book implements IBook{
 		System.out.println(sellingPrice);
 		System.out.println(picture);
 	}
+	
+	public Book(int isbn, String author, String title, int quantity, int thresh) {
+		setIsbn(isbn);
+		setAuthor(author);
+		setTitle(title);
+		setQuantity(quantity);
+		setThreshold(thresh);
+		}
 }
