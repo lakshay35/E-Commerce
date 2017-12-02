@@ -36,6 +36,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -115,7 +116,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="number" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN">
+			    						<input type="text" name="isbn" id="isbn" minlength="10" maxlength="10" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="ISBN">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -128,7 +129,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="number" name="year" id="year" class="form-control input-sm" placeholder="Publication Year">
+			    						<input type="number" name="year" id="year" min="1000" max="3000" class="form-control input-sm" placeholder="Publication Year">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -136,12 +137,12 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="number" name="threshold" id="threshold" class="form-control input-sm" placeholder="Minimum Threshold">
+			                <input type="number" name="threshold" min="0" id="threshold" class="form-control input-sm" placeholder="Minimum Threshold">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="number" name="quantity" id="quantity" class="form-control input-sm" placeholder="Quantity">
+			    						<input type="number" name="quantity" min="0" id="quantity" class="form-control input-sm" placeholder="Quantity">
 			    					</div>
 			    				</div>
 			    			</div>

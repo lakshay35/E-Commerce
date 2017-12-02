@@ -68,6 +68,8 @@ public class CustomerServlet extends HttpServlet {
 		String deleteCard = request.getParameter("deleteCard");
 		String searchBooks = request.getParameter("searchBooks");
 		
+		System.out.println("There is request.");
+		
 		if (browse != null)
 		{
 			browseBooks(request, response);
@@ -127,6 +129,10 @@ public class CustomerServlet extends HttpServlet {
 		{
 			cat = "title";
 		}
+		else if (temp == 3)
+		{
+			cat = "category";
+		}
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
@@ -141,20 +147,27 @@ public class CustomerServlet extends HttpServlet {
 
 	private void deleteCard(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("deleteCard"));
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.deleteCard(id);
-		if (check == 1)
+		System.out.println("Why aren't you deleting.");
+		if (!request.getParameter("deleteCard").equals(""))
 		{
-			viewCards(request, response, "Successfully deleted this card.");
+			int id = Integer.parseInt(request.getParameter("deleteCard"));
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.deleteCard(id);
+			if (check == 1)
+			{
+				viewCards(request, response, "Successfully deleted this card.");
+			}
+			else
+			{
+				viewCards(request, response, "Failed to delete this card.");
+			}
 		}
 		else
 		{
-			viewCards(request, response, "Failed to delete this card.");
+			viewCards(request, response, "You must select a card to delete");
 		}
-		
 	}
 
 	private void viewCards(HttpServletRequest request, HttpServletResponse response, String message) {
@@ -180,6 +193,7 @@ public class CustomerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String number = request.getParameter("number");
 		String type = request.getParameter("type");
+		String csc = request.getParameter("security");
 		
 		long timeStamp = Long.parseLong(request.getParameter("expiration"));
 		Date date = Date.from( Instant.ofEpochSecond( timeStamp ) );
@@ -193,7 +207,7 @@ public class CustomerServlet extends HttpServlet {
 		
 		HttpSession sess = request.getSession(false);
 		int userID = (int)sess.getAttribute("userID");
-		int check = custCtrl.addCard(number, dateTime, type, userID);
+		int check = custCtrl.addCard(number, dateTime, type, userID, csc);
 		
 		if (check == 1)
 		{
@@ -207,42 +221,56 @@ public class CustomerServlet extends HttpServlet {
 
 	private void deleteAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("deleteAddress"));
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.deleteAddress(id);
-		
-		if (check == 1)
+		if (!request.getParameter("deleteAddress").equals(""))
 		{
-			viewAddresses(request, response, "An address was deleted.");
+			int id = Integer.parseInt(request.getParameter("deleteAddress"));
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.deleteAddress(id);
+			
+			if (check == 1)
+			{
+				viewAddresses(request, response, "An address was deleted.");
+			}
+			else
+			{
+				viewAddresses(request, response, "Failed to delete an address.");
+			}
 		}
 		else
 		{
-			System.out.println("Failure");
+			viewAddresses(request, response, "You must select an address to delete");
 		}
 	}
 
 	private void editAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("editAddress"));
-		
-		String street = request.getParameter("street");
-		String city = request.getParameter("city");
-		String state = request.getParameter("state");
-		String zip = request.getParameter("zip");
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.editAddress(id, street, city, state, zip);
-		
-		if (check >= 1)
+		if (!request.getParameter("editAddress").equals(""))
 		{
-			viewAddresses(request, response, "An address has been changed.");
+			int id = Integer.parseInt(request.getParameter("editAddress"));
+			
+			String street = request.getParameter("street");
+			String city = request.getParameter("city");
+			String state = request.getParameter("state");
+			String zip = request.getParameter("zip");
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.editAddress(id, street, city, state, zip);
+			
+			if (check >= 1)
+			{
+				viewAddresses(request, response, "An address has been changed.");
+			}
+			else
+			{
+				viewAddresses(request, response, "Failed to change an address.");
+			}
 		}
 		else
 		{
-			System.out.println("Failure");
+			viewAddresses(request, response, "You must first select an address to edit it.");
 		}
 	}
 

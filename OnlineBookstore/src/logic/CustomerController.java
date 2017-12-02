@@ -43,9 +43,9 @@ public class CustomerController {
 		return add.deleteAddress();
 	}
 
-	public int addCard(String number, String expire, String type, int userID) {
+	public int addCard(String number, String expire, String type, int userID, String csc) {
 		// TODO Auto-generated method stub
-		CreditCard card = new CreditCard(number, expire, type);
+		CreditCard card = new CreditCard(number, expire, type, csc);
 		return card.addCard(userID);
 	}
 

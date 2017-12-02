@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `address` (
-  `street` varchar(100) DEFAULT NULL,
+  `street` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `state` varchar(45) DEFAULT NULL,
   `zipcode` varchar(45) DEFAULT NULL,
   `userID` int(10) unsigned DEFAULT NULL,
   `agencyID` int(10) unsigned DEFAULT NULL,
   `supplierID` int(10) unsigned DEFAULT NULL,
-  `addressID` int(11) NOT NULL AUTO_INCREMENT,
+  `addressID` int(11) NOT NULL,
   PRIMARY KEY (`addressID`),
   KEY `userID` (`userID`),
   KEY `agencyID` (`agencyID`),
@@ -38,7 +38,7 @@ CREATE TABLE `address` (
   CONSTRAINT `address_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`),
   CONSTRAINT `address_ibfk_2` FOREIGN KEY (`agencyID`) REFERENCES `agency` (`agencyID`),
   CONSTRAINT `address_ibfk_3` FOREIGN KEY (`supplierID`) REFERENCES `supplier` (`supplierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,6 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES ('395 River Road','Atheens','GA','30609',26,NULL,NULL,2),('123 Test Street','Atlanta','GA','30609',26,NULL,NULL,3),('375 River Road','Atheens','GA','30609',26,NULL,NULL,4),('341 East Lake Circle','Canton','GA','30115',26,NULL,NULL,5);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +110,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES (1234112,'Fantasy','Brad','Alice','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',1,'Me',2017,15,0,1,2500.11,NULL,'Hey there me.'),(60254920,'Children','Maurice Sendak','Where the Wild Things Are','https://images-na.ssl-images-amazon.com/images/I/61ulN35aErL._SY452_BO1,204,203,200_.jpg',1,'Harper Collins',2012,12,6,1,5,NULL,'A kid meets a bunch of monsters in the woods. Stuff happens.'),(1222222222,'Fiction','Edgar Rice Burroughs','Tarzan of the Apes','https://images-na.ssl-images-amazon.com/images/I/61beB3RAzbL.jpg',1,'Dover Publications',2012,25,12,5,6,NULL,'It is Tarzan. Everybody already knows what this book is about.'),(1234567892,'Fantasy','Lewis Carrol','Alice in Wonderland','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',12,'Random House Books for Young Readers',2009,50,0,2,10,NULL,'Hey there'),(1450517161,'Historical','Herman Melville','Moby Dick','https://images-na.ssl-images-amazon.com/images/I/51-3tPs3VdL.jpg',13,'Dover Publications',2012,50,0,8.5,10.5,NULL,'Hey there');
+INSERT INTO `book` VALUES (1234112,'Fantasy','Brad','Alice','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',1,'Me',2017,15,0,1,2.11,NULL,'Hey there'),(60254920,'Children','Maurice Sendak','Where the Wild Things Are','https://images-na.ssl-images-amazon.com/images/I/61ulN35aErL._SY452_BO1,204,203,200_.jpg',1,'Harper Collins',2012,12,6,1,5,NULL,'A kid meets a bunch of monsters in the woods. Stuff happens.'),(1222222222,'Fiction','Edgar Rice Burroughs','Tarzan of the Apes','https://images-na.ssl-images-amazon.com/images/I/61beB3RAzbL.jpg',1,'Dover Publications',2012,25,12,5,6,NULL,'It is Tarzan. Everybody already knows what this book is about.'),(1234567892,'Fantasy','Lewis Carrol','Alice in Wonderland','https://images-na.ssl-images-amazon.com/images/I/61OXoGt7EBL._SY346_.jpg',12,'Random House Books for Young Readers',2009,50,0,2,10,NULL,'Hey there'),(1450517161,'Historical','Herman Melville','Moby Dick','https://images-na.ssl-images-amazon.com/images/I/51-3tPs3VdL.jpg',13,'Dover Publications',2012,50,0,8.5,10.5,NULL,'Hey there');
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,14 +156,14 @@ DROP TABLE IF EXISTS `creditcard`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `creditcard` (
   `userID` int(10) unsigned NOT NULL,
-  `CCnumber` varchar(16) DEFAULT NULL,
+  `CCnumber` int(11) DEFAULT NULL,
   `CCtype` varchar(45) DEFAULT NULL,
-  `expireDate` date DEFAULT NULL,
-  `CCid` int(11) NOT NULL AUTO_INCREMENT,
+  `expireDate` datetime DEFAULT NULL,
+  `CCid` int(11) NOT NULL,
   PRIMARY KEY (`CCid`),
   KEY `userID` (`userID`),
   CONSTRAINT `creditcard_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +172,6 @@ CREATE TABLE `creditcard` (
 
 LOCK TABLES `creditcard` WRITE;
 /*!40000 ALTER TABLE `creditcard` DISABLE KEYS */;
-INSERT INTO `creditcard` VALUES (26,'1234123412341234','MasterCard','2017-12-01',2);
 /*!40000 ALTER TABLE `creditcard` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,10 +196,10 @@ CREATE TABLE `orders` (
   `orderTotal` double DEFAULT NULL,
   `CCid` int(11) DEFAULT NULL,
   PRIMARY KEY (`orderNumber`),
+  KEY `CCid` (`CCid`),
   KEY `userID` (`userID`),
   KEY `agencyID` (`agencyID`),
-  KEY `orders_ibfk_1_idx` (`CCid`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`CCid`) REFERENCES `creditcard` (`CCid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`CCid`) REFERENCES `creditcard` (`CCid`),
   CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`),
   CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`agencyID`) REFERENCES `agency` (`agencyID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -227,7 +225,7 @@ CREATE TABLE `promotion` (
   `promoID` int(10) unsigned NOT NULL,
   `pName` varchar(45) DEFAULT NULL,
   `percentage` double DEFAULT NULL,
-  `expiration` date DEFAULT NULL,
+  `expiration` datetime DEFAULT NULL,
   PRIMARY KEY (`promoID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -238,7 +236,6 @@ CREATE TABLE `promotion` (
 
 LOCK TABLES `promotion` WRITE;
 /*!40000 ALTER TABLE `promotion` DISABLE KEYS */;
-INSERT INTO `promotion` VALUES (1234,'Test',12,'2017-12-12'),(12345,'Test Promotion',12,'2017-12-12'),(12364,'Test Promotion',12,'2017-12-12'),(574337,'New Promo',12,'2017-12-12');
 /*!40000 ALTER TABLE `promotion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +318,7 @@ CREATE TABLE `user` (
   `status` varchar(45) DEFAULT 'unverified',
   `subscribed` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +327,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (16,'Lakshay','Sharma',NULL,'lakshay35@gmail.com',NULL,'Customer','pass',4675,'verified',0),(26,'Bradley','Reeves','7706559256','bkr02962@uga.edu',NULL,'Customer','pass',5423,'verified',1),(28,'Brad','Reeves','7706559253','reevesbk@gmail.com',NULL,'Customer','pass',5543,'verified',1);
+INSERT INTO `user` VALUES (14,'Bradley','Reeves',NULL,'reevesbk@gmail.com',NULL,'SystemAdmin','pass',3618,'verified',0),(15,'Brad','Reeves',NULL,'bkr02962@uga.edu',NULL,'Customer','pass',1048,'verified',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -343,4 +340,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-23 18:14:23
+-- Dump completed on 2017-11-05 13:31:13

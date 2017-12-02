@@ -8,10 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Online Book Store</title>
+    <title>Search Books</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
-	<script src="js/customerhome.js" type="text/javascript"></script>
+	<script src="js/admin.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -40,6 +40,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -85,8 +86,10 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-            	<button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
-              	<button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
+            	<form action="AdminServlet" method="post">
+              		<button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
+              		<button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
+            	</form>
             </div>
           </div>
         </div>

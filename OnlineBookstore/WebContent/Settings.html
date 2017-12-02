@@ -5,7 +5,7 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
         <meta charset="utf-8">
         <meta http-equiv="Cache-Control" content="no-store" />
-        <title>Bootply snippet - Edit profile form</title>
+        <title>Settings</title>
         <meta name="generator" content="Bootply" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="description" content="User information form snippet with timezones" />
@@ -40,7 +40,7 @@
     
     <!-- HTML code from Bootply.com editor -->
     
-    <body >
+    <body style="display: none;">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Book Store</a>
@@ -52,17 +52,19 @@
             <li class="nav-item active">
               <a class="nav-link" id="home" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
-            <li>
-            	
-             <form class="nav-link" action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">Addresses</button>
-              </form>
-              </li>
-              <li>
+            <li id="addressTab">
+            	<form class="nav-link" action="CustomerServlet" method="post">
+              		<button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">Addresses</button>
+              	</form>
+            </li>
+              <li id="creditTab">
              	<form class="nav-link" action="CustomerServlet" method="post">
               		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Credit Cards</button>
               	</form>
               </li>
+            <li class="nav-item">
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
+			</li>
           </ul>
         </div>
       </div>
