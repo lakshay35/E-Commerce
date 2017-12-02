@@ -73,6 +73,7 @@ public class BookstoreServlet extends HttpServlet {
 		String searchBooks = request.getParameter("searchBooks");
 		String saveProfile = request.getParameter("saveProfile");
 		String changeHome = request.getParameter("changeHome");
+		String cancel = request.getParameter("cancel");
 		
 		if (signup != null)
 		{
@@ -130,8 +131,27 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			changeHome(request, response);
 		}
+		else if (cancel != null)
+		{
+			cancelVerification(request, response);
+		}
 	}
 	
+	private void cancelVerification(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		HttpSession sess = request.getSession(false);
+		
+		if (sess != null)
+		{
+			sess.invalidate();
+		}
+		try {
+			response.sendRedirect("index.html");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void changeHome(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		HttpSession sess = request.getSession(false);
