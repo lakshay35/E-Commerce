@@ -11,11 +11,29 @@ public class AddressDA {
 
 	public static int addAddress(int userId, String street, String city, String state, String zip) {
 		// TODO Auto-generated method stub
-		String query = "INSERT INTO address (street, city, state, zipcode, userID) VALUES ('"
-				+ street + "', '" + city + "', '" + state + "', '" + zip + "', '" + userId + "')";
+		int id = getMaxAddressID();
+		String query = "INSERT INTO address (street, city, state, zipcode, userID, addressID) VALUES ('"
+				+ street + "', '" + city + "', '" + state + "', '" + zip + "', '" + userId + "', '" + id + "')";
 		Connection con = (Connection) DbAccessImpl.connect();
 		
 		return DbAccessImpl.create(con, query);
+	}
+	
+	public static int getMaxAddressID() {
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "SELECT * FROM finalonlinebookstore.address where addressID = (SELECT MAX(addressID) from finalonlinebookstore.address)";
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		int value = 0;
+		try {
+			if (set.next()) {
+				value = set.getInt("addressID");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return value+1;
 	}
 
 	public static int editAddress(int id, String street, String city, String state, String zip) {
@@ -35,7 +53,7 @@ public class AddressDA {
 	}
 	
 	public static ResultSet getAddress(int userID) {
-		String query = "SELECT * FROM onlinebookstoredb.address WHERE userID = '" + userID + "'";
+		String query = "SELECT * FROM finalonlinebookstore.address WHERE userID = '" + userID + "'";
 		ResultSet set = null;
 		Connection con = (Connection) DbAccessImpl.connect();
 		set = DbAccessImpl.retrieve(con, query);
@@ -43,7 +61,7 @@ public class AddressDA {
 	}
 	
 	public static Address getAddressById(int id) {
-		String query = "SELECT * FROM onlinebookstoredb.address WHERE addressID = '" + id + "'";
+		String query = "SELECT * FROM finalonlinebookstore.address WHERE addressID = '" + id + "'";
 		ResultSet set = null;
 		Connection con = (Connection) DbAccessImpl.connect();
 		set = DbAccessImpl.retrieve(con, query);
@@ -61,5 +79,4 @@ public class AddressDA {
 		}
 		return address;
 	}
-
 }

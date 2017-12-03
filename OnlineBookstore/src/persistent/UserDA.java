@@ -25,6 +25,7 @@ public class UserDA {
 				user.setUserType(set.getString("userType"));
 				user.setCode(set.getInt("userCode"));
 				user.setStatus(set.getString("status"));
+				user.setSubscribed(set.getBoolean("subscribed"));
 			}
 			else
 			{
@@ -134,6 +135,7 @@ public class UserDA {
         try {
 			if(rs.next()) {
 			    userProfile = new UserProfile(rs.getString("fname"), rs.getString("lname"), rs.getString("phone"), rs.getString("email"));
+			    userProfile.setSubscribe(rs.getBoolean("subscribed"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -143,9 +145,19 @@ public class UserDA {
         return userProfile;
     }
 	
-	public static int saveProfile(String email, String fname, String lname, String phone) {
+	public static int saveProfile(String email, String fname, String lname, String phone, Boolean subscribe) {
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "UPDATE user SET " + " fName = " + "'" + fname + "', " + " lName = " + "'" + lname + "', " + " phone = " + "'" + phone + "' WHERE email = " + "'" + email +"'";
+		int temp = 0;
+		if (subscribe == true)
+		{
+			temp = 1;
+		}
+		else
+		{
+			temp = 0;
+		}
+		String query = "UPDATE user SET " + " fName = " + "'" + fname + "', " + " lName = " + "'" + lname + "', " + " phone = " + "'" + phone + "', " 
+				+ "subscribed = '" + temp + "' WHERE email = " + "'" + email +"'";
 		System.out.println(query);
 		return DbAccessImpl.update(con, query);
 	}

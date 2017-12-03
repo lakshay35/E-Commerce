@@ -12,11 +12,11 @@ import object.CreditCard;
 
 public class CreditCardDA {
 
-	public static int addCard(int userID, String number, String expirationDate, String type) {
+	public static int addCard(int userID, String number, String expirationDate, String type, String csc) {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO creditcard (userID, CCnumber, CCtype, expireDate) VALUES ("
-				+ "'" + userID + "', '" + number + "', '" + type + "', '" + expirationDate + "')";
+		String query = "INSERT INTO creditcard (userID, CCnumber, CCtype, expireDate, CCid) VALUES ("
+				+ "'" + userID + "', '" + number + "', '" + type + "', '" + expirationDate + "', '" + Integer.parseInt(csc) + "')";
 		return DbAccessImpl.create(con, query);
 	}
 
@@ -31,6 +31,11 @@ public class CreditCardDA {
 			while (set.next())
 			{
 				String number = set.getString("CCnumber");
+				String sub = "";
+				if(number.length()>=5) {
+					sub = number.substring(number.length() - 4);
+				}
+				number = "XXXX-XXXX-XXXX-" + sub;
 				String type = set.getString("CCtype");
 				Date expire = set.getDate("expireDate");
 				String date = expire.toString();
