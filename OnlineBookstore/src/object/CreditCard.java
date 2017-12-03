@@ -186,4 +186,8 @@ public class CreditCard {
 		// TODO Auto-generated method stub
 		return CreditCardDA.deleteCard(id);
 	}
+	
+	public static CreditCard getCreditCardById(int id){
+		return CreditCardDA.getCreditCardById(id);
+	}
 }

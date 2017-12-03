@@ -1,12 +1,18 @@
 package logic;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import entity.IBook;
 import object.Address;
+import object.Book;
+import object.Cart;
 import object.CreditCard;
 import object.Customer;
+import object.Order;
+import persistent.CartDA;
 
 public class CustomerController {
 	
@@ -60,5 +66,39 @@ public class CustomerController {
 		CreditCard card = new CreditCard();
 		card.setId(id);
 		return card.deleteCard();
+	}
+	
+	public List<Order> viewHistory(int parseInt) {
+		Customer cust = new Customer();
+		return cust.viewHistory(parseInt);
+	}
+	
+	public IBook getBookInfo(int isbn) {
+		IBook book = new Book();
+		book.getBookInfo(isbn);
+		return book;
+	}
+	
+	public int getMaxOrderNumber() {
+		return Order.getMaxOrderNumber();
+	}
+	
+	public Cart getCartByID(int id) {
+		Cart cart = new Cart();
+		ResultSet set = CartDA.getCartByID(id);
+		try {
+			while(set.next()) {
+				cart.setCartID(id);
+				cart.setIsbn(set.getInt("isbn"));
+				cart.setPromoID(0);
+				cart.setQty(set.getInt("qty"));
+				cart.setTotal(set.getDouble("total"));
+				cart.setUserID(set.getInt("userID"));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return cart;
 	}
 }

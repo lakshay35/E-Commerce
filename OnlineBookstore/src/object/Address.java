@@ -185,4 +185,8 @@ public class Address {
 		// TODO Auto-generated method stub
 		return AddressDA.deleteAddress(id);
 	}
+	
+	public static Address getAddressById(int id){
+		return AddressDA.getAddressById(id);
+	}
 }

@@ -1,5 +1,7 @@
 package object;
 
+import java.util.ArrayList;
+
 /*
 Creates an Order Object
 */
@@ -18,6 +20,7 @@ public class Order {
 	int confirmationNumber;
 	int userID;
 	double orderTotal;
+	 ArrayList<Transaction> transactionList;
 	
 	/*
 	Parameters: None
@@ -58,6 +61,26 @@ public class Order {
 		this.setUserID(userID);
 		this.setOrderTotal(total);
 	}
+	
+	 public void setTransactionList(ArrayList<Transaction> Tlist) {
+			this.transactionList = Tlist;
+		}
+	 
+		public ArrayList<Transaction> getTransactionList(){
+			return transactionList;
+		}
+		
+		public String printTransactionList (){
+			int len = transactionList.size();
+			String toPrint = "";
+			for(int i=0; i<len; i++) {
+				int bookisbn = transactionList.get(i).isbn;
+				int quantity = transactionList.get(i).qty;
+				double tTotal = transactionList.get(i).total;
+				toPrint+="Book ISBN: " + bookisbn + "; Quantity: " + quantity + "; Price: " + tTotal + "\n";
+			}
+			return toPrint;
+		}
 	
 	/*
 	Parameters: None
@@ -250,5 +273,7 @@ public class Order {
 		return OrderDA.changeOrderStatus(orderID, status);
 	}
 	
-	
+	public static int getMaxOrderNumber() {
+		return OrderDA.getMaxOrderNumber();
+	}
 }
