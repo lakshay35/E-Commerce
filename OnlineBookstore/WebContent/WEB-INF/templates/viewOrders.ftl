@@ -11,6 +11,7 @@
     <script src="js/jquery.js" type="text/javascript"></script>
 	<script src="js/order.js" type="text/javascript"></script>
 	<script src="js/temp.js" type="text/javascript"></script>
+	<script src="js/userHistory.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -51,6 +52,61 @@
     <br>
      <div class="container">
 		<div class="table-responsive">
+		
+		<#if orderList?has_content>			
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Payment Info</th>
+            <th>Order Date</th>
+            <th>Order Total</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+        <#list orderList as order>
+          <tr>
+            <td>${order.getOrderNumber()?c}</td>
+            <td>${order.getPaymentMethod()}</td>
+            <td>${order.getDate()}</td>
+            <td>${order.getOrderTotal()?string.currency}</td>
+            <td><span class="label label-info">${order.getOrderStatus()}</span></td>
+            <td><button class="btn btn-primary transact" value="${order.getOrderNumber()?c}">View</button></td>
+          </tr>
+          <tr style="display:none;" id="${order.getOrderNumber()?c}">
+          <td></td>
+          <td>
+  			<table>
+  				<thead>
+  					<tr>
+  						<th>Title</th>
+  						<th>Author</th>
+  						<th>Quantity</th>
+  						<th>Total</th>
+  					</tr>
+  				</thead>
+  				<tbody>
+	          		<#list order.getTransactionList() as tAct>
+					<tr>
+						<td><span class="label label-info">${tAct.getTitle()}</span></td>
+						<td><span class="label label-info">${tAct.getAuthor()}</span></td>
+						<td><span class="label label-info">${tAct.getTransactionQty()}</span></td>
+						<td><span class="label label-info">${tAct.getTransactionTotal()}</span></td>
+						
+					</tr>
+	          		</#list>
+	          	</tbody>
+	          </table>
+	      </td>
+          </tr>
+        </#list>
+        </tbody>
+      </table>
+      <#else>
+      </#if>
+		
       <#if orders?has_content>			
       <table class="table table-bordered">
         <thead>
