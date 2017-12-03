@@ -33,8 +33,8 @@ public class OrderDA {
 				int num = set.getInt("orderNumber");
 				String stat = set.getString("orderStatus");
 				Date date = set.getDate("orderDate");
-				Address sAdd = null; // Add getting shipping address
-				Address bAdd = null; // add getting billing address
+				String sAdd = set.getString("shippingAddress"); // Add getting shipping address
+				String bAdd = set.getString("billingAddress"); // add getting billing address
 				String pay = set.getString("paymentMethod");
 				int conNum = set.getInt("confirmationNumber");
 				int userID = set.getInt("userID");

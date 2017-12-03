@@ -64,8 +64,6 @@ public class UserDA {
         try {
         	if (set.next())
         	{
-        		System.out.println(oldPassword);
-        		System.out.println(newPassword);
         		if (oldPassword.equals(set.getString("userPassword")))
         		{
 	        		id = set.getInt("userID");

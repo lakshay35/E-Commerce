@@ -25,6 +25,12 @@ import logic.UserController;
 import object.Address;
 import object.CreditCard;
 
+/* Authors: Bradley Reeves, Lakshay Sharma,  Aditya Yadav,  Dhanashree Joshi, Sayed Hussaini   
+ * 
+ * Description: A servlet used for the Customers that allow them to browse and search books,
+ *  add items to their carts, checkout, and other things.
+ */
+
 /**
  * Servlet implementation class CustomerServlet
  */
@@ -68,46 +74,72 @@ public class CustomerServlet extends HttpServlet {
 		String deleteCard = request.getParameter("deleteCard");
 		String searchBooks = request.getParameter("searchBooks");
 		
-		System.out.println("There is request.");
+		// Displays a list of books for the Customer
 		
 		if (browse != null)
 		{
 			browseBooks(request, response);
 		}
+		
+		// Display a page for the Customer to view, edit, add, and delete addresses.
+		
 		else if (viewAddress != null)
 		{
 			viewAddresses(request, response, "");
 		}
+		
+		// Adds an address for the Customer.
+		
 		else if (addAddress != null)
 		{
 			addAddress(request, response);
 		}
+		
+		// Edits a Customer's address
+		
 		else if (editAddress != null)
 		{
 			editAddress(request, response);
 		}
+		
+		// Deletes a Customer's address
+		
 		else if (deleteAddress != null)
 		{
 			deleteAddress(request, response);
 		}
+		
+		// Adds a CreditCard to a customer's account.
+		
 		else if (addCard != null)
 		{
 			addCard(request, response);
 		}
+		
+		// Displays a list of all credit cards for a customer.
+		
 		else if (viewCards != null)
 		{
 			viewCards(request, response, "");
 		}
+		
+		// Deletes a Customer's credit card.
+		
 		else if (deleteCard != null)
 		{
 			deleteCard(request, response);
 		}
+		
+		// Displays a list of books based on a search term.
+		
 		else if (searchBooks != null)
 		{
 			searchBooks(request, response);
 		}
 	}
 
+	// Displays a list of books based on a search term and category.
+	
 	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");
@@ -116,6 +148,8 @@ public class CustomerServlet extends HttpServlet {
 		UserController userCtrl = new UserController();
 		
 		List<IBook> bookList = new ArrayList<IBook>();
+		
+		// Sets the category from the select tag.
 		
 		if (temp == 0)
 		{
@@ -134,6 +168,8 @@ public class CustomerServlet extends HttpServlet {
 			cat = "category";
 		}
 		
+		// Retrieves a list of books.
+		
 		bookList = userCtrl.searchBooks(cat, term);
 		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
@@ -145,31 +181,48 @@ public class CustomerServlet extends HttpServlet {
 		process.processTemplate(templateName, root, request, response);
 	}
 
+	// Deletes a Credit card from a user's account.
+	
 	private void deleteCard(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		System.out.println("Why aren't you deleting.");
+		
+		// Checks if a credit card is selected.
+		
 		if (!request.getParameter("deleteCard").equals(""))
 		{
 			int id = Integer.parseInt(request.getParameter("deleteCard"));
 			
 			CustomerController custCtrl = new CustomerController();
 			
+			// Deletes the card.
+			
 			int check = custCtrl.deleteCard(id);
+			
+			// If it succeeded, reload the page with a success message.
+			
 			if (check == 1)
 			{
 				viewCards(request, response, "Successfully deleted this card.");
 			}
+			
+			// Else, reload the page with an error message.
+			
 			else
 			{
 				viewCards(request, response, "Failed to delete this card.");
 			}
 		}
+		
+		// Reload the page, then display a message telling the user to select a card.
+		
 		else
 		{
 			viewCards(request, response, "You must select a card to delete");
 		}
 	}
 
+	// Displays the page for viewing a user's credit cards.
+	
 	private void viewCards(HttpServletRequest request, HttpServletResponse response, String message) {
 		// TODO Auto-generated method stub
 		HttpSession sess = request.getSession(false);
@@ -178,6 +231,8 @@ public class CustomerServlet extends HttpServlet {
 		List<CreditCard> cardList = new ArrayList<CreditCard>();
 		
 		CustomerController custCtrl = new CustomerController();
+		
+		// Gets the list of a user's credit cards.
 		
 		cardList = custCtrl.viewCards(userID);
 		
@@ -189,11 +244,15 @@ public class CustomerServlet extends HttpServlet {
 		process.processTemplate(templateName, root, request, response);
 	}
 
+	// Adds a credit card to a user's account.
+	
 	private void addCard(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String number = request.getParameter("number");
 		String type = request.getParameter("type");
 		String csc = request.getParameter("security");
+		
+		// Gets the date for the credit card in the correct format.
 		
 		long timeStamp = Long.parseLong(request.getParameter("expiration"));
 		Date date = Date.from( Instant.ofEpochSecond( timeStamp ) );
@@ -207,7 +266,12 @@ public class CustomerServlet extends HttpServlet {
 		
 		HttpSession sess = request.getSession(false);
 		int userID = (int)sess.getAttribute("userID");
+		
+		// Adds the card.
+		
 		int check = custCtrl.addCard(number, dateTime, type, userID, csc);
+		
+		// Reloads the page with messages depending on if it succeeded in adding a credit card.
 		
 		if (check == 1)
 		{
@@ -219,8 +283,13 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 
+	// Deletes an address from a user's account.
+	
 	private void deleteAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
+		
+		// Checks if an address is selected.
+		
 		if (!request.getParameter("deleteAddress").equals(""))
 		{
 			int id = Integer.parseInt(request.getParameter("deleteAddress"));
@@ -228,6 +297,8 @@ public class CustomerServlet extends HttpServlet {
 			CustomerController custCtrl = new CustomerController();
 			
 			int check = custCtrl.deleteAddress(id);
+			
+			// Prints out a message for the user.
 			
 			if (check == 1)
 			{
@@ -244,8 +315,13 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 
+	// Edits a selected address.
+	
 	private void editAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
+		
+		// Checks if an address is selected.
+		
 		if (!request.getParameter("editAddress").equals(""))
 		{
 			int id = Integer.parseInt(request.getParameter("editAddress"));
@@ -257,7 +333,11 @@ public class CustomerServlet extends HttpServlet {
 			
 			CustomerController custCtrl = new CustomerController();
 			
+			// Updates the address in the database.
+			
 			int check = custCtrl.editAddress(id, street, city, state, zip);
+			
+			// Prints out messages for the user.
 			
 			if (check >= 1)
 			{
@@ -274,6 +354,8 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 
+	// Adds an address to the database.
+	
 	private void addAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String street = request.getParameter("street");
@@ -289,7 +371,7 @@ public class CustomerServlet extends HttpServlet {
 		
 		if (check == 0)
 		{
-			System.out.println("Failure");
+			viewAddresses(request, response, "Failed to add an address");
 		}
 		else
 		{
@@ -297,6 +379,8 @@ public class CustomerServlet extends HttpServlet {
 		}
 	}
 
+	// Displays a page for viewing, adding, editing, and deleting addresses.
+	
 	private void viewAddresses(HttpServletRequest request, HttpServletResponse response, String message) {
 		// TODO Auto-generated method stub
 		CustomerController custCtrl = new CustomerController();
@@ -315,6 +399,8 @@ public class CustomerServlet extends HttpServlet {
 		process.processTemplate(templateName, root, request, response);
 	}
 
+	// Displays a list of books for the Customer to browse.
+	
 	private void browseBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
