@@ -10,6 +10,8 @@
 
     <script src="js/jquery.js" type="text/javascript"></script>
 	<script src="js/bookReport.js" type="text/javascript"></script>
+	<script src="js/manager.js" type="text/javascript"></script>
+	<script src="js/temp.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -35,6 +37,12 @@
             <li class="nav-item active">
               <a class="nav-link" href="Manager_d.html">Home</a>
             </li>
+            <li class="nav-item">
+					<a class="nav-link" href="Settings.html">Settings</a>
+			</li>
+			<li class="nav-item">
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
+				</li>
           </ul>
         </div>
       </div>

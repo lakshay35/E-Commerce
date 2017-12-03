@@ -52,16 +52,19 @@
             <li class="nav-item active">
               <a class="nav-link" id="home" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
-            <li id="addressTab">
+            <li id="addressTab" class="nav-item">
             	<form class="nav-link" action="CustomerServlet" method="post">
               		<button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">Addresses</button>
               	</form>
             </li>
-              <li id="creditTab">
+              <li id="creditTab" class="nav-item">
              	<form class="nav-link" action="CustomerServlet" method="post">
               		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Credit Cards</button>
               	</form>
               </li>
+            <li class="nav-item">
+            	<a class="nav-link" href="password.html">Change Password</a>
+            </li>
             <li class="nav-item">
 					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>

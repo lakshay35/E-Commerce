@@ -10,6 +10,7 @@
     
     <script src="js/jquery.js" type="text/javascript"></script>
 	<script src="js/order.js" type="text/javascript"></script>
+	<script src="js/temp.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +27,7 @@
   <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Book Store</a>
+        <a class="navbar-brand" href="#">Shipping Employee</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,6 +36,12 @@
             <li class="nav-item active">
               <a class="nav-link" href="Shipmentview_d.html">Home</a>
             </li>
+            <li class="nav-item">
+				<a class="nav-link" href="Settings.html">Settings</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link logout" id="logout" href="#">Logout</a>
+			</li>
           </ul>
         </div>
       </div>
@@ -64,8 +71,8 @@
           <tr>
             <td>${order.getOrderNumber()?c}</td>
             <td>${order.getUserID()}</td>
-            <td>No shipping address yet</td>
-            <td>No billing address yet</td>
+            <td>${order.getShippingAddress()}</td>
+            <td>${order.getBillingAddress()}</td>
             <td>${order.getPaymentMethod()}</td>
             <td>${order.getDate()}</td>
             <td>${order.getOrderTotal()?string.currency}</td>

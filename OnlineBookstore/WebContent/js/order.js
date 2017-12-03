@@ -11,6 +11,7 @@ $(document).on('click', '.shipButton', function () {
 			if (responseText == '1')
 				{
 				alert("Successfully changed order status.");
+				location.reload();
 				}
 			else
 				{
