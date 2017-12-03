@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.mysql.jdbc.Connection;
+
 import entity.IBook;
 import entity.ICart;
 import freemarker.template.Configuration;
@@ -32,8 +34,9 @@ import object.Cart;
 import persistent.AddressDA;
 import persistent.CartDA;
 import persistent.CreditCardDA;
+import persistent.DbAccessImpl;
 import persistent.EmailUtility;
-import persistent.OrdersDA;
+import persistent.OrderDA;
 import persistent.PromotionDA;
 import persistent.TransactionDA;
 import object.Address;
@@ -92,10 +95,11 @@ public class CustomerServlet extends HttpServlet {
 		String checkOut = request.getParameter("checkoutCart");
 		String continueToCheckOut = request.getParameter("continueToCheckOut");
 		String completePurchase = request.getParameter("completePurchase");
+		System.out.println("There is request.");						 
 		
 		if (browse != null)
 		{
-			browseBooks(request, response);
+			browseBooks(request, response,null);
 		}
 		else if (viewAddress != null)
 		{
@@ -133,17 +137,17 @@ public class CustomerServlet extends HttpServlet {
 		{
 			int value = addToCart(request,response, isbn);
 			if(value == 1) {
-				browseBooks(request, response);
+				browseBooks(request, response,"Item added to Cart");
 			}else {
-				browseBooks(request, response);
+				browseBooks(request, response,"Item out of Stock");
 			}
 		}
 		else if(applyPromo != null)
 		{
-			showCart(request, response);
+			showCart(request, response, null);
 		}
 		else if(getCart != null) {
-			showCart(request, response);
+			showCart(request, response, null);
 		}
 		else if(updateCart != null) {
 			updateCart(request, response, updateCart);
@@ -152,7 +156,7 @@ public class CustomerServlet extends HttpServlet {
 			deleteFromCart(request, response, deleteFromCart);
 		}
 		else if(checkOut != null) {
-			showAddressAndPayment(request, response);
+			showAddressAndPayment(request, response, null);
 		}
 		else if(continueToCheckOut != null) {
 			continueToCheckOut(request,response);
@@ -183,6 +187,10 @@ public class CustomerServlet extends HttpServlet {
 		{
 			cat = "title";
 		}
+		else if (temp == 3)
+		{
+			cat = "category";
+		}
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
@@ -197,25 +205,31 @@ public class CustomerServlet extends HttpServlet {
 
 	private void deleteCard(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("deleteCard"));
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.deleteCard(id);
-		if (check == 1)
+		System.out.println("Why aren't you deleting.");
+		if (!request.getParameter("deleteCard").equals(""))
 		{
-			viewCards(request, response, "Successfully deleted this card.");
+			int id = Integer.parseInt(request.getParameter("deleteCard"));
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.deleteCard(id);
+			if (check == 1)
+			{
+				viewCards(request, response, "Successfully deleted this card.");
+			}
+			else
+			{
+				viewCards(request, response, "Failed to delete this card.");
+			}
 		}
 		else
 		{
-			viewCards(request, response, "Failed to delete this card.");
+			viewCards(request, response, "You must select a card to delete");
 		}
-		
 	}
 
 	private void viewCards(HttpServletRequest request, HttpServletResponse response, String message) {
 		// TODO Auto-generated method stub
-		
 		int userID = getUserId(request);
 		List<CreditCard> cardList = new ArrayList<CreditCard>();
 		
@@ -235,8 +249,8 @@ public class CustomerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String number = request.getParameter("number");
 		String type = request.getParameter("type");
-		String ccID = request.getParameter("ccID");
-		if (ccID == null) {ccID = "000";}
+		String csc = request.getParameter("security");
+		
 		long timeStamp = Long.parseLong(request.getParameter("expiration"));
 		Date date = Date.from( Instant.ofEpochSecond( timeStamp ) );
 		Calendar c = Calendar.getInstance(); 
@@ -248,7 +262,7 @@ public class CustomerServlet extends HttpServlet {
 		CustomerController custCtrl = new CustomerController();
 		
 		int userID = getUserId(request);
-		int check = custCtrl.addCard(number, dateTime, type, userID,Integer.parseInt(ccID));
+		int check = custCtrl.addCard(number, dateTime, type, userID, csc);
 		
 		if (check == 1)
 		{
@@ -262,42 +276,56 @@ public class CustomerServlet extends HttpServlet {
 
 	private void deleteAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("deleteAddress"));
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.deleteAddress(id);
-		
-		if (check == 1)
+		if (!request.getParameter("deleteAddress").equals(""))
 		{
-			viewAddresses(request, response, "An address was deleted.");
+			int id = Integer.parseInt(request.getParameter("deleteAddress"));
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.deleteAddress(id);
+			
+			if (check == 1)
+			{
+				viewAddresses(request, response, "An address was deleted.");
+			}
+			else
+			{
+				viewAddresses(request, response, "Failed to delete an address.");
+			}
 		}
 		else
 		{
-			System.out.println("Failure");
+			viewAddresses(request, response, "You must select an address to delete");
 		}
 	}
 
 	private void editAddress(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		int id = Integer.parseInt(request.getParameter("editAddress"));
-		
-		String street = request.getParameter("street");
-		String city = request.getParameter("city");
-		String state = request.getParameter("state");
-		String zip = request.getParameter("zip");
-		
-		CustomerController custCtrl = new CustomerController();
-		
-		int check = custCtrl.editAddress(id, street, city, state, zip);
-		
-		if (check >= 1)
+		if (!request.getParameter("editAddress").equals(""))
 		{
-			viewAddresses(request, response, "An address has been changed.");
+			int id = Integer.parseInt(request.getParameter("editAddress"));
+			
+			String street = request.getParameter("street");
+			String city = request.getParameter("city");
+			String state = request.getParameter("state");
+			String zip = request.getParameter("zip");
+			
+			CustomerController custCtrl = new CustomerController();
+			
+			int check = custCtrl.editAddress(id, street, city, state, zip);
+			
+			if (check >= 1)
+			{
+				viewAddresses(request, response, "An address has been changed.");
+			}
+			else
+			{
+				viewAddresses(request, response, "Failed to change an address.");
+			}
 		}
 		else
 		{
-			System.out.println("Failure");
+			viewAddresses(request, response, "You must first select an address to edit it.");
 		}
 	}
 
@@ -329,8 +357,9 @@ public class CustomerServlet extends HttpServlet {
 		
 		List<Address> addressList = new ArrayList<Address>();
 		
-		int id = getUserId(request);
-		addressList = custCtrl.getAddresses(id);
+		HttpSession sess = request.getSession(false);
+		String id = sess.getAttribute("userID").toString();
+		addressList = custCtrl.getAddresses(Integer.parseInt(id));
 		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
@@ -340,14 +369,22 @@ public class CustomerServlet extends HttpServlet {
 		process.processTemplate(templateName, root, request, response);
 	}
 
-	private void browseBooks(HttpServletRequest request, HttpServletResponse response) {
+	private void browseBooks(HttpServletRequest request, HttpServletResponse response, String message) {
 		// TODO Auto-generated method stub
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
 		CustomerController custCtrl = new CustomerController();
 		
+		ArrayList<String> errorList = new ArrayList<String>();
+		if(message == null) {
+			errorList.add("");
+		}else {
+			errorList.add(message);
+		}
+		
 		List<IBook> bookList = custCtrl.browseBooks();
 		root.put("books", bookList);
+		root.put("error", errorList);
 		String templateName = "customerBrowse.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}
@@ -359,7 +396,7 @@ public class CustomerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
+
 	/**
 	 * @return 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -384,60 +421,61 @@ public class CustomerServlet extends HttpServlet {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected SimpleHash getCart(HttpServletRequest request, HttpServletResponse response) {
 		int userID = getUserId(request);
 		
 		ICart cart1 = new Cart(0, 0, userID, 0, 0, 0);
 		List<Cart> cartList = cart1.getCart(userID);
 		
+		String promoCode = request.getParameter("promoCode");
+		if(promoCode != null) {
+			promoCode = promoCode.replaceAll("[^0-9]", "");
+		}
+		ArrayList<String> promoCodeList = new ArrayList<String>();
+		double percent = 0.0;
+		
+		if(promoCode == null || promoCode.equals("")) {
+			promoCodeList.add("Enter Promo Code");
+		} else {
+			int promo = Integer.parseInt(promoCode);
+			ResultSet set = PromotionDA.getPromotion(promo);
+			if(set == null) {
+				promoCodeList.add("Promo Code Invalid");
+			} else {
+				try {
+					if(set.next()) {
+						String expirationDate = set.getString("expiration");
+						try {
+							Date expiry = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
+							Date currentDate = new Date();
+							if(expiry.compareTo(currentDate) < 0) {
+								promoCodeList.add("PROMO CODE INVALID");
+							}else{
+								percent = Double.parseDouble(set.getString("percentage"));
+								promoCodeList.add(promoCode);
+							}
+						}catch(ParseException e) {
+							e.printStackTrace();
+						}
+					}
+				}catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		ArrayList<Book> titleList = new ArrayList<Book>();
 		double sum = 0.0;
 		for (Cart cart : cartList) {
-			sum = sum + cart.getTotal();
+			double total = cart.getTotal();
+			double discount = (total*percent)/100;
+			total = total - discount;
+			cart.setTotal(total);
+			sum = sum + total;
 			CustomerController custCtrl = new CustomerController();
 			IBook book = custCtrl.getBookInfo(cart.getIsbn());
 			titleList.add((Book) book);
 		}
-		
-		String promoCode = request.getParameter("promoCode");
-		if(promoCode != null) {promoCode = promoCode.replaceAll("[^0-9]", "");}
-		ArrayList<String> promoCodeList = new ArrayList<String>();
-		if(promoCode == null || promoCode.equals("")) {
-			promoCodeList.add("Enter Promo Code");
-		} else {
-			int promo = 0;
-			if(promoCode != "") {
-				promo = Integer.parseInt(promoCode);
-			}
-			ResultSet set = PromotionDA.getPromotion(promo);
-			try {
-				if (set.next()) {
-					String expirationDate = set.getString("expiration");
-					try {
-						Date expiry = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
-						Date currentDate = new Date();
-						if(expiry.compareTo(currentDate) < 0) {
-							promoCodeList.add("PROMO CODE INVALID");
-						} else {
-							double percent = Double.parseDouble(set.getString("percentage"));
-							double discount = (sum*percent)/100;
-							sum = sum - discount;
-							promoCodeList.add(promoCode);
-						}
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else {
-					promoCodeList.add("PROMO CODE INVALID");
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		ArrayList<String> cartTotal = new ArrayList<String>();
 		cartTotal.add(Double.toString(sum));
 		
@@ -452,10 +490,17 @@ public class CustomerServlet extends HttpServlet {
 		return root;
 	}
 	
-	protected void showCart(HttpServletRequest request, HttpServletResponse response) {
+	protected void showCart(HttpServletRequest request, HttpServletResponse response, String message) {
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
 		root = getCart(request,response);
+		ArrayList<String> errorList = new ArrayList<String>();
+		if(message == null) {
+			errorList.add("");
+		} else {
+			errorList.add(message);
+		}
+		root.put("error",errorList);
 		process.processTemplate("cartBrowse.ftl", root, request, response);
 	}
 	
@@ -466,23 +511,37 @@ public class CustomerServlet extends HttpServlet {
 		int userID = getUserId(request);
 		
 		CustomerController custCtrl = new CustomerController();
+		ICart oldCart = custCtrl.getCartByID(cartId);
 		IBook book = custCtrl.getBookInfo(isbn);
 		
-		if(book.getQuantity() < quantity) {
+		if(quantity <= oldCart.getQty()) {
+			int difference = oldCart.getQty() - quantity;
+			IBook newBook = new Book(book.getIsbn(), book.getCategory(), book.getAuthor(), book.getTitle(), book.getEdition(), book.getPublisher(), book.getYear(), book.getThreshold(), book.getQuantity()+difference, book.getBuyingPrice(), book.getSellingPrice(), book.getPicture(), book.getDescription());
+			newBook.editBook();
 			double quant = book.getSellingPrice()*quantity;
-			
 			ICart cart = new Cart(cartId, userID, 0, isbn, quantity, quant);
-			
 			int value = 0;
 			value = cart.updateCart();
 			if(value != 0) {
-				System.out.println("Cart Updated");
-				showCart(request, response);
+				showCart(request, response,null);
 			}
 		} else {
-			System.out.println("Cart wasn't updated since item not in stock");
-			showCart(request, response);
+			int difference = quantity - oldCart.getQty();
+			if(book.getQuantity() >= difference) {
+				IBook newBook = new Book(book.getIsbn(), book.getCategory(), book.getAuthor(), book.getTitle(), book.getEdition(), book.getPublisher(), book.getYear(), book.getThreshold(), book.getQuantity()-difference, book.getBuyingPrice(), book.getSellingPrice(), book.getPicture(), book.getDescription());
+				newBook.editBook();
+				double quant = book.getSellingPrice()*quantity;
+				ICart cart = new Cart(cartId, userID, 0, isbn, quantity, quant);
+				int value = 0;
+				value = cart.updateCart();
+				if(value != 0) {
+					showCart(request, response,null);
+				}
+			} else {
+				showCart(request, response, "Cart wasn't updated since item not in stock");
+			}
 		}
+		
 	}
 	
 	protected void deleteFromCart(HttpServletRequest request, HttpServletResponse response, String updateCart) {
@@ -505,16 +564,39 @@ public class CustomerServlet extends HttpServlet {
 		value = cart.deleteFromCart();
 		
 		if(value != 0) {
-			System.out.println("Cart Updated");
-			showCart(request, response);
+			showCart(request, response, "Item Deleted From Cart");
 		}
 	}
 
-	protected void showAddressAndPayment(HttpServletRequest request, HttpServletResponse response) {
-		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
-		SimpleHash root = new SimpleHash(df.build());
-		root = getAddressAndPayment(request,response);
-		process.processTemplate("addressAndPayment.ftl", root, request, response);
+	protected void showAddressAndPayment(HttpServletRequest request, HttpServletResponse response, String message) {
+		int userID = getUserId(request);
+		Connection con=(Connection) DbAccessImpl.connect();
+		String cartIds = "";
+		ResultSet set= CartDA.getCart(userID, con);
+		try {
+			while(set.next()) {
+				cartIds += Integer.toString(set.getInt("cartID")); 
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(cartIds.equals("") || cartIds == null) {
+			showCart(request, response, "Cart is Empty. Please Add Items from Browse Books");
+		}else {
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			ArrayList<String> errorList = new ArrayList<String>();
+			if(message == null) {
+				errorList.add("");
+			} else {
+				errorList.add(message);
+			}
+			root = getAddressAndPayment(request,response);
+			root.put("error",errorList);
+			process.processTemplate("addressAndPayment.ftl", root, request, response);
+		}
 	}
 	
 	protected SimpleHash getAddressAndPayment(HttpServletRequest request, HttpServletResponse response) {
@@ -530,18 +612,28 @@ public class CustomerServlet extends HttpServlet {
 		ArrayList<String> orderTotalList = new ArrayList<String>();
 		orderTotalList.add(request.getParameter("orderTotal"));
 		
+		ArrayList<String> promoCodeList = new ArrayList<String>();
+		if(request.getParameter("promoCode") != null) {
+			promoCodeList.add(request.getParameter("promoCode"));
+		}else {
+			promoCodeList.add(request.getParameter("No Promo Code"));
+		}
+		
+		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
 		
 		root.put("address", addressList);
 		root.put("card", cardList);
 		root.put("total", orderTotalList);
+		root.put("promo", promoCodeList);
 		
 		return root;
 	}
 	
 	private void continueToCheckOut(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
+		String error = "";
 		String selectedShippingAddress = request.getParameter("selectShipAddress");
 		String selectedBillingAddress = request.getParameter("selectBillAddress");
 		String selectedCard = request.getParameter("selectCard");
@@ -553,8 +645,12 @@ public class CustomerServlet extends HttpServlet {
 			address.setCity(request.getParameter("newshipcity"));
 			address.setState(request.getParameter("newshipstate"));
 			address.setZip(request.getParameter("newshipzip"));
-			CustomerController custCtrl = new CustomerController();
-			custCtrl.addAddress(this.getUserId(request), request.getParameter("newshipstreet"), request.getParameter("newshipcity"), request.getParameter("newshipstate"), request.getParameter("newshipzip"));
+			if(address.getStreet().equals("") || address.getCity().equals("") || address.getState().equals("") || address.getZip().equals("")) {
+				error += "** Please Enter Shipping Address Details";
+			} else {
+				CustomerController custCtrl = new CustomerController();
+				custCtrl.addAddress(this.getUserId(request), request.getParameter("newshipstreet"), request.getParameter("newshipcity"), request.getParameter("newshipstate"), request.getParameter("newshipzip"));
+			}
 		}
 		else
 		{
@@ -569,6 +665,9 @@ public class CustomerServlet extends HttpServlet {
 			address.setCity(request.getParameter("newbillcity"));
 			address.setState(request.getParameter("newbillstate"));
 			address.setZip(request.getParameter("newbillzip"));
+			if(address.getStreet().equals("") || address.getCity().equals("") || address.getState().equals("") || address.getZip().equals("")) {
+				error += "** Please Enter Billing Address Details";
+			}
 		}
 		else
 		{
@@ -583,28 +682,43 @@ public class CustomerServlet extends HttpServlet {
 			card.setNumber(request.getParameter("newcardnumber"));
 			card.setType(request.getParameter("newcardtype"));
 			card.setExpirationDate(request.getParameter("newcardexpiration"));
-			card.setId(Integer.parseInt(request.getParameter("newccid")));
-			CustomerController addCard = new CustomerController();
-			addCard.addCard(request.getParameter("newcardnumber"), request.getParameter("newcardexpiration"), request.getParameter("newcardtype"), getUserId(request), Integer.parseInt(request.getParameter("newccid")));
+			card.setCsc(request.getParameter("newccid"));
+			if(card.getNumber().equals("") || card.getExpirationDate().equals("") || card.getCsc().equals("")) {
+				error += "** Please enter Credit Card Details or select an existing one";
+			}else{
+				CustomerController addCard = new CustomerController();
+				addCard.addCard(request.getParameter("newcardnumber"), request.getParameter("newcardexpiration"), request.getParameter("newcardtype"), getUserId(request), request.getParameter("newccid"));
+			}
 		}
 		else
 		{
 			card = CreditCard.getCreditCardById(Integer.parseInt(selectedCard));
 		}
-		ArrayList<CreditCard> billingCard = new ArrayList<CreditCard>();
-		billingCard.add(card);
 		
-		ArrayList<String> orderTotalList = new ArrayList<String>();
-		orderTotalList.add(request.getParameter("orderTotal"));
-		
-		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
-		SimpleHash root = new SimpleHash(df.build());
-		root = getCart(request,response);
-		root.put("shippingAddress", shippingAddress);
-		root.put("billingAddress", billingAddress);
-		root.put("billingCard", billingCard);
-		root.put("orderTotal", orderTotalList);
-		process.processTemplate("completePurchase.ftl", root, request, response);
+		if(error == null || error.equals("")) {
+			ArrayList<CreditCard> billingCard = new ArrayList<CreditCard>();
+			billingCard.add(card);
+			
+			ArrayList<String> orderTotalList = new ArrayList<String>();
+			orderTotalList.add(request.getParameter("orderTotal"));
+	
+			ArrayList<String> promoCodeList = new ArrayList<String>();
+			promoCodeList.add(request.getParameter("promoCode"));
+			
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root = getCart(request,response);
+			root.put("shippingAddress", shippingAddress);
+			root.put("billingAddress", billingAddress);
+			root.put("billingCard", billingCard);
+			root.put("orderTotal", orderTotalList);
+			root.put("promo", promoCodeList);
+			process.processTemplate("completePurchase.ftl", root, request, response);
+		}
+		else
+		{
+			showAddressAndPayment(request, response, error);
+		}
 	}
 		
 	private void completePurchase(HttpServletRequest request, HttpServletResponse response) {
@@ -643,7 +757,7 @@ public class CustomerServlet extends HttpServlet {
 		paymentMethodList.add(paymentMethod);
 		
 		//set MAX confirmation Number
-		String confirmationNumber = "Conf" + orderNumber;
+		String confirmationNumber = Integer.toString(orderNumber);
 		ArrayList<String> confirmationNumberList = new ArrayList<String>();
 		confirmationNumberList.add(confirmationNumber);
 		
@@ -654,18 +768,50 @@ public class CustomerServlet extends HttpServlet {
 		String orderTotal = request.getParameter("orderTotal");
 		double total = Double.parseDouble(orderTotal);
 		
-		int success = OrdersDA.addtoOrders(orderNumber, 0, status, orderDate, shippingAddress, billingAddress, paymentMethod, confirmationNumber, userId, total);
+		int success = OrderDA.addtoOrders(orderNumber, 0, status, orderDate, shippingAddress, billingAddress, paymentMethod, confirmationNumber, userId, total);
 		
 		if(success != 0) {
+			String promoCode = request.getParameter("promoCode");
+			if(promoCode != null) {
+				promoCode = promoCode.replaceAll("[^0-9]", "");
+			}
+			double percent = 0.0;
+			
+			int promo = 0;
+			if(promoCode != null && !promoCode.equals("")) {
+				promo = Integer.parseInt(promoCode);
+				ResultSet set = PromotionDA.getPromotion(promo);
+				if(set != null) {
+					try {
+						if(set.next()) {
+							String expirationDate = set.getString("expiration");
+							try {
+								Date expiry = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
+								Date currentDate = new Date();
+								if(expiry.compareTo(currentDate) >= 0) {
+									percent = Double.parseDouble(set.getString("percentage"));
+								}
+							}catch(ParseException e) {
+								e.printStackTrace();
+							}
+						}
+					}catch(SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
 			ICart cart1 = new Cart(0, 0, userId, 0, 0, 0);
 			List<Cart> cartList = cart1.getCart(userId);
 			for(ICart cart:cartList) {
+				double total1 = cart.getTotal();
+				double discount = (total1*percent)/100;
+				total1 = total1 - discount;
+				cart.setTotal(total1);
 				int transactionId = TransactionDA.getMaxTrasactionId();
 				int isbn = cart.getIsbn();
 				int qty = cart.getQty();
-				int promoId = cart.getPromoID();
-				double transactionTotal = cart.getTotal();
-				success = TransactionDA.addToTransaction(orderNumber,transactionId,isbn,qty,promoId,transactionTotal);
+				success = TransactionDA.addToTransaction(orderNumber,transactionId,isbn,qty,promo,total1);
 			}
 		}
 		

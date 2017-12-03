@@ -10,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
 import entity.IBook;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
@@ -66,6 +69,11 @@ public class AdminServlet extends HttpServlet {
 		String suspendUser = request.getParameter("suspendUser");
 		String unsuspendUser = request.getParameter("unsuspendUser");
 		String searchBooks = request.getParameter("searchBooks");
+		String deletebook = request.getParameter("deletebook");
+		String salesReport = request.getParameter("salesReport");
+		String updateQuantity = request.getParameter("updateQuantity");
+
+		String lowQty = request.getParameter("lowQty");
 		
 		if (addbook != null)
 		{
@@ -77,7 +85,8 @@ public class AdminServlet extends HttpServlet {
 		}
 		else if (editbook != null)
 		{
-			showEditBook(request, response);
+			int tempIsbn = Integer.parseInt(editbook);
+			showEditBook(request, response, "", tempIsbn);
 		}
 		else if (submitedit != null)
 		{
@@ -107,8 +116,74 @@ public class AdminServlet extends HttpServlet {
 		{
 			searchBooks(request, response);
 		}
+		else if (deletebook != null)
+		{
+			deleteBook(request, response);
+		}
+		else if(salesReport != null) {
+            generateSalesReport(request, response);
+        }
+		else if(updateQuantity != null) 
+		{
+			updateQuantityOfBook(request, response); 
+		}
+		else if (lowQty != null) 
+		{
+			generateBookReport(request, response);
+		}
 	}
 	
+	private void updateQuantityOfBook(HttpServletRequest request, HttpServletResponse response)  {
+		AdminController adminCtrl = new AdminController();
+		String updateQuantity = request.getParameter("updateQuantity");
+		if (updateQuantity != "")
+		{
+			int check = adminCtrl.updateQuantityOfBook(Integer.parseInt(updateQuantity), Integer.parseInt(request.getParameter("isbn")));
+			System.out.println("Test " + check + "k");
+			Gson gson = new Gson();
+	        try {
+				response.getWriter().write(gson.toJson(check));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		}
+
+		private void generateBookReport(HttpServletRequest request, HttpServletResponse response) {
+		       try{
+		AdminController adminCtrl = new AdminController();
+		process.processTemplate("bookReport.ftl", adminCtrl.getBookReport(), request, response);
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+		}
+	
+	private void generateSalesReport(HttpServletRequest request, HttpServletResponse response) {
+        AdminController adminCtrl = new AdminController();
+        process.processTemplate("salesReport.ftl", adminCtrl.getSalesReport(), request, response);
+    }
+	
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		if (!request.getParameter("deletebook").equals(""))
+		{
+			System.out.println("Delete book");
+			int isbn = Integer.parseInt(request.getParameter("deletebook"));
+			AdminController aCtrl = new AdminController();
+			
+			int check = aCtrl.deleteBook(isbn);
+			if (check == 1)
+			{
+				browseBooks(request, response);
+			}
+			else
+			{
+				browseBooks(request, response);
+			}
+		}
+	}
+
 	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");
@@ -130,6 +205,10 @@ public class AdminServlet extends HttpServlet {
 		{
 			cat = "title";
 		}
+		else if (temp == 3)
+		{
+			cat = "category";
+		}
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
@@ -138,7 +217,7 @@ public class AdminServlet extends HttpServlet {
 		
 		root.put("books", bookList);
 		root.put("searchTerm", term);
-		String templateName = "customerSearch.ftl";
+		String templateName = "adminSearch.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}
 	
@@ -224,26 +303,39 @@ public class AdminServlet extends HttpServlet {
 		String name = request.getParameter("promoName");
 		String percent = request.getParameter("percentage");
 		String expiration = request.getParameter("expiration");
-		System.out.println(expiration);
+		
 		AdminController aCtrl = new AdminController();
-		System.out.println(name);
-		int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration, user, host, pass, port);
-		if(check >= 1) {
-			System.out.println("Success");
-			try {
-				response.sendRedirect("AddPromo.html");
-			} catch (IOException e) {
-				e.printStackTrace();
+		int checkPromo = aCtrl.checkPromo(Integer.parseInt(promoID));
+		
+		if (checkPromo != 1)
+		{
+			int check = aCtrl.addPromotion(Integer.parseInt(promoID), name, Double.parseDouble(percent), expiration, user, host, pass, port);
+			if(check >= 1) {
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				root.put("message", "Successfully added a new promotion.");
+				
+				String templateName = "AddPromo.ftl";
+				process.processTemplate(templateName, root, request, response);
+			}
+			else
+			{
+				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+				SimpleHash root = new SimpleHash(df.build());
+				root.put("message", "Failed to add a new promotion.");
+				
+				String templateName = "AddPromo.ftl";
+				process.processTemplate(templateName, root, request, response);
 			}
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddPromo.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "This promo code is already in use.");
+			
+			String templateName = "AddPromo.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 
@@ -264,31 +356,27 @@ public class AdminServlet extends HttpServlet {
 		String url = request.getParameter("picture");
 		String description = request.getParameter("description");
 		
-
+		int temp = Integer.parseInt(isbn);
 		AdminController aCtrl = new AdminController();
-		System.out.println(thresh);
+		
 		int check = aCtrl.editBook(title, author, Integer.parseInt(edition), category, Integer.parseInt(isbn), publisher, Integer.parseInt(year), 
 				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url, description);
 		
 		if (check >= 1)
 		{
 			System.out.println("Success");
-			browseBooks(request, response);
+			showEditBook(request, response, "Successfully updated the information for this book.", temp);
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println("Mega fail");
+			showEditBook(request, response, "Failed to update the information for this book.", temp);
 		}
 	}
 
-	private void showEditBook(HttpServletRequest request, HttpServletResponse response) {
+	private void showEditBook(HttpServletRequest request, HttpServletResponse response, String message, int temp) {
 		// TODO Auto-generated method stub
-		int isbn = Integer.parseInt(request.getParameter("editbook"));
+		int isbn = temp;
 		
 		AdminController aCtrl = new AdminController();
 		
@@ -299,13 +387,13 @@ public class AdminServlet extends HttpServlet {
 			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 			SimpleHash root = new SimpleHash(df.build());
 			root.put("book", book);
-			book.printBook();
+			root.put("message", message);
+			
 			String templateName = "editBook.ftl";
 			process.processTemplate(templateName, root, request, response);
 		}
 		else
 		{
-			System.out.println("No such book exists.");
 			browseBooks(request, response);
 		}
 	}
@@ -344,26 +432,36 @@ public class AdminServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		
 		AdminController aCtrl = new AdminController();
-		System.out.println(thresh);
+		
 		int check = aCtrl.addNewBook(title, author, Integer.parseInt(edition), category, Integer.parseInt(isbn), publisher, Integer.parseInt(year), 
 				Integer.parseInt(thresh), Integer.parseInt(quantity), Double.parseDouble(buyprice), Double.parseDouble(sellprice), url, description);
 		if (check >= 1)
 		{
 			System.out.println("Success");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "Successfully add a book to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
+		}
+		else if (check == -2)
+		{
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "A book with this ISBN has already been added to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 		else
 		{
-			System.out.println("Failure");
-			try {
-				response.sendRedirect("AddBook.html");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
+			SimpleHash root = new SimpleHash(df.build());
+			root.put("message", "Failed to add a book to the store.");
+			
+			String templateName = "addBookMessage.ftl";
+			process.processTemplate(templateName, root, request, response);
 		}
 	}
 
