@@ -17,9 +17,66 @@ import freemarker.template.SimpleHash;
 import object.Address;
 import object.Order;
 import object.ReportEntry;
+import object.Transaction;
 
 public class OrderDA {
 
+	 public static List<Order> viewHistory(int parseInt) {
+			Connection con = (Connection) DbAccessImpl.connect();
+			String query = "SELECT * FROM orders WHERE userID = '" + parseInt + "' ORDER BY orderDate DESC";
+			ResultSet set = DbAccessImpl.retrieve(con, query);
+			List<Order> list = new ArrayList<Order>();
+			try {
+				while(set.next())
+				{
+					int num = set.getInt("orderNumber");
+					String stat = set.getString("orderStatus");
+					Date date = set.getDate("orderDate");
+					String sAdd = set.getString("billingAddress"); // Add getting shipping address
+					String bAdd = set.getString("shippingAddress"); // add getting billing address
+					String pay = set.getString("paymentMethod");
+					int conNum = set.getInt("confirmationNumber");
+					int userID = set.getInt("userID");
+					double total = set.getDouble("orderTotal");
+					
+					Order order = new Order(num, stat, date, sAdd, bAdd, pay, conNum, userID, total);
+					list.add(order);	
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			int len = list.size();
+			for(int i=0; i<len; i++) {
+				int oNum = list.get(i).getOrderNumber();
+				query = "SELECT * FROM transactions JOIN book ON book.isbn = transactions.isbn WHERE orderNumber = '" + oNum + "'";
+				set = DbAccessImpl.retrieve(con, query);
+				ArrayList<Transaction> tList = new ArrayList<Transaction>();
+				
+				try {
+					while(set.next()) {
+						int isbn = set.getInt("isbn");
+						String title = set.getString("title");
+						String author = set.getString("authorName");
+						int orderNum = set.getInt("orderNumber");
+						int qty = set.getInt("qty");
+						int promoID = set.getInt("promoID");
+						double tTotal = set.getDouble("total");
+						
+						Transaction transaction = new Transaction(orderNum, isbn, qty, promoID, tTotal, author, title);
+						tList.add(transaction);
+						System.out.println(title);
+					}
+					list.get(i).setTransactionList(tList);
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			DbAccessImpl.disconnect(con);
+			return list;
+		}
+	
 	public static List<Order> viewOrders() {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
@@ -120,7 +177,6 @@ public class OrderDA {
 					if (check == 0)
 					{
 						tempDate = newSet.getDate("orderDate");
-						System.out.println(tempDate);
 						tempIsbn = newSet.getInt("isbn");
 						tempAuthor = newSet.getString("authorName");
 						tempTitle = newSet.getString("title");
@@ -146,4 +202,30 @@ public class OrderDA {
 		root.put("total", total);
         return root;
     }
+	
+	public static int addtoOrders(int orderNumber, int agencyID, String orderStatus, String orderDate, String shippingAddress, String billingAddress, String paymentMethod, String confirmationNumber, int userID, double orderTotal) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "INSERT INTO orders(orderNumber,agencyID,orderStatus,orderDate,shippingAddress,billingAddress,paymentMethod,confirmationNumber,userID,orderTotal) VALUES (" + "'" + orderNumber + "', '" + agencyID + "', '" + orderStatus + "', '" + orderDate + "','" + shippingAddress + "', '" + billingAddress + "', '" + paymentMethod + "', '" + confirmationNumber + "', '" + userID + "', '" + orderTotal + "')";
+		System.out.println(query);
+		return DbAccessImpl.create(con, query);
+	}
+	
+	public static int getMaxOrderNumber() {
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "SELECT * FROM orders where orderNumber = (SELECT MAX(orderNumber) from orders)";
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		int value = 0;
+		try {
+			if (set.next()) {
+				value = set.getInt("orderNumber");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return value+1;
+	}
+	
 }

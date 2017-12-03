@@ -55,4 +55,12 @@ public class PromotionDA {
 		}
 		return 0;
 	}
+	
+	public static ResultSet getPromotion(int promoID) {
+		String query = "SELECT * FROM promotion WHERE promoID = '" + promoID + "'";
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
 }

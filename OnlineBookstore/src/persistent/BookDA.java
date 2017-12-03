@@ -124,4 +124,41 @@ public class BookDA {
 			return DbAccessImpl.update(con, query);
 		}
 	
+		public static int rateBook(int transID, int isbn, int rating) {
+			Connection con = (Connection) DbAccessImpl.connect();
+			String query = "UPDATE transactions SET rating = '" + rating + "' WHERE isbn = '" + isbn + "' AND transactionID = '" + transID + "'";
+			
+			int check = DbAccessImpl.update(con, query);
+			
+			if (check == 1)
+			{
+				String newQuery = "SELECT rating FROM transactions WHERE isbn = '" + isbn + "'";
+				
+				ResultSet set = DbAccessImpl.retrieve(con, newQuery);
+				double totalRating = 0.0;
+				int number = 0;
+				try {
+					while (set.next())
+					{
+						number++;
+						totalRating += set.getDouble("rating");
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				double finalRating = totalRating/number;
+				finalRating = Math.round(finalRating*100.0)/100.0;
+				String finalQuery = "UPDATE book SET rating = '" + finalRating + "' WHERE isbn = '" + isbn + "'";
+				check = DbAccessImpl.update(con, finalQuery);
+				DbAccessImpl.disconnect(con);
+				return check;
+			}
+			else
+			{
+				DbAccessImpl.disconnect(con);
+				return check;
+			}
+		}
+		
 }

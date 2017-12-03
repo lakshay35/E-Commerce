@@ -54,5 +54,24 @@ public class CreditCardDA {
 		Connection con = (Connection) DbAccessImpl.connect();
 		return DbAccessImpl.delete(con, query);
 	}
+	
+	public static CreditCard getCreditCardById(int id) {
+		String query = "SELECT * FROM creditcard WHERE CCid = '" + id + "'";
+		ResultSet set = null;
+		Connection con = (Connection) DbAccessImpl.connect();
+		set = DbAccessImpl.retrieve(con, query);
+		CreditCard card = new CreditCard();
+		try {
+			while(set.next()) {
+				card.setNumber(set.getString("CCnumber"));
+				card.setExpirationDate(set.getString("expireDate"));
+				card.setType(set.getString("CCtype"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return card;
+	}
 
 }

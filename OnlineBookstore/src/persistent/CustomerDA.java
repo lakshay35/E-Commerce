@@ -24,7 +24,7 @@ public class CustomerDA {
 			sub = 0;
 		}
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword, userCode, subscribed, phone) VALUES"
+		String query = "INSERT INTO user (fName, lName, email, userType, userPassword, userCode, subscribed, phone) VALUES"
 				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "', '" + sub + "', '" + phone + "')";
 		System.out.println(query);
 		int value = DbAccessImpl.create(con, query);

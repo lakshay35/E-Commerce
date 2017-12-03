@@ -1,6 +1,11 @@
 package persistent;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.mysql.jdbc.Connection;
+
+import object.Address;
 
 public class AddressDA {
 
@@ -29,4 +34,48 @@ public class AddressDA {
 		return DbAccessImpl.delete(con, query);
 	}
 
+	public static int getMaxAddressID() {
+		Connection con = (Connection) DbAccessImpl.connect();
+		String query = "SELECT * FROM address where addressID = (SELECT MAX(addressID) from address)";
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		int value = 0;
+		try {
+			if (set.next()) {
+				value = set.getInt("addressID");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return value+1;
+	}
+	
+	public static ResultSet getAddress(int userID) {
+		String query = "SELECT * FROM address WHERE userID = '" + userID + "'";
+		ResultSet set = null;
+		Connection con = (Connection) DbAccessImpl.connect();
+		set = DbAccessImpl.retrieve(con, query);
+		return set;
+	}
+	
+	public static Address getAddressById(int id) {
+		String query = "SELECT * FROM address WHERE addressID = '" + id + "'";
+		ResultSet set = null;
+		Connection con = (Connection) DbAccessImpl.connect();
+		set = DbAccessImpl.retrieve(con, query);
+		Address address = new Address();
+		try {
+			while(set.next()) {
+				address.setStreet(set.getString("street"));
+				address.setCity(set.getString("city"));
+				address.setState(set.getString("state"));
+				address.setZip(set.getString("zipcode"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return address;
+	}
 }
