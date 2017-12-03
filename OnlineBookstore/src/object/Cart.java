@@ -18,7 +18,7 @@ public class Cart implements ICart{
 	private int qty;
 	private double total;
 	
-	public Cart(int cartID, int promoID, int userID, int isbn, int qty, double total)
+	public Cart(int cartID, int userID, int promoID, int isbn, int qty, double total)
 	{
 		setCartID(cartID);
 		setPromoID(promoID);
@@ -26,6 +26,10 @@ public class Cart implements ICart{
 		setIsbn(isbn);
 		setQty(qty);
 		setTotal(total);
+	}
+	
+	public Cart() {
+		
 	}
 	
 	public int getCartID() {
@@ -77,6 +81,14 @@ public class Cart implements ICart{
 	
 	public int addToCart() {
 		return CartDA.addtocartDA(cartID, userID, promoID, isbn, qty, total);
+	}
+	
+	public int updateCart() {
+		return CartDA.updateCart(userID, isbn, qty, total);
+	}
+	
+	public int deleteFromCart() {
+		return CartDA.deleteFromCartDA(userID, isbn);
 	}
 	
 	public ArrayList<Cart> getCart(int userID) {

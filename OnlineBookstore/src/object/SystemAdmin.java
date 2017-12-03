@@ -8,6 +8,7 @@ import java.util.List;
 import com.mysql.jdbc.Connection;
 
 import persistent.AdminDA;
+import persistent.BookDA;
 import persistent.DbAccessImpl;
 import persistent.UserDA;
 
@@ -53,6 +54,11 @@ public class SystemAdmin extends User {
 	public int unsuspendUser(int userID) {
 		// TODO Auto-generated method stub
 		return AdminDA.unsuspendUser(userID);
+	}
+
+	public int deleteBook(int isbn) {
+		// TODO Auto-generated method stub
+		return BookDA.deleteBook(isbn);
 	}
 
 }

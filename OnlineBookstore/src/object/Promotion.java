@@ -15,6 +15,10 @@ public class Promotion {
 		setExpiration(expiration);
 	}
 	
+	public Promotion() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int addPromo(String userEmail, String host, String senderPassword, String port) {
 		int value = PromotionDA.addPromoToDA(promoID, name, percent, expiration);
 		
@@ -58,6 +62,11 @@ public class Promotion {
 	
 	public void setExpiration(String expiration) {
 		this.expiration = expiration;
+	}
+
+	public int checkPromo(int parseInt) {
+		// TODO Auto-generated method stub
+		return PromotionDA.checkPromo(parseInt);
 	}
 	
 }

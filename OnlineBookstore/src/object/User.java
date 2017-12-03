@@ -24,7 +24,16 @@ public class User {
 	int code;
 	String status;
 	Boolean subscribed;
+	String phone;
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Boolean getSubscribed() {
 		return subscribed;
 	}
@@ -89,6 +98,17 @@ public class User {
 		setSubscribed(subscribe);
 	}
 
+	public User(String fname2, String lname2, String email2, String password2, int code2, Boolean sub, String phone) {
+		// TODO Auto-generated constructor stub
+		setFname(fname2);
+		setLname(lname2);
+		setEmail(email2);
+		setPassword(password2);
+		setCode(code2);
+		setSubscribed(sub);
+		setPhone(phone);
+	}
+
 	public String getFname() {
 		return fname;
 	}
@@ -123,7 +143,7 @@ public class User {
 
 	public int createNewUser() {
 		CustomerDA da = new CustomerDA();
-		int value = da.createNewCustomer(fname, lname, email, password, code, subscribed);
+		int value = da.createNewCustomer(fname, lname, email, password, code, subscribed, phone);
 		return value;
 	}
 
@@ -194,6 +214,7 @@ public class User {
 		{
 			return null;
 		}
+		DbAccessImpl.disconnect(con);
 		return temp;
 	}
 
@@ -249,5 +270,35 @@ public class User {
 			e.printStackTrace();
 		}
 		return check;
+	}
+	
+	public List<IBook> searchBooks(String cat, String term) {
+		// TODO Auto-generated method stub
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = BookDA.searchBooks(con, cat, term);
+		List<IBook> temp = new ArrayList<IBook>();
+			try {
+				while (set.next())
+				{
+					IBook book = new Book(set.getInt("isbn"), set.getString("category"), 
+							set.getString("authorName"), set.getString("title"), 
+							set.getInt("edition"), set.getString("publisher"), 
+							set.getInt("publicationYear"), set.getInt("minThreshold"), 
+							set.getInt("qtyInStock"), set.getDouble("buyingPrice"), 
+							set.getDouble("sellingPrice"), set.getString("picture"), 
+							set.getString("description"));
+					temp.add(book);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
+		DbAccessImpl.disconnect(con);
+		return temp;
+	}
+
+	public int saveProfile(String email2, String fname2, String lname2, String phone, Boolean subscribe) {
+		// TODO Auto-generated method stub
+		return UserDA.saveProfile(email2, fname2, lname2, phone, subscribe);
 	}
 }
