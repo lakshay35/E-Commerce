@@ -74,6 +74,12 @@
     
     <br/><br/>
 
+	<#list error as error>
+		<div style="color:#800">
+  			${error}
+		</div>
+	</#list>
+
     <div class="container">
     	<div class="row">
     		<div class="col-sm-3"></div>

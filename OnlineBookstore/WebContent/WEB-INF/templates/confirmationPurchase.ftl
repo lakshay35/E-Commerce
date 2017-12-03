@@ -93,9 +93,6 @@
 		</#list>
 		<br><br>
 		
-		<#list confNumber as confNumber>
-			<span class="label label-default"><h5>Confirmation Number: </h5>${confNumber}</span>
-		</#list>
 	</div>
 	
     <!-- Footer -->

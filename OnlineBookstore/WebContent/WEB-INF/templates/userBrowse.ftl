@@ -8,10 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Online Book Store</title>
+    <title>Browse Books</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
-	
+	<script src="js/user.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -40,6 +40,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -80,10 +81,18 @@
               <h4 class="card-title">${book.getTitle()}</h4>
               <p class="card-text">${book.getDescription()}</p>
             </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+            </div>
             <div class="card-footer">
             	<form role="form" action="CustomerServlet" method="post">
               		<a href="#" class="btn btn-primary" id="view" name="viewbook" value="${book.getIsbn()}">View Info</a>
-              		<button type="submit" class="btn btn-link" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
+              		<button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
           		</form>
             </div>
           </div>

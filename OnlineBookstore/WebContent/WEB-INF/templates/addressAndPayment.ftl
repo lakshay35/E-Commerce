@@ -70,7 +70,13 @@
 		</div>
 	</nav>
 
-	<br/><br/>
+	<br/>
+	<#list error as error>
+		<div style="color:#800">
+  			${error}
+		</div>
+	</#list>
+	<br/>
 
 	<div class="container">
 		<form action="CustomerServlet" method="post">
@@ -96,7 +102,7 @@
 					</tr>
 					</#list>
 					<tr>
-						<td><input type="radio" name="selectShipAddress" value="newAddress">Add Shipping Address</td>
+						<td><input type="radio" name="selectShipAddress" value="newAddress" checked>Add Shipping Address</td>
 						<td><input type="text" name="newshipstreet" id="street" class="form-control input-sm" placeholder="Street"></td>
 						<td><input type="text" name="newshipcity" id="city" class="form-control input-sm" placeholder="City"/></td>
 						<td><!-- <input type="text" name="newshipstate" id="state" class="form-control input-sm" placeholder="State"/>-->
@@ -183,7 +189,7 @@
 					</tr>
 					</#list>
 					<tr>
-						<td><input type="radio" name="selectBillAddress" value="newAddress">Add Billing Address</td>
+						<td><input type="radio" name="selectBillAddress" value="newAddress" checked>Add Billing Address</td>
 						<td><input type="text" name="newbillstreet" id="street" class="form-control input-sm" placeholder="Street"></td>
 						<td><input type="text" name="newbillcity" id="city" class="form-control input-sm" placeholder="City"/></td>
 						<td><!-- <input type="text" name="newbillstate" id="state" class="form-control input-sm" placeholder="State"/>-->
@@ -265,10 +271,11 @@
 						<td>${card.getNumber()}</td>
 						<td>${card.getType()}</td>
 						<td>${card.getExpirationDate()}</td>
+						<td></td>
 					</tr>
 					</#list>
 					<tr>
-						<td><input type="radio" name="selectCard" value="newCard">Add Card</td>
+						<td><input type="radio" name="selectCard" value="newCard" checked>Add Card</td>
 						<td>
 							<input type="text" name="newcardnumber" id="number" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number">
 						</td>
@@ -281,11 +288,15 @@
 							</select>
 						</td>
 						<td><input type="text" name="newcardexpiration" id="expiration" class="form-control input-sm" placeholder="Expiration Date" ></td>
+						<td><input type="text" name="newccid" id="ccid" maxlength="4" class="form-control input-sm" placeholder="CC ID"></td>
 					</tr>
 				</tbody>
 			</table>
 			<#list total as total>
-			<input type="hidden" name="orderTotal" value="${total}">
+				<input type="hidden" name="orderTotal" value="${total}">
+			</#list>
+			<#list promo as promo>
+				<input type="hidden" name="promoCode" value="${promo}">
 			</#list>
 			<button class="btn btn-link" value="continueToCheckOut" name="continueToCheckOut">Continue To CheckOut</button>
 		</form>

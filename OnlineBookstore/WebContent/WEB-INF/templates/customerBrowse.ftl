@@ -22,7 +22,7 @@
 
   </head>
 
-  <body>
+  <body style="display: none;">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -40,6 +40,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -53,12 +54,12 @@
             <form action="CustomerServlet" method="post">
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
-            </li>&nbsp;
+            </li>
           	<li class="nav-item">
               <form role="form" action="CustomerServlet" method="post">
               	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
               </form>
-            </li>&nbsp;
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="History.html">Order-History</a>
             </li>
@@ -66,7 +67,7 @@
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>
             <li class="nav-item">
-				<a class="nav-link logout" id="logout" href="#">Logout</a>
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
 			</li>
           </ul>
         </div>
@@ -75,6 +76,13 @@
 
 	<br/>
 	<br/>
+	
+	<#list error as error>
+		<div style="color:#800">
+  			${error}
+		</div>
+	</#list>
+	
     <!-- Page Content -->
     <div class="container">
 
@@ -88,10 +96,18 @@
               <h4 class="card-title">${book.getTitle()}</h4>
               <p class="card-text">${book.getDescription()}</p>
             </div>
+            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
+	            <p class="card-text">Title: ${book.getTitle()}</p>
+	            <p class="card-text">Author: ${book.getAuthor()}</p>
+	            <p class="card-text">Edition: ${book.getEdition()}</p>
+	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
+	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
+	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+            </div>
             <div class="card-footer">
               	<form role="form" action="CustomerServlet" method="post">
               		<a href="#" class="btn btn-primary" id="view" name="viewbook" value="${book.getIsbn()}">View Info</a>
-              		<button type="submit" class="btn btn-link" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
+              		<button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
           		</form>
             </div>
           </div>

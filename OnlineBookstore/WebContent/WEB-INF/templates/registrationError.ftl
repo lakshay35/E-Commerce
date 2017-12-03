@@ -6,12 +6,12 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Sign Up</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       
-    <!-- Custom styles for this template -->
+
     
   </head>
 
@@ -32,47 +32,25 @@
             <li class="nav-item">
               <a class="nav-link" href="login.html">Log-In</a>
             </li>
-              <li class="nav-item">
-              <a class="nav-link" href="ForgotPassword.html">Forgot Password</a>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="registation.html">Sign Up</a>
             </li>
-              <li class="nav-item">
-              <a class="nav-link" href="Settings.html">Settings</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="Promotions.html">Promotions</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
-            </li>
-                 <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="Conformation.html">Conformation</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="RegistrationConformation.html">Reg-Conform</a>
-            </li>
-            
           </ul>
         </div>
       </div>
     </nav>
      
+      
     <div class="container">
       <div style="
-    display: inline-block;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 900px;
-    height: 300px;
-    margin: auto;
+   position: absolute;
+  margin: auto;
+  top: 100px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+ 
    ">
         <div class="row centered-form">
         <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
@@ -98,6 +76,10 @@
 			    			<div class="form-group">
 			    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address" required>
 			    			</div>
+                            
+                            <div class="form-group">
+			    				<input type="tel" name="phoneNumber" id="phoneNumber" class="form-control input-sm" placeholder="Phone Number" required>
+			    			</div>
 
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
@@ -111,7 +93,7 @@
 			    					</div>
 			    				</div>
 			    			</div>
-			    			
+			    			<p>Check this box to subscribe to receive promotions via email! <input type="checkbox" name="sub"/></p>
 			    			<input type="submit" value="Register" name="signup" class="btn btn-info btn-block">
 			    			<#if check == 0>
 				    			<p>This email is already in use.</p>

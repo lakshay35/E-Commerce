@@ -109,6 +109,9 @@
 			</#list>
 			<br><br>
 			<span class="label label-default">Total = </span>
+			<#list promo as promo>
+				<input type="hidden" name="promoCode" value="${promo}">
+			</#list>
 			<#list orderTotal as orderTotal><input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal}</span></#list>
 			<button class="btn btn-link" value="completePurchase" name="completePurchase">Complete Purchase</button>
 		</form>
