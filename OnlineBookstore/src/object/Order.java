@@ -1,19 +1,41 @@
 package object;
 
-import persistent.OrdersDA;
+import java.util.Date;
+
+import persistent.OrderDA;
 
 public class Order {
-	private int orderNumber;
-	private int agencyId;
-	private String orderStatus;
-	private String orderDate;
-	private String shippingAddress;
-	private String billingAddress;
-	private String paymentMethod;
-	private int confirmationNumber;
-	private int transactionId;
-	private int userId;
-	private double orderTotal;
+	int orderNumber;
+	String orderStatus;
+	Date date;
+	Address shippingAddress;
+	Address billingAddress;
+	String paymentMethod;
+	int confirmationNumber;
+	int userID;
+	double orderTotal;
+	
+	public Order() {
+		
+	}
+	
+	public Order(int orderNumber, double orderTotal, Date orderDate) {
+        this.setOrderNumber(orderNumber);
+        this.setOrderTotal(orderTotal);
+        this.setDate(orderDate);
+    }
+	
+	public Order(int num, String stat, Date date, Address sAdd, Address bAdd, String pay, int conNum, int userID, double total) {
+		this.setOrderNumber(num);
+		this.setOrderStatus(stat);
+		this.setDate(date);
+		this.setShippingAddress(sAdd);
+		this.setBillingAddress(bAdd);
+		this.setPaymentMethod(pay);
+		this.setConfirmationNumber(conNum);
+		this.setUserID(userID);
+		this.setOrderTotal(total);
+	}
 	
 	public int getOrderNumber() {
 		return orderNumber;
@@ -21,35 +43,28 @@ public class Order {
 	public void setOrderNumber(int orderNumber) {
 		this.orderNumber = orderNumber;
 	}
-	
-	public int getAgencyId() {
-		return agencyId;
-	}
-	public void setAgencyId(int agencyId) {
-		this.agencyId = agencyId;
-	}
 	public String getOrderStatus() {
 		return orderStatus;
 	}
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	public String getOrderDate() {
-		return orderDate;
+	public Date getDate() {
+		return date;
 	}
-	public void setOrderDate(String orderDate) {
-		this.orderDate = orderDate;
+	public void setDate(Date date) {
+		this.date = date;
 	}
-	public String getShippingAddress() {
+	public Address getShippingAddress() {
 		return shippingAddress;
 	}
-	public void setShippingAddress(String shippingAddress) {
+	public void setShippingAddress(Address shippingAddress) {
 		this.shippingAddress = shippingAddress;
 	}
-	public String getBillingAddress() {
+	public Address getBillingAddress() {
 		return billingAddress;
 	}
-	public void setBillingAddress(String billingAddress) {
+	public void setBillingAddress(Address billingAddress) {
 		this.billingAddress = billingAddress;
 	}
 	public String getPaymentMethod() {
@@ -64,17 +79,11 @@ public class Order {
 	public void setConfirmationNumber(int confirmationNumber) {
 		this.confirmationNumber = confirmationNumber;
 	}
-	public int getTransactionId() {
-		return transactionId;
+	public int getUserID() {
+		return userID;
 	}
-	public void setTransactionId(int transactionId) {
-		this.transactionId = transactionId;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserID(int userID) {
+		this.userID = userID;
 	}
 	public double getOrderTotal() {
 		return orderTotal;
@@ -82,8 +91,13 @@ public class Order {
 	public void setOrderTotal(double orderTotal) {
 		this.orderTotal = orderTotal;
 	}
+
+	public int changeOrderStatus(String orderID, String status) {
+		// TODO Auto-generated method stub
+		return OrderDA.changeOrderStatus(orderID, status);
+	}
 	
 	public static int getMaxOrderNumber() {
-		return OrdersDA.getMaxOrderNumber();
+		return OrderDA.getMaxOrderNumber();
 	}
 }

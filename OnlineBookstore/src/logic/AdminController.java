@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.IBook;
+import freemarker.template.SimpleHash;
 import object.Book;
 import object.Promotion;
 import object.SystemAdmin;
 import object.User;
+import persistent.BookDA;
+import persistent.OrderDA;
 
 public class AdminController {
 
@@ -79,4 +82,27 @@ public class AdminController {
 		return admin.unsuspendUser(userID);
 	}
 
+	public int checkPromo(int parseInt) {
+		// TODO Auto-generated method stub
+		Promotion promo = new Promotion();
+		return promo.checkPromo(parseInt);
+	}
+
+	public int deleteBook(int isbn) {
+		// TODO Auto-generated method stub
+		SystemAdmin admin = new SystemAdmin();
+		return admin.deleteBook(isbn);
+	}
+
+	public SimpleHash getSalesReport() {
+        return OrderDA.getSalesReport();
+    }
+	
+	public SimpleHash getBookReport() {
+        return BookDA.getBookReport();
+	}
+
+public int updateQuantityOfBook(int quantity, int isbn) {
+	return BookDA.updateQuantityOfBook(quantity, isbn);
+	}
 }

@@ -1,5 +1,7 @@
 package logic;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +9,10 @@ import entity.IBook;
 import object.Address;
 import object.CreditCard;
 import object.Book;
+import object.Cart;
 import object.Customer;
 import object.Order;
+import persistent.CartDA;
 
 public class CustomerController {
 	
@@ -51,9 +55,9 @@ public class CustomerController {
 		return add.deleteAddress();
 	}
 
-	public int addCard(String number, String expire, String type, int userID) {
+	public int addCard(String number, String expire, String type, int userID, String csc) {
 		// TODO Auto-generated method stub
-		CreditCard card = new CreditCard(number, expire, type);
+		CreditCard card = new CreditCard(number, expire, type, csc);
 		return card.addCard(userID);
 	}
 
@@ -72,5 +76,24 @@ public class CustomerController {
 
 	public int getMaxOrderNumber() {
 		return Order.getMaxOrderNumber();
+	}
+	
+	public Cart getCartByID(int id) {
+		Cart cart = new Cart();
+		ResultSet set = CartDA.getCartByID(id);
+		try {
+			while(set.next()) {
+				cart.setCartID(id);
+				cart.setIsbn(set.getInt("isbn"));
+				cart.setPromoID(0);
+				cart.setQty(set.getInt("qty"));
+				cart.setTotal(set.getDouble("total"));
+				cart.setUserID(set.getInt("userID"));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return cart;
 	}
 }
