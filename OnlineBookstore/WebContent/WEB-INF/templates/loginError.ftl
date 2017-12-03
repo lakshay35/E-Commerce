@@ -73,7 +73,9 @@
         <input type="password" name="pass" id="inputPassword" class="form-control" placeholder="Password" required>
         <a href="ForgotPassword.html">Forgot Password</a>
         <button class="btn btn-lg btn-primary btn-block" name="login" type="submit">Sign in</button>
+        <p>${message}</p>
       </form>
+ 
 
     </div> <!-- /container -->
       </div>

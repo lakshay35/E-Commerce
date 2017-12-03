@@ -8,10 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Browse Books</title>
+    <title>Online Book Store</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
-	<script src="js/admin.js" type="text/javascript"></script>
+	<script src="js/customerhome.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
   </head>
 
-  <body>
+  <body onload="showValue()">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -34,29 +34,32 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="AdminServlet" method="post">
-						<input type="text" name="term" class="form-control" placeholder="Search here"/>
-						<select class="form-control" name="category" id="dropDown_search">
-							<option value="0">ISBN</option>
-							<option value="1">Author</option>
-							<option value="2">Title</option>
-							<option value="3">Subject</option>
-						</select>
-						<button type="submit" name="searchBooks" class="form-control">Search</button>
-					</form>
-				</li>
+				<form class="form-inline" action="BookstoreServlet" method="post">
+					<input type="text" class="form-control" placeholder="Search here">
+					<select class="form-control" id="dropDown_search">
+						<option>Search By</option>
+						<option>ISBN</option>
+						<option>Author</option>
+						<option>Name</option>
+					</select>
+					<button type="submit" class="form-control">Search</button>
+				</form>
+			</li>
             <li class="nav-item active">
-              <a class="nav-link" href="Admin.html">Home
+              <a class="nav-link" href="Customer.html">Home
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="AddBook.html">Add Book</a>
-            </li>
             <li class="nav-item"> 
-            <form action="AdminServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
+            <form action="CustomerServlet" method="post">
+              <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
+            </form>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="MyCart.html">MyCart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="History.html">Order-History</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -68,37 +71,30 @@
         </div>
       </div>
     </nav>
-
-	<br/>
-	<br/>
-    <!-- Page Content -->
+    <br><br>
     <div class="container">
-
-      <!-- Page Features -->
-      <div class="row text-center" id="bookRow">
-		<#list books as book>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="${book.getPicture()}" alt="${book.getTitle()}">
-            <div class="card-body">
-              <h4 class="card-title">${book.getTitle()}</h4>
-              <p class="card-text">${book.getDescription()}</p>
-            </div>
-            <div class="card-footer">
-            <form action="AdminServlet" method="post">
-              <button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
-              <button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
-            </form>
-            </div>
-          </div>
-        </div>
+		<#list orderNumber as orderNumber>
+			<span class="label label-default"><h5>Order Number: </h5>${orderNumber}</span>
 		</#list>
-      </div>
-      <!-- /.row -->
-
-    </div>
-    <!-- /.container -->
-
+		<br><br>
+		
+		<#list shipAddress as shipAddress>
+			<span class="label label-default"><h5>Shipping Address: </h5>${shipAddress}</span>
+		</#list>
+		<br><br>
+		
+		<#list billAddress as billAddress>
+			<span class="label label-default"><h5>Billing Address: </h5>${billAddress}</span>
+		</#list>
+		<br><br>
+		
+		<#list paymentMethod as paymentMethod>
+			<span class="label label-default"><h5>Payment Method: </h5>${paymentMethod}</span>
+		</#list>
+		<br><br>
+		
+	</div>
+	
     <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">

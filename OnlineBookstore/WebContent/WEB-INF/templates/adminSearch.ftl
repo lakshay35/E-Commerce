@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Browse Books</title>
+    <title>Search Books</title>
 
 	<script src="js/jquery.js" type="text/javascript"></script>
 	<script src="js/admin.js" type="text/javascript"></script>
@@ -73,9 +73,10 @@
 	<br/>
     <!-- Page Content -->
     <div class="container">
-
+	<p>Showing results for: ${searchTerm}</p>
       <!-- Page Features -->
       <div class="row text-center" id="bookRow">
+      	<#if books?has_content>
 		<#list books as book>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
@@ -85,14 +86,17 @@
               <p class="card-text">${book.getDescription()}</p>
             </div>
             <div class="card-footer">
-            <form action="AdminServlet" method="post">
-              <button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
-              <button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
-            </form>
+            	<form action="AdminServlet" method="post">
+              		<button type="submit" class="btn btn-primary" id="edit" name="editbook" value="${book.getIsbn()?c}">Edit Book</button>
+              		<button type="submit" class="btn btn-primary" id="delete" name="deletebook" value="${book.getIsbn()?c}">Delete Book</button>
+            	</form>
             </div>
           </div>
         </div>
 		</#list>
+		<#else>
+		<p>No results found.</p>
+		</#if>
       </div>
       <!-- /.row -->
 

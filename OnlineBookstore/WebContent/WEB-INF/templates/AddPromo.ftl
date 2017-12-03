@@ -6,16 +6,13 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Edit Book</title>
+    <title>Add Promotion</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="js/jquery.js" type="text/javascript"></script>
-    <script src="js/admin.js" type="text/javascript"></script>
-      
+	<link href="css/browsebutton.css" rel="stylesheet">  
     <!-- Custom styles for this template -->
-    
-    <link href="css/browsebutton.css" rel="stylesheet">
     
   </head>
 
@@ -47,6 +44,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="AddBook.html">Add Book</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="AddPromo.html">Add Promotion</a>
             </li>
              <li class="nav-item"> 
             <form action="AdminServlet" method="post">
@@ -82,85 +82,42 @@
         <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
         	<div class="panel panel-default">
         		<div class="panel-heading">
-			    		<h3 class="panel-title">Edit Book</h3>
+			    		<h3 class="panel-title">Add a Promotion</h3>
 			 			</div>
 			 			<div class="panel-body">
 			    		<form role="form" action="AdminServlet" method="post">
-			    		<input type="hidden" name="isbn" id="isbn" class="form-control input-sm" placeholder="ISBN" value="${book.getIsbn()?c}">
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="title" id="title" class="form-control input-sm" placeholder="Title" value="${book.getTitle()}" required>
+			                <input type="text" name="promoName" id="promoName" class="form-control input-sm" placeholder="Promotion Name">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="author" id="author" class="form-control input-sm" placeholder="Author Name" value="${book.getAuthor()}" required>
+			    						<input type="text" name="percentage" minlength="1" maxlength="2" id="percentage" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion Percentage">
 			    					</div>
 			    				</div>
 			    			</div>
 			    			
 			    			<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    				<div class="col-xs-8 col-sm-8 col-md-8">
 			    					<div class="form-group">
-			    						<input type="text" name="edition" id="edition" class="form-control input-sm" placeholder="Edition" value="${book.getEdition()}" required>
+			    						<input type="date" name="expiration" id="expiration" class="form-control input-sm" placeholder="Expiration Date">
 			    					</div>
 			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="category" id="category" class="form-control input-sm" placeholder="Category" value="${book.getCategory()}" required>
-			    					</div>
-			    				</div>
-			    			</div>
-							
-							<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="publisher" id="publisher" class="form-control input-sm" placeholder="Publisher" value="${book.getPublisher()}" required>
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year" value="${book.getYear()?c}" required>
-			    					</div>
-			    				</div>
-			    			</div>
-							
-							<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="number" name="threshold" id="threshold" class="form-control input-sm" placeholder="Minimum Threshold" value="${book.getThreshold()?c}" required>
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="number" name="quantity" id="quantity" class="form-control input-sm" placeholder="Quantity" value="${book.getQuantity()?c}" required>
-			    					</div>
-			    				</div>
-			    			</div>
-							
-							<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price" value="${book.getBuyingPrice()?c}" required>
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price" value="${book.getSellingPrice()?c}" required>
-			    					</div>
-			    				</div>
-			    			</div>
-							
-			    			<div class="form-group">
-			    				<input type="url" name="picture" id="picture" class="form-control input-sm" placeholder="Cover URL" value="${book.getPicture()}" required>
 			    			</div>
 			    			
-			    			<div class="form-group">
-			    				<textarea name="description" id="description" class="form-control input-sm" placeholder="Description" required>${book.getDescription()}</textarea>
+			    			<div class="row">
+			    				<div class="col-xs-12 col-sm-12 col-md-12">
+			    					<div class="form-group">
+			                			<input type="text" name="promoID" minlength="1" maxlength="10" id="promoID" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion ID">
+			    					</div>
+			    				</div>
 			    			</div>
-			    			<input type="submit" value="Edit Book" name="submitedit" class="btn btn-info btn-block">
-			    			<p id="editMessage">${message}</p>
+			    			
+			    			
+			    			<input type="submit" value="Add Promotion" name="addpromotion" class="btn btn-info btn-block">
+			    			<p>${message}</p>
 			    		</form>
 			    	</div>
 	    		</div>

@@ -71,72 +71,51 @@
         </div>
       </div>
     </nav>
-    
-    <br/><br/>
-
-	<#list error as error>
-		<div style="color:#800">
-  			${error}
-		</div>
-	</#list>
-
+    <br><br>
     <div class="container">
-    	<div class="row">
-    		<div class="col-sm-3"></div>
-			<div class="col-sm-3"><h4>Title</h4></div>
-			<div class="col-sm-3"><h4>Quantity</h4></div>
-			<div class="col-sm-3"><h4>Total</h4></div>
-		</div>
-		<#assign sum = 0>
-    	<#list cart as cart>
-    		<#assign sum = sum + cart.getTotal()>
-    		<form action="CustomerServlet" method="post">
-	    		<div class="row">
-	    			<div class="col-sm-3"><img class="img-thumbnail" src="${book[cart?index].getPicture()}" alt="${book[cart?index].getTitle()}"></div>
-	    			<div class="col-sm-3"><p>${book[cart?index].getTitle()}</p></div>
-	    			<div class="col-sm-3">
-	    				<select name="quantity">
-	    					<#list 1..20 as x>
-	    						${x}
-	    						<#if x == cart.getQty()>
-	    							<option selected=selected vlaue="${x}">${x}</option>
-								<#else>
-	    							<option value="${x}">${x}</option>
-	    						</#if>
-	    					</#list>
-	    				</select>
-	    				<input type="hidden" name="cartID" value="${cart.getCartID()}">
-	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="updateItem">Update</button>
-	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="deleteItem">Delete</button>
-	    			</div>
-	    			<div class="col-sm-3"><p name="total">${cart.getTotal()}</p></div>
-				</div>
-			</form>
-		</#list>
-	</div>
-	
-	<form action="CustomerServlet" method="post">
-		<div class="row">
-		<div class="col-sm-3"></div>
-		<div class="col-sm-3"></div>
-		<div class="col-sm-3"></div>
-		<div class="col-sm-3">
-			<#list total as total>
-				<span class="label label-default">Total = </span>
-				<input type="hidden" name="orderTotal" value="${total}"><span class="label label-default">${total}</span>
+		<form action="CustomerServlet" method="post">
+			<h5>Shipping Address</h5>
+			<#list shippingAddress as shippingAddress>
+				<input type="hidden" name="shipAddress" value="${shippingAddress.getStreet()}, ${shippingAddress.getCity()}, ${shippingAddress.getState()}, ${shippingAddress.getZip()}">
+				<span class="label label-default">${shippingAddress.getStreet()}, ${shippingAddress.getCity()}, ${shippingAddress.getState()}, ${shippingAddress.getZip()}</span>
 			</#list>
-		</div>
-		</div>
-		<div class="row">
-		<div class="col-sm-3"></div>
-		<div class="col-sm-3">
-			<label>Enter Promo Code:</label>
-			<#list promo as promo><input type="text" id="promoCode" name="promoCode" value="${promo}"></#list>
-		</div>
-		<div class="col-sm-3"><button class="btn btn-link" value="applyPromo" name="applyPromo">Apply</button></div>
-		<div class="col-sm-3"><button class="btn btn-link" value="checkout" name="checkoutCart">Checkout</button></div>
-		</div>
-	</form>
+			<br><br><h5>Billing Address</h5>
+			<#list billingAddress as billingAddress>
+				<input type="hidden" name="billAddress" value="${billingAddress.getStreet()}, ${billingAddress.getCity()}, ${billingAddress.getState()}, ${billingAddress.getZip()}">
+				<span class="label label-default">${billingAddress.getStreet()}, ${billingAddress.getCity()}, ${billingAddress.getState()}, ${billingAddress.getZip()}</span>
+			</#list>
+			<br><br><h5>Payment Type</h5>
+			<#list billingCard as billingCard>
+				<input type = "hidden" name="billCard" value="${billingCard.getType()}, ${billingCard.getExpirationDate()}, ${billingCard.getNumber()}">
+				<span class="label label-default">${billingCard.getType()}, ${billingCard.getExpirationDate()}, ${billingCard.getNumber()}</span>
+			</#list>
+			<br><br><h5>Cart</h5>
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-3"><h4>Title</h4></div>
+				<div class="col-sm-3"><h4>Quantity</h4></div>
+				<div class="col-sm-3"><h4>Total</h4></div>
+			</div>
+			<#list cart as cart>
+			<div class="row">
+				<div class="col-sm-3"><img class="img-thumbnail" src="${book[cart?index].getPicture()}" alt="${book[cart?index].getTitle()}"></div>
+				<div class="col-sm-3"><p>${book[cart?index].getTitle()}</p></div>
+				<div class="col-sm-3">
+					<span class="label label-default" name="cartTotal">${cart.getQty()}</span>
+					<input type="hidden" name="cartID" value="${cart.getCartID()}">
+				</div>
+				<div class="col-sm-3"><p name="total">${cart.getTotal()}</p></div>
+			</div>
+			</#list>
+			<br><br>
+			<span class="label label-default">Total = </span>
+			<#list promo as promo>
+				<input type="hidden" name="promoCode" value="${promo}">
+			</#list>
+			<#list orderTotal as orderTotal><input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal}</span></#list>
+			<button class="btn btn-link" value="completePurchase" name="completePurchase">Complete Purchase</button>
+		</form>
+	</div>
 	
     <!-- Footer -->
     <footer class="py-5 bg-dark">
