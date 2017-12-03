@@ -35,29 +35,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
-				<li class="nav-item">
-					<form class="form-inline">
-						<input type="text" class="form-control" placeholder="Search here">
-						<select class="form-control" id="dropDown_search">
-							<option>Search By</option>
-							<option>ISBN</option>
-							<option>Author</option>
-							<option>Name</option>
-						</select>
-						<button type="submit" class="form-control">Search</button>
-					</form>
-				</li>
+				
 				<li class="nav-item active">
 					<a class="nav-link" href="CustomerPage_d.html">Home
 						<span class="sr-only">(current)</span>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">View Orders</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">View Reports</a>
-				</li>
+				<li class="nav-item"> 
+            		<form action="AdminServlet" method="post">
+              			<button type="submit" class="btn btn-link browsebutton" name="salesReport" id="salesReport" value="View EOD">View EOD</button>
+              		</form>
+            	</li>
+            	<li class="nav-item"> 
+            		<form action="AdminServlet" method="post">
+              			<button type="submit" class="btn btn-link browsebutton" name="lowQty" id="lowQty" value="View Low Quantity">View Inventory</button>
+              		</form>
+            	</li>
 				<li class="nav-item">
 					<a class="nav-link logout" id="logout" href="#">Logout</a>
 				</li>

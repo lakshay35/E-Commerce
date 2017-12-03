@@ -8,7 +8,7 @@ $(document).ready(function loadPage() {
 		async:"false",
 		success: function(responseText) {
 			
-			if (responseText == "SystemAdmin")
+			if (responseText != '0')
 				{
 					$.ajax({
 						type: "POST",
@@ -26,22 +26,8 @@ $(document).ready(function loadPage() {
 				}
 			else
 				{
-				
 				window.location.href = "login.html";
 				}
-		}
-	});
-});
-
-$(document).on('click', ".logout", function () { 
-	$.ajax({
-		type: "POST",
-		url: "BookstoreServlet",
-		data: {
-		"logout" : "logout"
-		}, async:"false",
-		success: function () {
-			window.location.href = "index.html"
 		}
 	});
 });

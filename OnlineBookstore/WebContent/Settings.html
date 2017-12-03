@@ -4,7 +4,8 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
         <meta charset="utf-8">
-        <title>Bootply snippet - Edit profile form</title>
+        <meta http-equiv="Cache-Control" content="no-store" />
+        <title>Settings</title>
         <meta name="generator" content="Bootply" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="description" content="User information form snippet with timezones" />
@@ -39,7 +40,7 @@
     
     <!-- HTML code from Bootply.com editor -->
     
-    <body >
+    <body style="display: none;">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Book Store</a>
@@ -49,41 +50,21 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="index.html">Home
-                <span class="sr-only">(current)</span>
-              </a>
+              <a class="nav-link" id="home" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="login.html">Log-In</a>
+            <li id="addressTab">
+            	<form class="nav-link" action="CustomerServlet" method="post">
+              		<button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">Addresses</button>
+              	</form>
             </li>
-              <li class="nav-item">
-              <a class="nav-link" href="ForgotPassword.html">Forgot Password</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="registation.html">Sign Up</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="Settings.html">Settings</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="Promotions.html">Promotions</a>
-            </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
-            </li>
-                 <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
-            </li>
-            <li>
-             <form action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-link browsebutton"  name="viewAddress" id="viewAddress" value="My Addresses">My Addresses</button>
-              </form>
-              </li>
-              <li>
-             	<form action="CustomerServlet" method="post">
-              		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Payment Methods</button>
+              <li id="creditTab">
+             	<form class="nav-link" action="CustomerServlet" method="post">
+              		<button type="submit" class="btn btn-link browsebutton"  name="viewCreditCard" id="viewCreditCard" value="My Credit Cards">Credit Cards</button>
               	</form>
               </li>
+            <li class="nav-item">
+					<a class="nav-link logout" id="logout" href="#">Logout</a>
+			</li>
           </ul>
         </div>
       </div>
@@ -91,17 +72,6 @@
         <div class="container">
     <h1>Edit Profile</h1>
   	<hr>
-	<div class="row">
-      <!-- left column -->
-      <div class="col-md-3">
-        <div class="text-center">
-          <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
-          <h6>Upload a different photo...</h6>
-          
-          <input type="file" class="form-control">
-        </div>
-      </div>
-      
       <!-- edit form column -->
       <div class="col-md-9 personal-info">
         <div class="alert alert-info alert-dismissable">
@@ -115,66 +85,31 @@
           <div class="form-group">
             <label class="col-lg-3 control-label">First name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" id="fname" value="Jane">
+              <input class="form-control" type="text" id="fname" value="">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Last name:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" id="lname" value="Bishop">
+              <input class="form-control" type="text" id="lname" value="">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-lg-3 control-label">Company:</label>
+            <label class="col-lg-3 control-label">Email: (Cannot be changed.)</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-lg-3 control-label">Email:</label>
-            <div class="col-lg-8">
-              <input class="form-control" type="text" id="email" value="janesemail@gmail.com">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-lg-3 control-label">Time Zone:</label>
-            <div class="col-lg-8">
-              <div class="ui-select">
-                <select id="user_time_zone" class="form-control">
-                  <option value="Hawaii">(GMT-10:00) Hawaii</option>
-                  <option value="Alaska">(GMT-09:00) Alaska</option>
-                  <option value="Pacific Time (US &amp; Canada)">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
-                  <option value="Arizona">(GMT-07:00) Arizona</option>
-                  <option value="Mountain Time (US &amp; Canada)">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
-                  <option value="Central Time (US &amp; Canada)" selected="selected">(GMT-06:00) Central Time (US &amp; Canada)</option>
-                  <option value="Eastern Time (US &amp; Canada)">(GMT-05:00) Eastern Time (US &amp; Canada)</option>
-                  <option value="Indiana (East)">(GMT-05:00) Indiana (East)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label">Username:</label>
-            <div class="col-md-8">
-              <input class="form-control" type="text" value="janeuser">
+              <input class="form-control" type="email" id="email" value="">
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">Phone:</label>
             <div class="col-md-8">
-              <input class="form-control" type="text" id="phone" value="11111122333">
+              <input class="form-control" type="text" id="phone" value="">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label">Password:</label>
+            <label class="col-md-3 control-label">Subscribe to promotions: </label>
             <div class="col-md-8">
-              <input class="form-control" type="password" value="11111122333">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label">Confirm password:</label>
-            <div class="col-md-8">
-              <input class="form-control" type="password" value="11111122333">
+             	<input type="checkbox" id="sub" name="sub"/>
             </div>
           </div>
           <div class="form-group">
@@ -184,11 +119,14 @@
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>
+            <br>
+            <div class="col-md-8">
+            <p id="messagePara"></p>
+            </div>
           </div>
         </form>
       </div>
   </div>
-</div>
 <hr>
         
         <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>

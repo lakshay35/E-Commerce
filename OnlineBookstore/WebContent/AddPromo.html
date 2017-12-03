@@ -32,6 +32,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -93,7 +94,7 @@
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="percentage" id="percentage" class="form-control input-sm" placeholder="Promotion Percentage">
+			    						<input type="text" name="percentage" minlength="1" maxlength="2" id="percentage" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion Percentage">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -109,7 +110,7 @@
 			    			<div class="row">
 			    				<div class="col-xs-12 col-sm-12 col-md-12">
 			    					<div class="form-group">
-			                			<input type="text" name="promoID" id="promoID" class="form-control input-sm" placeholder="Promotion ID">
+			                			<input type="text" name="promoID" minlength="1" maxlength="10" id="promoID" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion ID">
 			    					</div>
 			    				</div>
 			    			</div>
