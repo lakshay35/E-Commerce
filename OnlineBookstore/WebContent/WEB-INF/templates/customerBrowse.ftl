@@ -55,11 +55,15 @@
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
             </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
+             <li class="nav-item">
+              <form role="form" action="CustomerServlet" class="test" method="post">
+              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">MyCart</button>
+              </form>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+            <form action="CustomerServlet" method="post">
+            		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
+            </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -101,6 +105,7 @@
 	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
 	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
 	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+	            <p class="card-text">Rating: ${book.getRating()?c}/5</p>
             </div>
             <div class="card-footer">
               <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>

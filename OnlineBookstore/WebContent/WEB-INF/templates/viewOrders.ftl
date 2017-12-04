@@ -28,14 +28,14 @@
   <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Shipping Employee</a>
+        <a class="navbar-brand" href="#">Orders</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="Shipmentview_d.html">Home</a>
+              <a class="nav-link" id="home" href="">Home</a>
             </li>
             <li class="nav-item">
 				<a class="nav-link" href="Settings.html">Settings</a>
@@ -85,6 +85,8 @@
   						<th>Author</th>
   						<th>Quantity</th>
   						<th>Total</th>
+  						<th>Rating</th>
+  						<th>Rate Book</th>
   					</tr>
   				</thead>
   				<tbody>
@@ -94,7 +96,18 @@
 						<td><span class="label label-info">${tAct.getAuthor()}</span></td>
 						<td><span class="label label-info">${tAct.getTransactionQty()}</span></td>
 						<td><span class="label label-info">${tAct.getTransactionTotal()}</span></td>
-						
+						<td><span class="label label-info">${tAct.getRating()?c}</span></td>
+						<td><span class="label label-info">
+							<select class="rateSelect">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+							<input type="hidden" class="order" value="${tAct.getOrderNumber()?c}"/>
+							<button class="btn btn-primary rate" value="${tAct.getTransactionISBN()?c}">Rate</button>
+						</span></td>
 					</tr>
 	          		</#list>
 	          	</tbody>

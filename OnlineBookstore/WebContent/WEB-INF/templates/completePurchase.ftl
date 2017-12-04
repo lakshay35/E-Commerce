@@ -34,16 +34,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-				<form class="form-inline" action="BookstoreServlet" method="post">
-					<input type="text" class="form-control" placeholder="Search here">
-					<select class="form-control" id="dropDown_search">
-						<option>Search By</option>
-						<option>ISBN</option>
-						<option>Author</option>
-						<option>Name</option>
-					</select>
-					<button type="submit" class="form-control">Search</button>
-				</form>
+				<form class="form-inline" action="CustomerServlet" method="post">
+						<input type="text" name="term" class="form-control" placeholder="Search here"/>
+						<select class="form-control" name="category" id="dropDown_search">
+							<option value="0">ISBN</option>
+							<option value="1">Author</option>
+							<option value="2">Title</option>
+							<option value="3">Subject</option>
+						</select>
+						<button type="submit" name="searchBooks" class="form-control">Search</button>
+					</form>
 			</li>
             <li class="nav-item active">
               <a class="nav-link" href="Customer.html">Home
@@ -55,11 +55,15 @@
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
             </form>
             </li>
-              <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
+             <li class="nav-item">
+              <form role="form" action="CustomerServlet" method="post">
+              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
+              </form>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+            <form action="CustomerServlet" method="post">
+            		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
+            </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -112,7 +116,9 @@
 			<#list promo as promo>
 				<input type="hidden" name="promoCode" value="${promo}">
 			</#list>
-			<input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal?string.currency}</span>
+			<#list orderTotal as orderTotal>
+			<input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal}</span>
+			</#list>
 			<button class="btn btn-link" value="completePurchase" name="completePurchase">Complete Purchase</button>
 		</form>
 	</div>

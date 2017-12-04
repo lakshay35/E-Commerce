@@ -40,6 +40,7 @@
 							<option value="0">ISBN</option>
 							<option value="1">Author</option>
 							<option value="2">Title</option>
+							<option value="3">Subject</option>
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
@@ -58,9 +59,11 @@
               <form role="form" action="CustomerServlet" method="post">
               	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
               </form>
-            </li>&nbsp;
+            </li>
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+            <form action="CustomerServlet" method="post">
+            		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
+            </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>

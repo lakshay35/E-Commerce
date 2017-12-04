@@ -89,6 +89,7 @@
 	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
 	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
 	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+	             <p class="card-text">Rating: ${book.getRating()?c}/5</p>
             </div>
             <div class="card-footer">
               <button class="btn btn-primary view" id="view" value="${book.getIsbn()?c}">View Info</button>

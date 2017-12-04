@@ -1,8 +1,9 @@
 .browsebutton {
 	color: rgba(255,255,255,.5); 
 	text-decoration: none;
-	padding-left: 0;
-	padding-right: 0;
+	padding-left: 5;
+	padding-right: 5;
+	margin-right: 5px;
 	border-left: 0;
 	border-right: 0;
 	cursor: pointer;

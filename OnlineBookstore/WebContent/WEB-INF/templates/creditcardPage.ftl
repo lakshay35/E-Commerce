@@ -114,7 +114,7 @@
     			
 			    <div class="col-xs-12 col-sm-12 col-md-12">
 			    	<div class="form-group">
-			        	<input type="text" name="number" id="number" minlength="16" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
+			        	<input type="password" name="number" id="number" minlength="16" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
 			    	</div>
 			    </div>
 			  
@@ -122,7 +122,7 @@
 			<div class="row">
 				<div class="col-xs-3 col-sm-6 col-md-3">
 					<div class="form-group">
-						<input type="text" name="security" minlength="3" maxlength="3" id="security" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CSC"/>
+						<input type="password" name="security" minlength="3" maxlength="3" id="security" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CSC"/>
 					</div>
 				</div>
 			</div>

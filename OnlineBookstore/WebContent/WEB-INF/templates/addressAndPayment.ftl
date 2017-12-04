@@ -32,16 +32,16 @@
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<form class="form-inline" action="BookstoreServlet" method="post">
-							<input type="text" class="form-control" placeholder="Search here">
-							<select class="form-control" id="dropDown_search">
-								<option>Search By</option>
-								<option>ISBN</option>
-								<option>Author</option>
-								<option>Name</option>
-							</select>
-							<button type="submit" class="form-control">Search</button>
-						</form>
+						<form class="form-inline" action="CustomerServlet" method="post">
+						<input type="text" name="term" class="form-control" placeholder="Search here"/>
+						<select class="form-control" name="category" id="dropDown_search">
+							<option value="0">ISBN</option>
+							<option value="1">Author</option>
+							<option value="2">Title</option>
+							<option value="3">Subject</option>
+						</select>
+						<button type="submit" name="searchBooks" class="form-control">Search</button>
+					</form>
 					</li>
 					<li class="nav-item active">
 						<a class="nav-link" href="Customer.html">Home
@@ -54,11 +54,15 @@
 						</form>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="MyCart.html">MyCart</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="History.html">Order-History</a>
-					</li>
+              <form role="form" action="CustomerServlet" method="post">
+              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
+              </form>
+            </li>
+            <li class="nav-item">
+            <form action="CustomerServlet" method="post">
+            		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
+            </form>
+            </li>
 					<li class="nav-item">
 						<a class="nav-link" href="Settings.html">Settings</a>
 					</li>
@@ -103,8 +107,8 @@
 					</#list>
 					<tr>
 						<td><input type="radio" name="selectShipAddress" value="newAddress" checked>Add Shipping Address</td>
-						<td><input type="text" name="newshipstreet" id="street" class="form-control input-sm" placeholder="Street"></td>
-						<td><input type="text" name="newshipcity" id="city" class="form-control input-sm" placeholder="City"/></td>
+						<td><input type="text" name="newshipstreet" id="street" maxlength="100" class="form-control input-sm" placeholder="Street"></td>
+						<td><input type="text" name="newshipcity" id="city" maxlength="45" class="form-control input-sm" placeholder="City"/></td>
 						<td><!-- <input type="text" name="newshipstate" id="state" class="form-control input-sm" placeholder="State"/>-->
 							<select class="state form-control input-sm" id="state" name="newshipstate">
 								<option value="AL">Alabama</option>
@@ -160,7 +164,7 @@
 								<option value="WY">Wyoming</option>
 							</select>
 						</td>
-						<td><input type="text" name="newshipzip" id="zip" class="form-control input-sm" placeholder="Zip code"/></td>
+						<td><input type="text" name="newshipzip" id="zip" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Zip code"/></td>
 					</tr>
 				</tbody>
 			</table>
@@ -190,8 +194,8 @@
 					</#list>
 					<tr>
 						<td><input type="radio" name="selectBillAddress" value="newAddress" checked>Add Billing Address</td>
-						<td><input type="text" name="newbillstreet" id="street" class="form-control input-sm" placeholder="Street"></td>
-						<td><input type="text" name="newbillcity" id="city" class="form-control input-sm" placeholder="City"/></td>
+						<td><input type="text" name="newbillstreet" id="street" maxlength="100" class="form-control input-sm" placeholder="Street"></td>
+						<td><input type="text" name="newbillcity" id="city" maxlength="45" class="form-control input-sm" placeholder="City"/></td>
 						<td><!-- <input type="text" name="newbillstate" id="state" class="form-control input-sm" placeholder="State"/>-->
 							<select class="state form-control input-sm" id="state" name="newbillstate">
 								<option value="AL">Alabama</option>
@@ -247,7 +251,7 @@
 								<option value="WY">Wyoming</option>
 							</select>
 						</td>
-						<td><input type="text" name="newbillzip" id="zip" class="form-control input-sm" placeholder="Zip code"/></td>
+						<td><input type="text" name="newbillzip" id="zip" maxlength="45" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Zip code"/></td>
 					</tr>
 				</tbody>
 			</table>
@@ -277,7 +281,7 @@
 					<tr>
 						<td><input type="radio" name="selectCard" value="newCard" checked>Add Card</td>
 						<td>
-							<input type="text" name="newcardnumber" id="number" maxlength="16" class="form-control input-sm" placeholder="Credit Card Number">
+							<input type="text" name="newcardnumber" minlength="16" maxlength="16" id="number" maxlength="16" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Credit Card Number">
 						</td>
 						<td>
 							<select class="state form-control input-sm" id="type" name="newcardtype">
@@ -288,13 +292,13 @@
 							</select>
 						</td>
 						<td><input type="text" name="newcardexpiration" id="expiration" class="form-control input-sm" placeholder="Expiration Date" ></td>
-						<td><input type="text" name="newccid" id="ccid" maxlength="4" class="form-control input-sm" placeholder="CC ID"></td>
+						<td><input type="text" name="newccid" id="ccid" minlength="3" maxlength="3" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CC ID"></td>
 					</tr>
 				</tbody>
 			</table>
 			<#list total as total>
 				<input type="hidden" name="orderTotal" value="${total}">
-			</#list>
+				</#list>
 			<#list promo as promo>
 				<input type="hidden" name="promoCode" value="${promo}">
 			</#list>

@@ -93,17 +93,17 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="title" id="title" class="form-control input-sm" placeholder="Title">
+			                <input type="text" name="title" id="title" maxlength="45" class="form-control input-sm" placeholder="Title">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="author" id="author" class="form-control input-sm" placeholder="Author Name">
+			    						<input type="text" name="author" id="author" maxlength="45" class="form-control input-sm" placeholder="Author Name">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="number" name="edition" id="edition" class="form-control input-sm" placeholder="Edition">
+			    						<input type="number" name="edition" id="edition" maxlength="11" class="form-control input-sm" placeholder="Edition">
 			    					</div>
 			    				</div>
 			    			</div>
@@ -111,7 +111,7 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="category" id="category" class="form-control input-sm" placeholder="Category">
+			                <input type="text" name="category" id="category" maxlength="45" class="form-control input-sm" placeholder="Category">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
@@ -124,7 +124,7 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="publisher" id="publisher" class="form-control input-sm" placeholder="Publisher">
+			                <input type="text" name="publisher" id="publisher" maxlength="45" class="form-control input-sm" placeholder="Publisher">
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
