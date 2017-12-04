@@ -9,6 +9,7 @@ public class Transaction {
 	double total;
 	String title;
 	String author;
+	double rating;
 	
 	public Transaction() {
 		
@@ -23,6 +24,26 @@ public class Transaction {
 		this.setTitle(title);
 		this.setAuthor(author);
 	}
+	
+	public Transaction(int num, int isbn, int qty, int promoID, double total, String author, String title, double rating) {
+		this.setOrderNumber(num);
+		this.setTransactionISBN(isbn);
+		this.setTransactionQty(qty);
+		this.setTransactionPromoID(promoID);
+		this.setTransactionTotal(total);
+		this.setTitle(title);
+		this.setAuthor(author);
+		this.setRating(rating);
+	}
+	
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
 	public String getTitle() {
 		return title;
 	}

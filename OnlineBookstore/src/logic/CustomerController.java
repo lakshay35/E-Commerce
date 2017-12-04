@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.Connection;
+
 import entity.IBook;
 import object.Address;
 import object.Book;
@@ -12,7 +14,9 @@ import object.Cart;
 import object.CreditCard;
 import object.Customer;
 import object.Order;
+import persistent.BookDA;
 import persistent.CartDA;
+import persistent.DbAccessImpl;
 
 public class CustomerController {
 	
@@ -100,5 +104,26 @@ public class CustomerController {
 		}
 		
 		return cart;
+	}
+	
+	public String getTitleOfBook(int isbn) {
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet rs = BookDA.getBookInfo(isbn, con);
+		try {
+			if(rs.next()) {
+				return rs.getString("title");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public int rateBook(int order, int numIsbn, int rating) {
+		// TODO Auto-generated method stub
+		Customer customer = new Customer();
+		return customer.rateBook(order, numIsbn, rating);
 	}
 }

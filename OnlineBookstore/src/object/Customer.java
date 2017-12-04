@@ -9,6 +9,7 @@ Represents a Customer Object
 
 import java.util.List;
 
+import persistent.BookDA;
 import persistent.CartDA;
 import persistent.CreditCardDA;
 import persistent.CustomerDA;
@@ -63,6 +64,11 @@ public class Customer extends User {
 		}
 		
 		return cart;
+	}
+
+	public int rateBook(int order, int numIsbn, int rating) {
+		// TODO Auto-generated method stub
+		return BookDA.rateBook(order, numIsbn, rating);
 	}
 
 }

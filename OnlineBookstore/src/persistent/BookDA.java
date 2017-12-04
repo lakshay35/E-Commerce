@@ -124,15 +124,15 @@ public class BookDA {
 			return DbAccessImpl.update(con, query);
 		}
 	
-		public static int rateBook(int transID, int isbn, int rating) {
+		public static int rateBook(int orderID, int isbn, int rating) {
 			Connection con = (Connection) DbAccessImpl.connect();
-			String query = "UPDATE transactions SET rating = '" + rating + "' WHERE isbn = '" + isbn + "' AND transactionID = '" + transID + "'";
+			String query = "UPDATE transactions SET rating = '" + rating + "' WHERE isbn = '" + isbn + "' AND orderNumber = '" + orderID + "'";
 			
 			int check = DbAccessImpl.update(con, query);
-			
+			con = (Connection) DbAccessImpl.connect();
 			if (check == 1)
 			{
-				String newQuery = "SELECT rating FROM transactions WHERE isbn = '" + isbn + "'";
+				String newQuery = "SELECT rating FROM transactions WHERE isbn = '" + isbn + "' AND rating != '0'";
 				
 				ResultSet set = DbAccessImpl.retrieve(con, newQuery);
 				double totalRating = 0.0;

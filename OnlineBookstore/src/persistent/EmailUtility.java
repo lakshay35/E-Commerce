@@ -131,13 +131,18 @@ public class EmailUtility {
 
         }
 
-        public static void sendOrderConfirmation(String customerEmail, String host, String port, String user, String pass, ArrayList<String> orderNumberList, ArrayList<String> shippingAddressList, ArrayList<String> billingAddressList, ArrayList<String> paymentMethodList, ArrayList<String> confirmationNumberList) throws Exception {
+        public static void sendOrderConfirmation(String customerEmail, String host, String port, String user, String pass, ArrayList<String> orderNumberList, ArrayList<String> shippingAddressList, ArrayList<String> billingAddressList, ArrayList<String> paymentMethodList, ArrayList<String> confirmationNumberList, ArrayList<String> titles, ArrayList<Integer> quantities, double emailTotal) throws Exception {
         	System.out.println(customerEmail);
         	
         	String subject = "Your Order is Confirmed!";
             String body = "Hello,\n\nThis email includes a copy of your order confirmation. Please email us back if you have any questions.\n\nOrderNumber: " + orderNumberList.get(0) + "\nShipping Address: " + shippingAddressList.get(0) + "\nBilling Address: " + billingAddressList.get(0) +
-             "\nPayment Method: " + paymentMethodList.get(0) + "\nConfirmation Number: " + confirmationNumberList.get(0);
+             "\nPayment Method: " + paymentMethodList.get(0) + "\nConfirmation Number: " + confirmationNumberList.get(0) + "\n\n";
 
+            for(int i = 0; i < titles.size(); i++) {
+            	body = body + titles.get(i) + "      Quantity: " + quantities.get(i) + "\n"; 
+            }
+            body = body + "\n\nTotal Price: $" + emailTotal;
+            
              Properties properties = new Properties();
              properties.put("mail.smtp.host", host);
              properties.put("mail.smtp.port", port);

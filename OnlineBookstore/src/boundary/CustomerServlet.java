@@ -3,6 +3,8 @@ package boundary;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.mysql.jdbc.Connection;
 
 import entity.IBook;
@@ -102,6 +105,7 @@ public class CustomerServlet extends HttpServlet {
 		String checkOut = request.getParameter("checkoutCart");
 		String continueToCheckOut = request.getParameter("continueToCheckOut");
 		String completePurchase = request.getParameter("completePurchase");
+		String rateBook = request.getParameter("rateBook");
 		
 		// Displays a list of books for the Customer
 		
@@ -201,8 +205,31 @@ public class CustomerServlet extends HttpServlet {
 		else if(completePurchase != null) {
 			completePurchase(request,response);
 		}
+		else if (rateBook != null)
+		{
+			rateBook(request, response);
+		}
 	}
 	
+	private void rateBook(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String isbn = request.getParameter("rateBook");
+		int rating = Integer.parseInt(request.getParameter("rating"));
+		int order = Integer.parseInt(request.getParameter("order"));
+		int check = 0;
+		CustomerController cCtrl = new CustomerController();
+		int numIsbn = Integer.parseInt(isbn);
+		check = cCtrl.rateBook(order, numIsbn, rating);
+			System.out.println(isbn);
+			Gson gson = new Gson();
+	        try {
+				response.getWriter().write(gson.toJson(check));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+
 	// Overridden version of browse books.
 	
 	private void browseBooks(HttpServletRequest request, HttpServletResponse response, String message) {
@@ -228,7 +255,7 @@ public class CustomerServlet extends HttpServlet {
 	// Completes the order.
 	
 	private void completePurchase(HttpServletRequest request, HttpServletResponse response) {
-		//Get MAX order numer
+		//Get MAX order number
 		CustomerController custCtrl = new CustomerController();
 		int orderNumber = custCtrl.getMaxOrderNumber();
 		ArrayList<String> orderNumberList = new ArrayList<String>();
@@ -272,9 +299,16 @@ public class CustomerServlet extends HttpServlet {
 		
 		//set total
 		String orderTotal = request.getParameter("orderTotal");
-		double total = Double.parseDouble(orderTotal);
+		orderTotal = orderTotal.replace(",", "");
+		System.out.println(orderTotal);
 		
+		double total = Double.parseDouble(orderTotal);
+		total = Math.round(total*100.0)/100.0;
 		int success = OrderDA.addtoOrders(orderNumber, 0, status, orderDate, shippingAddress, billingAddress, paymentMethod, confirmationNumber, userId, total);
+		
+		ArrayList<String> titles = new ArrayList<String>();
+		ArrayList<Integer> quantities = new ArrayList<Integer>();
+		int emailTotal = 0;
 		
 		if(success != 0) {
 			String promoCode = request.getParameter("promoCode");
@@ -324,6 +358,9 @@ public class CustomerServlet extends HttpServlet {
 				int isbn = cart.getIsbn();
 				int qty = cart.getQty();
 				success = TransactionDA.addToTransaction(orderNumber,transactionId,isbn,qty,promo,total1);
+				emailTotal += total1;
+				titles.add(custCtrl.getTitleOfBook(isbn));
+				quantities.add(qty);
 			}
 		}
 		
@@ -340,7 +377,7 @@ public class CustomerServlet extends HttpServlet {
 		root.put("confNumber", confirmationNumberList);
 		
 		try {
-			EmailUtility.sendOrderConfirmation((String)request.getSession(false).getAttribute("email"), host, port, user, pass, orderNumberList, shippingAddressList, billingAddressList, paymentMethodList, confirmationNumberList);
+			EmailUtility.sendOrderConfirmation((String)request.getSession(false).getAttribute("email"), host, port, user, pass, orderNumberList, shippingAddressList, billingAddressList, paymentMethodList, confirmationNumberList, titles, quantities, total);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -430,8 +467,9 @@ public class CustomerServlet extends HttpServlet {
 			ArrayList<CreditCard> billingCard = new ArrayList<CreditCard>();
 			billingCard.add(card);
 			
-			double orderTotalList = 0.0;
-			orderTotalList = Double.parseDouble(request.getParameter("orderTotal"));
+			ArrayList<String> orderTotalList = new ArrayList<String>();
+			orderTotalList.add(request.getParameter("orderTotal"));
+			
 	
 			ArrayList<String> promoCodeList = new ArrayList<String>();
 			promoCodeList.add(request.getParameter("promoCode"));

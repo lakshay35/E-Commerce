@@ -62,8 +62,8 @@ public class OrderDA {
 						int qty = set.getInt("qty");
 						int promoID = set.getInt("promoID");
 						double tTotal = set.getDouble("total");
-						
-						Transaction transaction = new Transaction(orderNum, isbn, qty, promoID, tTotal, author, title);
+						double rating = set.getDouble("rating");
+						Transaction transaction = new Transaction(orderNum, isbn, qty, promoID, tTotal, author, title , rating);
 						tList.add(transaction);
 						System.out.println(title);
 					}
@@ -123,7 +123,7 @@ public class OrderDA {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Double total = 0.0;
         String newDate = format.format(date) + " 00:00:00";
-        newDate = "2017-11-29 00:00:00";
+        
         
         String newQuery = "SELECT isbn FROM book";
         List<Integer> bookList = new ArrayList<Integer>();

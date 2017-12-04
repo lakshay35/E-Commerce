@@ -27,6 +27,36 @@ public class Book implements IBook{
 	private Double buyingPrice;
 	private Double sellingPrice;
 	private String description;
+	private double rating;
+	
+	
+	public Book(int isbn, String cat, String author, String title, int edition, 
+			String publisher, int year, int thresh, int quantity, Double buyingPrice, Double 
+			sellingPrice, String url, String description, double rating)
+	{
+		setIsbn(isbn);
+		setCategory(cat);
+		setAuthor(author);
+		setTitle(title);
+		setEdition(edition);
+		setPublisher(publisher);
+		setYear(year);
+		setQuantity(quantity);
+		setBuyingPrice(buyingPrice);
+		setSellingPrice(sellingPrice);
+		setPicture(url);
+		setThreshold(thresh);
+		setDescription(description);
+		setRating(rating);
+	}
+	
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
 	
 	/*
 	Parameters: None
@@ -34,6 +64,7 @@ public class Book implements IBook{
 	Description: Returns description
 	*/
 	
+
 	public String getDescription() {
 		return description;
 	}

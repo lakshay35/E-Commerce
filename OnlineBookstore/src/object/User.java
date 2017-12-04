@@ -380,7 +380,7 @@ public class User {
 							set.getInt("publicationYear"), set.getInt("minThreshold"), 
 							set.getInt("qtyInStock"), set.getDouble("buyingPrice"), 
 							set.getDouble("sellingPrice"), set.getString("picture"), 
-							set.getString("description"));
+							set.getString("description"), set.getDouble("rating"));
 					temp.add(book);
 				}
 			} catch (SQLException e) {
@@ -488,7 +488,7 @@ public class User {
 							set.getInt("publicationYear"), set.getInt("minThreshold"), 
 							set.getInt("qtyInStock"), set.getDouble("buyingPrice"), 
 							set.getDouble("sellingPrice"), set.getString("picture"), 
-							set.getString("description"));
+							set.getString("description"), set.getDouble("rating"));
 					temp.add(book);
 				}
 			} catch (SQLException e) {
