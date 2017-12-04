@@ -104,7 +104,7 @@
 					<span class="label label-default" name="cartTotal">${cart.getQty()}</span>
 					<input type="hidden" name="cartID" value="${cart.getCartID()}">
 				</div>
-				<div class="col-sm-3"><p name="total">${cart.getTotal()}</p></div>
+				<div class="col-sm-3"><p name="total">${cart.getTotal()?string.currency}</p></div>
 			</div>
 			</#list>
 			<br><br>
@@ -112,7 +112,7 @@
 			<#list promo as promo>
 				<input type="hidden" name="promoCode" value="${promo}">
 			</#list>
-			<#list orderTotal as orderTotal><input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal}</span></#list>
+			<input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal?string.currency}</span>
 			<button class="btn btn-link" value="completePurchase" name="completePurchase">Complete Purchase</button>
 		</form>
 	</div>

@@ -75,10 +75,11 @@
     <br/><br/>
 
 	<#list error as error>
-		<div style="color:#800">
-  			${error}
-		</div>
+		<div style="color:#800; margin: auto; text-align: center;" width="100%">
+			${error}
+			</div>
 	</#list>
+	<br/>
 
     <div class="container">
     	<div class="row">
@@ -109,7 +110,7 @@
 	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="updateItem">Update</button>
 	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="deleteItem">Delete</button>
 	    			</div>
-	    			<div class="col-sm-3"><p name="total">${cart.getTotal()}</p></div>
+	    			<div class="col-sm-3"><p name="total">${cart.getTotal()?string.currency}</p></div>
 				</div>
 			</form>
 		</#list>
@@ -121,17 +122,15 @@
 		<div class="col-sm-3"></div>
 		<div class="col-sm-3"></div>
 		<div class="col-sm-3">
-			<#list total as total>
 				<span class="label label-default">Total = </span>
-				<input type="hidden" name="orderTotal" value="${total}"><span class="label label-default">${total}</span>
-			</#list>
+				<input type="hidden" name="orderTotal" value="${total}"><span class="label label-default">${total?string.currency}</span>
 		</div>
 		</div>
 		<div class="row">
 		<div class="col-sm-3"></div>
 		<div class="col-sm-3">
 			<label>Enter Promo Code:</label>
-			<#list promo as promo><input type="text" id="promoCode" name="promoCode" value="${promo}"></#list>
+			<input type="text" maxlength="10" id="promoCode" name="promoCode" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="" placeholder"Promo Code">
 		</div>
 		<div class="col-sm-3"><button class="btn btn-link" value="applyPromo" name="applyPromo">Apply</button></div>
 		<div class="col-sm-3"><button class="btn btn-link" value="checkout" name="checkoutCart">Checkout</button></div>

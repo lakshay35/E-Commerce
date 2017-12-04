@@ -72,9 +72,9 @@
 
 	<br/>
 	<#list error as error>
-		<div style="color:#800">
-  			${error}
-		</div>
+		<div style="color:#800; margin: auto; text-align: center;" width="100%">
+			${error}
+			</div>
 	</#list>
 	<br/>
 

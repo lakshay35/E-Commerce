@@ -74,6 +74,13 @@
 
 	<br/>
 	<br/>
+	
+	<#list error as error>
+		<div style="color:#800; margin: auto; text-align: center;" width="100%">
+			${error}
+			</div>
+	</#list>
+	<br/>
     <!-- Page Content -->
     <div class="container">
 
@@ -97,7 +104,9 @@
             </div>
             <div class="card-footer">
               <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
-              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()?c}">Add to Cart</a>
+              <form role="form" action="CustomerServlet" method="post">
+              <button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
+              </form>
             </div>
           </div>
         </div>
