@@ -1,7 +1,7 @@
 package boundary;
 
 /* Bradley Reeves
- * Section 26666
+ * 
  * 
  * A TemplateProcessor class used to process templater
  * that Dr. Mehdi created.

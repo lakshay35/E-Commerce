@@ -1,5 +1,9 @@
 package entity;
 
+/*
+Creates an interface to represent a book from the inventory
+*/
+
 public interface IBook {
 	
 	public String getDescription();

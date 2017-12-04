@@ -7,16 +7,20 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 
 public class PromotionDA {
+	
+	// Adds a promotion to the database.
 
 	public static int addPromoToDA(int promoID, String name, double percent, String expiration) {
 		Connection con = (Connection) DbAccessImpl.connect();
 		String query = "INSERT INTO onlinebookstoredb.promotion (promoID, pName, percentage, expiration) VALUES"
 				+ " ('" + promoID + "', '" + name + "', '" + percent + "', '" + expiration + "')";
-		System.out.println(query);
+		
 		int value = DbAccessImpl.create(con, query);
 		DbAccessImpl.disconnect(con);
 		return value;
 	}
+	
+	// Gets a list of emails for Customers that are subscribed to promotions.
 	
 	public static ArrayList<String> getEmailList() {
         ArrayList<String> list = new ArrayList<String>();
@@ -34,6 +38,8 @@ public class PromotionDA {
         DbAccessImpl.disconnect(con);
         return list;
     }
+	
+	// Checks to see if a promo code is already in use.
 
 	public static int checkPromo(int parseInt) {
 		// TODO Auto-generated method stub
@@ -54,5 +60,15 @@ public class PromotionDA {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	// Gets a ResultSet for a promotion from the database.
+	
+	public static ResultSet getPromotion(int promoID) {
+		String query = "SELECT * FROM promotion WHERE promoID = '" + promoID + "'";
+		Connection con = (Connection) DbAccessImpl.connect();
+		ResultSet set = null;
+		set = DbAccessImpl.retrieve(con, query);
+		return set;
 	}
 }

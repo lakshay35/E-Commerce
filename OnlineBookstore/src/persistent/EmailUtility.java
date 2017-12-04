@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Properties;
 
 public class EmailUtility {
+	
+	// Sends a confirmation email to a user for registering.
 
     public static void sendConfirmation(String userEmail, String host, String senderEmail, String senderPassword, String port, int code) throws Exception{
 
@@ -57,6 +59,8 @@ public class EmailUtility {
          */
         Transport.send(message);
     }
+    
+    // Sends a new password to a user that has forgotten their password.
     
     public static void sendNewPassword(String userEmail, String host, String senderEmail, String senderPassword, String port, String newPass) throws Exception {
         String subject = "Account Confirmation - Welcome";
@@ -130,5 +134,44 @@ public class EmailUtility {
            Transport.send(message);
 
         }
+        
+        // Sends an order confirmation after checkout to the user.
 
+        public static void sendOrderConfirmation(String customerEmail, String host, String port, String user, String pass, ArrayList<String> orderNumberList, ArrayList<String> shippingAddressList, ArrayList<String> billingAddressList, ArrayList<String> paymentMethodList, ArrayList<String> confirmationNumberList, ArrayList<String> titles, ArrayList<Integer> quantities, double emailTotal) throws Exception {
+        	
+        	
+        	String subject = "Your Order is Confirmed!";
+            String body = "Hello,\n\nThis email includes a copy of your order confirmation. Please email us back if you have any questions.\n\nOrderNumber: " + orderNumberList.get(0) + "\nShipping Address: " + shippingAddressList.get(0) + "\nBilling Address: " + billingAddressList.get(0) +
+             "\nPayment Method: " + paymentMethodList.get(0) + "\nConfirmation Number: " + confirmationNumberList.get(0) + "\n\n";
+
+            for(int i = 0; i < titles.size(); i++) {
+            	body = body + titles.get(i) + "      Quantity: " + quantities.get(i) + "\n"; 
+            }
+            body = body + "\n\nTotal Price: $" + emailTotal;
+            
+             Properties properties = new Properties();
+             properties.put("mail.smtp.host", host);
+             properties.put("mail.smtp.port", port);
+             properties.put("mail.smtp.starttls.enable", true);
+             properties.put("mail.smtp.auth", true);
+
+             Authenticator authenticator = new Authenticator() {
+                 @Override
+                 protected PasswordAuthentication getPasswordAuthentication() {
+                     return new PasswordAuthentication(user, pass);
+                 }
+             };
+
+             Session session = Session.getInstance(properties, authenticator);
+
+
+             Message message = new MimeMessage(session);
+             message.setFrom(new InternetAddress(user));
+             message.addRecipient(Message.RecipientType.TO, new InternetAddress(customerEmail));
+             message.setSentDate(new Date());
+             message.setSubject(subject);
+             message.setText(body);
+
+             Transport.send(message);
+        }
 }

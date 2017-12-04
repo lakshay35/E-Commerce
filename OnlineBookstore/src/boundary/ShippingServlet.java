@@ -19,6 +19,11 @@ import freemarker.template.SimpleHash;
 import logic.ShippingController;
 import object.Order;
 
+/* Authors: Bradley Reeves, Lakshay Sharma,  Aditya Yadav,  Dhanashree Joshi, Sayed Hussaini   
+ * 
+ * Description: A servlet used for the Shipping Employee.
+ */
+
 /**
  * Servlet implementation class ShippingServlet
  */
@@ -55,43 +60,57 @@ public class ShippingServlet extends HttpServlet {
 		String orderChange = request.getParameter("orderChange");
 		String viewOrders = request.getParameter("viewOrders");
 		
+		// Displays the orders to the shipping employee
+		
 		if (viewOrders != null)
 		{
 			viewOrders(request, response);
 		}
+		
+		// Lets the shipping employee update the status of orders.
+		
 		else if (orderChange != null)
 		{
 			changeOrderStatus(request, response);
 		}
 	}
 
+	// Displays a list of order to the shipping employee based on date and order status.
+	
 	private void viewOrders(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		ShippingController sCtrl = new ShippingController();
 		
 		List<Order> orderList = new ArrayList<Order>();
 		
+		// Retrieves a list of orders.
+		
 		orderList = sCtrl.viewOrders();
 		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
+		
+		// Puts the list in root then processes the template.
 		
 		root.put("orders", orderList);
 		String templateName = "viewOrders.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}
 
+	// Changes the status of an order.
+	
 	private void changeOrderStatus(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String status = request.getParameter("status");
 		String orderID = request.getParameter("orderChange");
 		
-		System.out.println("Status: " + status);
-		System.out.println("ID: " + orderID);
-		
 		ShippingController sCtrl = new ShippingController();
 		
+		// Changes status in database.
+		
 		int check = sCtrl.changeOrderStatus(orderID, status);
+		
+		// Returns an int in order to tell if the change was successful.
 		
 		Gson gson = new Gson();
         try {

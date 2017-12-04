@@ -1,7 +1,7 @@
 package persistent;
 
 /* Bradley Reeves
- * Section 26666
+ * 
  * 
  * Contains the information that is needed to connect to the database
  * with DbAccessImpl.

@@ -4,6 +4,8 @@ import com.mysql.jdbc.Connection;
 
 public class AdminDA {
 
+	// Authorizes a user as a certain type of User.
+	
 	public static int authorizeUser(int userID, int value) {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
@@ -33,6 +35,8 @@ public class AdminDA {
 		return check;
 	}
 
+	// Suspends a User's account.
+	
 	public static int suspendUser(int userID) {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
@@ -40,6 +44,8 @@ public class AdminDA {
 		int check = DbAccessImpl.update(con, query);
 		return check;
 	}
+	
+	// Unsuspend's a User's account.
 
 	public static int unsuspendUser(int userID) {
 		Connection con = (Connection) DbAccessImpl.connect();

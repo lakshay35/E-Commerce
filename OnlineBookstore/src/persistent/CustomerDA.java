@@ -12,6 +12,8 @@ import object.Address;
 
 public class CustomerDA {
 	
+	// Creates a new Customer in the database.
+	
 	public int createNewCustomer(String fname, String lname, String email, String password, int code, Boolean subscribe, String phone)
 	{
 		int sub = 0;
@@ -24,13 +26,15 @@ public class CustomerDA {
 			sub = 0;
 		}
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO onlinebookstoredb.user (fName, lName, email, userType, userPassword, userCode, subscribed, phone) VALUES"
+		String query = "INSERT INTO user (fName, lName, email, userType, userPassword, userCode, subscribed, phone) VALUES"
 				+ " ('" + fname + "', '" + lname + "', '" + email + "', 'Customer', '" + password + "', '" + code + "', '" + sub + "', '" + phone + "')";
-		System.out.println(query);
+		
 		int value = DbAccessImpl.create(con, query);
 		DbAccessImpl.disconnect(con);;
 		return value;
 	}
+	
+	// Gets all of the addresses for a user.
 
 	public static List<Address> getAddresses(int parseInt) {
 		// TODO Auto-generated method stub

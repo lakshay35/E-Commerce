@@ -11,6 +11,8 @@ import com.mysql.jdbc.Connection;
 import object.CreditCard;
 
 public class CreditCardDA {
+	
+	// Adds a new CreditCard for a Customer in the database.
 
 	public static int addCard(int userID, String number, String expirationDate, String type, String csc) {
 		// TODO Auto-generated method stub
@@ -19,6 +21,8 @@ public class CreditCardDA {
 				+ "'" + userID + "', '" + number + "', '" + type + "', '" + expirationDate + "', '" + csc + "')";
 		return DbAccessImpl.create(con, query);
 	}
+	
+	// Retrieves all of a user's credit cards.
 
 	public static List<CreditCard> viewCards(int userID) {
 		// TODO Auto-generated method stub
@@ -48,11 +52,34 @@ public class CreditCardDA {
 		return cardList;
 	}
 
+	// Deletes a user's credit card.
+	
 	public static int deleteCard(int id) {
 		// TODO Auto-generated method stub
 		String query = "DELETE FROM creditcard WHERE CCid = '" + id + "'";
 		Connection con = (Connection) DbAccessImpl.connect();
 		return DbAccessImpl.delete(con, query);
+	}
+	
+	// Returns a credit card bases on the id.
+	
+	public static CreditCard getCreditCardById(int id) {
+		String query = "SELECT * FROM creditcard WHERE CCid = '" + id + "'";
+		ResultSet set = null;
+		Connection con = (Connection) DbAccessImpl.connect();
+		set = DbAccessImpl.retrieve(con, query);
+		CreditCard card = new CreditCard();
+		try {
+			while(set.next()) {
+				card.setNumber(set.getString("CCnumber"));
+				card.setExpirationDate(set.getString("expireDate"));
+				card.setType(set.getString("CCtype"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return card;
 	}
 
 }

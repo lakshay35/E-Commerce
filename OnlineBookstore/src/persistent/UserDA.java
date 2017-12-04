@@ -10,6 +10,8 @@ import object.UserProfile;
 
 public class UserDA {
 
+	// Retrieves a user's info from the database and returns a User object.
+	
 	public User getUserInfo(String email2, String pass, Connection con) {
 		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
 		ResultSet set = DbAccessImpl.retrieve(con, query);
@@ -39,6 +41,8 @@ public class UserDA {
 		return user;
 	}
 
+	// Verifies a user's account
+	
 	public int verifyAccount(String attribute) {
 		Connection con = (Connection) DbAccessImpl.connect();
 		String query = "UPDATE user SET status = 'verified' WHERE email = '" + attribute + "'";
@@ -47,11 +51,15 @@ public class UserDA {
 		return value;
 	}
 	
+	// Checks to see if an email and password combination exists in the database.
+	
 	public ResultSet checkLogin(String email2, String pass, Connection con) {
 		String query = "SELECT * FROM user WHERE email = '" + email2 + "' AND userPassword = '" + pass + "'";
 		ResultSet set = DbAccessImpl.retrieve(con, query);
 		return set;
 	}
+	
+	// Changes the password for a user.
 
 	public int changePassword(String email2, String oldPassword, String newPassword) {
 
@@ -64,8 +72,6 @@ public class UserDA {
         try {
         	if (set.next())
         	{
-        		System.out.println(oldPassword);
-        		System.out.println(newPassword);
         		if (oldPassword.equals(set.getString("userPassword")))
         		{
 	        		id = set.getInt("userID");
@@ -83,12 +89,14 @@ public class UserDA {
         	}
         } catch (Exception e) {
             value = 0;
-            e.printStackTrace();
+            
         }
         DbAccessImpl.disconnect(con);
         return value;
 	}
 
+	// Resets a user's password to a random string, which is then later mailed to the user.
+	
 	public int recoverPassword(String email2, String newPass) {
 		// TODO Auto-generated method stub
 
@@ -110,6 +118,8 @@ public class UserDA {
         DbAccessImpl.disconnect(con);
 		return value;
 	}
+	
+	// Gets a ResultSet of all of the users in the database.
 
 	public static ResultSet getUsers(Connection con) {
 		// TODO Auto-generated method stub
@@ -117,6 +127,8 @@ public class UserDA {
 		ResultSet set = DbAccessImpl.retrieve(con, query);
 		return set;
 	}
+	
+	// Checks to see if an email already exists in the database.
 
 	public static ResultSet checkEmail(Connection con, String email2) {
 		// TODO Auto-generated method stub
@@ -124,6 +136,8 @@ public class UserDA {
 		ResultSet set = DbAccessImpl.retrieve(con, query);
 		return set;
 	}
+	
+	// Gets the details for a certain user based on their email.
 
 	public UserProfile getDetails(String email) {
         Connection con = (Connection) DbAccessImpl.connect();
@@ -145,6 +159,8 @@ public class UserDA {
         return userProfile;
     }
 	
+	// Saves a user's changes to their profile information.
+	
 	public static int saveProfile(String email, String fname, String lname, String phone, Boolean subscribe) {
 		Connection con = (Connection) DbAccessImpl.connect();
 		int temp = 0;
@@ -158,7 +174,7 @@ public class UserDA {
 		}
 		String query = "UPDATE user SET " + " fName = " + "'" + fname + "', " + " lName = " + "'" + lname + "', " + " phone = " + "'" + phone + "', " 
 				+ "subscribed = '" + temp + "' WHERE email = " + "'" + email +"'";
-		System.out.println(query);
+		
 		return DbAccessImpl.update(con, query);
 	}
 }

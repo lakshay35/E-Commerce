@@ -22,6 +22,11 @@ import logic.UserController;
 import object.User;
 import object.UserProfile;
 import persistent.EmailUtility;
+/* Authors: Bradley Reeves, Lakshay Sharma,  Aditya Yadav,  Dhanashree Joshi, Sayed Hussaini   
+ * 
+ * Description: A servlet used for unregistered users and general methods that
+ * do not fit the other servlets.
+ */
 
 /**
  * Servlet implementation class BookstoreServlet
@@ -30,10 +35,16 @@ import persistent.EmailUtility;
 public class BookstoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	// Path for templates
+	
 	private String templateDir = "/WEB-INF/templates";
+	
+	// Used to process templates
 	
 	private TemplateProcessor process;
 
+	// Used for sending emails to the users.
+	
     final String host = "smtp.gmail.com";
     final String user = "ecommerce4050@gmail.com";
     final String pass = "ecommercecsci4050";
@@ -73,64 +84,133 @@ public class BookstoreServlet extends HttpServlet {
 		String searchBooks = request.getParameter("searchBooks");
 		String saveProfile = request.getParameter("saveProfile");
 		String changeHome = request.getParameter("changeHome");
+		String cancel = request.getParameter("cancel");
+		
+		// If signup is clicked then register the user.
 		
 		if (signup != null)
 		{
 			registerUser(request, response);
 		}
+		
+		// If login is clicked then login the user.
+		
 		else if (login != null)
 		{
-			System.out.println("Gets Request.");
 			loginUser(request, response);
 		}
+		
+		// Retrieves the name from the user's session.
+		
 		else if (getName != null)
 		{
 			retrieveName(request, response);
 		}
+		
+		// Verifies the account of a user.
+		
 		else if (verify != null)
 		{
 			verifyAccount(request, response);
 		}
+		
+		// Changes the password of a user.
+		
 		else if (newPass != null)
 		{
 			changePassword(request, response);
 		}
+		
+		// Helps a user reset their password.
+		
 		else if (forgotPass != null)
 		{
 			recoverPassword(request, response);
 		}
+		
+		// Checks to see if the user is logged in.
+		
 		else if (checkLogin != null)
 		{
 			checkSession(request, response);
 		}
+		
+		// Logs the user out.
+		
 		else if (logout != null)
 		{
 			logout(request, response);
 		}
+		
+		// Changes the user's password.
+		
 		else if (changePass != null)
 		{
 			changePassword(request, response);
 		}
+		
+		// Retrieves the user's information for their profile.
+		
 		else if(viewProfile != null) {
             viewProfile(request, response);
         }
+		
+		// Lets unregistered users browse books.
+		
 		else if (browse != null)
 		{
 			browseBooks(request, response);
 		}
+		
+		// Lets unregistered users search books.
+		
 		else if (searchBooks != null)
 		{
 			searchBooks(request, response);
 		}
+		
+		// Edits the information for a user's profile.
+		
 		else if (saveProfile != null)
 		{
 			saveProfile(request, response);
 		}
+		
+		// Changes the settings page based on user type.
+		
 		else if (changeHome != null)
 		{
 			changeHome(request, response);
 		}
+		
+		// Cancels code verification.
+		
+		else if (cancel != null)
+		{
+			cancelVerification(request, response);
+		}
 	}
+	
+	// Cancels the code verification for a user.
+	
+	private void cancelVerification(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		HttpSession sess = request.getSession(false);
+		
+		// Invalidates session and redirects to homepage.
+		
+		if (sess != null)
+		{
+			sess.invalidate();
+		}
+		try {
+			response.sendRedirect("index.html");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Updates home tab for settings based on usertype.
 	
 	private void changeHome(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
@@ -175,6 +255,8 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 
+	// Saves the changed information on the user's profile.
+	
 	private void saveProfile(HttpServletRequest request, HttpServletResponse response) {
 
 		HttpSession session = request.getSession(false);
@@ -190,7 +272,7 @@ public class BookstoreServlet extends HttpServlet {
 		String sub = request.getParameter("sub");
 		
 		Boolean subscribe = null;
-		System.out.println(sub);
+		
 		if (sub.equals("true"))
 		{
 			subscribe = true;
@@ -202,11 +284,14 @@ public class BookstoreServlet extends HttpServlet {
 
 		UserController userCtrl = new UserController();
 
+		// Returns a number after updating the database.
+		
 		int check = userCtrl.saveProfile(email, fname, lname, phone, subscribe);
 
+		// if check == 1 then it succeeded.
+		
 		if(check == 1)
 		{
-			System.out.println("Success");
 			try {
 				response.getWriter().write("Success");
 			} catch (IOException e) {
@@ -216,7 +301,6 @@ public class BookstoreServlet extends HttpServlet {
 		}
 		else
 		{
-			System.out.println("Failure");
 			try {
 				response.getWriter().write("Failure");
 			} catch (IOException e) {
@@ -226,6 +310,8 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 	
+	// Displays a list of books that the user searched for.
+	
 	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");
@@ -234,6 +320,8 @@ public class BookstoreServlet extends HttpServlet {
 		UserController userCtrl = new UserController();
 		
 		List<IBook> bookList = new ArrayList<IBook>();
+		
+		// Sets the category for the search.
 		
 		if (temp == 0)
 		{
@@ -252,10 +340,15 @@ public class BookstoreServlet extends HttpServlet {
 			cat = "category";
 		}
 		
+		// Gets the list of books.
+		
 		bookList = userCtrl.searchBooks(cat, term);
 		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
+		
+		// Puts the list of books and the searchTerm into a SimpleHash to process in the 
+		// .ftl template processor.
 		
 		root.put("books", bookList);
 		root.put("searchTerm", term);
@@ -263,29 +356,43 @@ public class BookstoreServlet extends HttpServlet {
 		process.processTemplate(templateName, root, request, response);
 	}
 	
+	// Displays a list of books for the user.
+	
 	private void browseBooks(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
 		UserController uCtrl = new UserController();
 		
+		// Gets the list of books.
+		
 		List<IBook> bookList = uCtrl.browseBooks();
+		
+		// Puts the list into root and processes the template.
+		
 		root.put("books", bookList);
-
 		String templateName = "userBrowse.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}
 	
+	// Gets the user information that can be changed on Settings.html
+	
 	private void viewProfile(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         String email = (String)session.getAttribute("email");
+        
         UserController userCtrl = new UserController();
         UserProfile profile = userCtrl.viewProfile(email);
+        
+        // Set session values.
+        
         session.setAttribute("subscribe", profile.getSubscribe());
         session.setAttribute("fName", profile.getFname());
 		session.setAttribute("lName", profile.getLname());
 		session.setAttribute("email", profile.getEmail());
-        System.out.println(profile.getFname());
+        
+		// Return the profile information to Settings.html
+		
         Gson gson = new Gson();
         try {
 			response.getWriter().write(gson.toJson(profile));
@@ -295,9 +402,11 @@ public class BookstoreServlet extends HttpServlet {
 		}
     }
 	
+	// Invalidates a user's session which logs them out.
+	
 	private void logout(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-		System.out.println("Logging out.");
+		
 		HttpSession session = request.getSession(false);
 		if (session != null)
 		{
@@ -305,6 +414,8 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 
+	// Checks to see if a user has a session and returns the usertype.
+	
 	private void checkSession(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(false);
@@ -318,10 +429,13 @@ public class BookstoreServlet extends HttpServlet {
 		{
 			check = 0;
 		}
+		
+		// If there is a session then return the usertype.
+		
 		if (check == 1)
 		{
 			String type = (String)session.getAttribute("userType");
-			System.out.println(type);
+			
 			response.setContentType("application/json");
 			try {
 				response.getWriter().write(gson.toJson(type));
@@ -329,6 +443,9 @@ public class BookstoreServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		// Otherwise return check;
+		
 		else
 		{
 		response.setContentType("application/json");
@@ -340,18 +457,21 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 
+	// Sends the user a newly generated password so that they can log into their account.
+	
 	private void recoverPassword(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String email = request.getParameter("email");
 		UserController userCtrl = new UserController();
+		
+		// Generates a new password and emails it to the user.
+		
 		int check = userCtrl.recoverPassword(email, host, user, port, pass);
 		if (check == 0)
 		{
-			System.out.println("error");
 		}
 		else
 		{
-			System.out.println("Success");
 			try {
 				response.sendRedirect("login.html");
 			} catch (IOException e) {
@@ -360,6 +480,8 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 
+	// Changes the user's password when they are logged in.
+	
 	private void changePassword(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		
@@ -367,10 +489,11 @@ public class BookstoreServlet extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
 
         HttpSession session = request.getSession(false);
-        System.out.println(oldPassword);
-        System.out.println(newPassword);
-        System.out.println(session.getAttribute("email"));
+      
         UserController userCtrl = new UserController();
+        
+        // Changes password in database.
+        
         int check = userCtrl.changePassword((String)session.getAttribute("email"), oldPassword, newPassword);
         if (check == 0)
         {
@@ -380,6 +503,9 @@ public class BookstoreServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 			}
         }
+        
+        // If successful return Success.
+        
         else
         {
         	try {
@@ -391,14 +517,19 @@ public class BookstoreServlet extends HttpServlet {
         }
 	}
 
+	// Verifies a user's account using a code that was emailed to them.
+	
 	private void verifyAccount(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		String code = request.getParameter("code");
 		HttpSession session = request.getSession(false);
 		UserController userCtrl = new UserController();
 		
+		// Checks if the codes match.
+		
 		if (code.equals(session.getAttribute("userCode").toString()))
 		{
+			// Verifies the account in the database.
 			int check = userCtrl.verifyAccount((String)session.getAttribute("email"));
 			if (check == 1)
 			{
@@ -427,6 +558,8 @@ public class BookstoreServlet extends HttpServlet {
 		}
 	}
 
+	// Returns the name of the current user.
+	
 	private void retrieveName(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		Gson g = new Gson();
@@ -434,7 +567,6 @@ public class BookstoreServlet extends HttpServlet {
 		if (session != null)
 		{
 			String name = (String)session.getAttribute("fName");
-			System.out.println(g.toJson(name));
 			response.setContentType("application/json");
 			try {
 				response.getWriter().write(g.toJson(name));
@@ -537,12 +669,15 @@ public class BookstoreServlet extends HttpServlet {
 				else if (stat.equals("suspended"))
 				{
 					try {
-						response.sendRedirect("login.html");
+						response.sendRedirect("suspended.html");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			}
+			
+			// Prints out an error message to the user.
+			
 			else
 			{
 				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
@@ -553,6 +688,9 @@ public class BookstoreServlet extends HttpServlet {
 				process.processTemplate(templateName, root, request, response);
 			}
 		}
+		
+		// Prints out a message that the email or password is incorrect.
+		
 		else
 		{
 			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
@@ -572,6 +710,8 @@ public class BookstoreServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	// Generates a 4-digit verification code.
 	
 	private int createCode()
 	{
@@ -646,9 +786,12 @@ public class BookstoreServlet extends HttpServlet {
 					process.processTemplate(templateName, root, request, response);
 				}
 			}
+			
+			// Prints out an error if the email is already being used.
+			
 			else
 			{
-				System.out.println("Email already in use.");
+				
 				DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 				SimpleHash root = new SimpleHash(df.build());
 				
@@ -657,9 +800,12 @@ public class BookstoreServlet extends HttpServlet {
 				process.processTemplate(templateName, root, request, response);
 			}
 		}
+		
+		// Prints out an error if the passwords are different.
+		
 		else
 		{
-			System.out.println("Different Passwords");
+			
 			DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 			SimpleHash root = new SimpleHash(df.build());
 			

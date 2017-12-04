@@ -1,7 +1,7 @@
 package persistent;
 
 /* Bradley Reeves
- * Section 26666
+ * 
  * 
  * This is a class that connects to the database
  * and has function to retrieve, edit, insert,
