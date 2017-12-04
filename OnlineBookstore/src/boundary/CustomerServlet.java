@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.Connection;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import entity.IBook;
 import entity.ICart;
@@ -108,7 +107,7 @@ public class CustomerServlet extends HttpServlet {
 		
 		if (browse != null)
 		{
-			browseBooks(request, response);
+			browseBooks(request, response, "");
 		}
 		
 		// Display a page for the Customer to view, edit, add, and delete addresses.
@@ -164,7 +163,7 @@ public class CustomerServlet extends HttpServlet {
 		
 		else if (searchBooks != null)
 		{
-			searchBooks(request, response);
+			searchBooks(request, response, "");
 		}
 		
 		else if (viewHistory != null)
@@ -243,8 +242,7 @@ public class CustomerServlet extends HttpServlet {
 		
 		//Set today's date as order date
 		Date date = new Date();
-		String orderDate = "";
-		//String orderDate = Integer.toString(1900+date.getYear()) + '-' + Integer.toString(date.getMonth()+1) + '-' + Integer.toString(date.getDate());
+		String orderDate = Integer.toString(1900+date.getYear()) + '-' + Integer.toString(date.getMonth()+1) + '-' + Integer.toString(date.getDate());
 		ArrayList<String> orderDateList = new ArrayList<String>();
 		orderDateList.add(orderDate);
 		
@@ -305,7 +303,7 @@ public class CustomerServlet extends HttpServlet {
 								if(expiry.compareTo(currentDate) >= 0) {
 									percent = Double.parseDouble(set.getString("percentage"));
 								}
-							}catch(ParseException e) {
+							}catch(Exception e) {
 								e.printStackTrace();
 							}
 						}
@@ -432,8 +430,8 @@ public class CustomerServlet extends HttpServlet {
 			ArrayList<CreditCard> billingCard = new ArrayList<CreditCard>();
 			billingCard.add(card);
 			
-			ArrayList<String> orderTotalList = new ArrayList<String>();
-			orderTotalList.add(request.getParameter("orderTotal"));
+			double orderTotalList = 0.0;
+			orderTotalList = Double.parseDouble(request.getParameter("orderTotal"));
 	
 			ArrayList<String> promoCodeList = new ArrayList<String>();
 			promoCodeList.add(request.getParameter("promoCode"));
@@ -646,7 +644,7 @@ public class CustomerServlet extends HttpServlet {
 								percent = Double.parseDouble(set.getString("percentage"));
 								promoCodeList.add(promoCode);
 							}
-						}catch(ParseException e) {
+						}catch(Exception e) {
 							e.printStackTrace();
 						}
 					}
@@ -668,8 +666,8 @@ public class CustomerServlet extends HttpServlet {
 			IBook book = custCtrl.getBookInfo(cart.getIsbn());
 			titleList.add((Book) book);
 		}
-		ArrayList<String> cartTotal = new ArrayList<String>();
-		cartTotal.add(Double.toString(sum));
+		double cartTotal = sum;
+		//cartTotal.add(Double.toString(sum));
 		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
@@ -687,7 +685,7 @@ public class CustomerServlet extends HttpServlet {
 	protected int addToCart(HttpServletRequest request, HttpServletResponse response, String isbn) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		isbn = isbn.replaceAll("[^0-9]", "");
-		
+		System.out.println(isbn);
 		CustomerController custCtrl = new CustomerController();
 		IBook book = custCtrl.getBookInfo(Integer.parseInt(isbn));
 		if(book.getQuantity() > 0) {
@@ -722,7 +720,7 @@ public class CustomerServlet extends HttpServlet {
 
 	// Displays a list of books based on a search term and category.
 	
-	private void searchBooks(HttpServletRequest request, HttpServletResponse response) {
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response, String message) {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");
 		int temp = Integer.parseInt(request.getParameter("category"));
@@ -754,11 +752,19 @@ public class CustomerServlet extends HttpServlet {
 		
 		bookList = userCtrl.searchBooks(cat, term);
 		
+		ArrayList<String> errorList = new ArrayList<String>();
+		if(message == null) {
+			errorList.add("");
+		}else {
+			errorList.add(message);
+		}
+		
 		DefaultObjectWrapperBuilder df = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
 		SimpleHash root = new SimpleHash(df.build());
 		
 		root.put("books", bookList);
 		root.put("searchTerm", term);
+		root.put("error", errorList);
 		String templateName = "customerSearch.ftl";
 		process.processTemplate(templateName, root, request, response);
 	}

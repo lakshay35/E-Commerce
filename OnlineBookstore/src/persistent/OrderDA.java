@@ -206,7 +206,7 @@ public class OrderDA {
 	public static int addtoOrders(int orderNumber, int agencyID, String orderStatus, String orderDate, String shippingAddress, String billingAddress, String paymentMethod, String confirmationNumber, int userID, double orderTotal) {
 		// TODO Auto-generated method stub
 		Connection con = (Connection) DbAccessImpl.connect();
-		String query = "INSERT INTO orders(orderNumber,agencyID,orderStatus,orderDate,shippingAddress,billingAddress,paymentMethod,confirmationNumber,userID,orderTotal) VALUES (" + "'" + orderNumber + "', '" + agencyID + "', '" + orderStatus + "', '" + orderDate + "','" + shippingAddress + "', '" + billingAddress + "', '" + paymentMethod + "', '" + confirmationNumber + "', '" + userID + "', '" + orderTotal + "')";
+		String query = "INSERT INTO orders(orderNumber,orderStatus,orderDate,shippingAddress,billingAddress,paymentMethod,confirmationNumber,userID,orderTotal) VALUES (" + "'" + orderNumber + "', 'pending', '" + orderDate + "','" + shippingAddress + "', '" + billingAddress + "', '" + paymentMethod + "', '" + confirmationNumber + "', '" + userID + "', '" + orderTotal + "')";
 		System.out.println(query);
 		return DbAccessImpl.create(con, query);
 	}
