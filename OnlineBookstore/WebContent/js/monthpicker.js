@@ -1,3 +1,6 @@
+// This is code used to create a month/year picker for creditcardPage.ftl
+// Copyright belongs to the person below.
+
 /**
  * monthPicker - a simple but useful month/year picker
  * this plugin creates two selectboxes where the user can can select month and year. afterwars a unix-timestamp is written into the

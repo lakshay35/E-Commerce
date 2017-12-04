@@ -90,12 +90,12 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="title" id="title" class="form-control input-sm" placeholder="Title" value="${book.getTitle()}" required>
+			                <input type="text" name="title" id="title" class="form-control input-sm" maxlength="45" placeholder="Title" value="${book.getTitle()}" required>
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="author" id="author" class="form-control input-sm" placeholder="Author Name" value="${book.getAuthor()}" required>
+			    						<input type="text" name="author" maxlength="45" id="author" class="form-control input-sm" placeholder="Author Name" value="${book.getAuthor()}" required>
 			    					</div>
 			    				</div>
 			    			</div>
@@ -103,12 +103,12 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="edition" id="edition" class="form-control input-sm" placeholder="Edition" value="${book.getEdition()}" required>
+			    						<input type="text" name="edition" id="edition" maxlength="11" class="form-control input-sm" placeholder="Edition" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="${book.getEdition()}" required>
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="category" id="category" class="form-control input-sm" placeholder="Category" value="${book.getCategory()}" required>
+			                <input type="text" name="category" id="category" maxlength="45" class="form-control input-sm" placeholder="Category" value="${book.getCategory()}" required>
 			    					</div>
 			    				</div>
 			    			</div>
@@ -116,12 +116,12 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="publisher" id="publisher" class="form-control input-sm" placeholder="Publisher" value="${book.getPublisher()}" required>
+			                <input type="text" name="publisher" id="publisher" maxlength="45" class="form-control input-sm" placeholder="Publisher" value="${book.getPublisher()}" required>
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year" value="${book.getYear()?c}" required>
+			    						<input type="text" name="year" id="year" class="form-control input-sm" placeholder="Publication Year" value="${book.getYear()?c}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
 			    					</div>
 			    				</div>
 			    			</div>
@@ -142,12 +142,12 @@
 							<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price" value="${book.getBuyingPrice()?c}" required>
+			                <input type="text" name="buyprice" id="buyprice" class="form-control input-sm" placeholder="Buying Price" step=".01" value="${book.getBuyingPrice()?c}" required>
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price" value="${book.getSellingPrice()?c}" required>
+			    						<input type="text" name="sellprice" id="sellprice" class="form-control input-sm" placeholder="Selling Price" step=".01" value="${book.getSellingPrice()?c}" required>
 			    					</div>
 			    				</div>
 			    			</div>

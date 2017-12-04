@@ -1,3 +1,4 @@
+// Updates the quantity for a book.
 $(document).on('click', '.updatedQuantityButton', function () {
 $.ajax({
 type: "POST",

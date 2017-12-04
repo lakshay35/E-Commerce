@@ -1,3 +1,4 @@
+// Checks to see if the user is an admin.
 $(document).ready(function loadPage() {
 	$.ajax({
 		type: "POST",
@@ -32,6 +33,8 @@ $(document).ready(function loadPage() {
 		}
 	});
 });
+
+// Logs the user out.
 
 $(document).on('click', ".logout", function () { 
 	$.ajax({

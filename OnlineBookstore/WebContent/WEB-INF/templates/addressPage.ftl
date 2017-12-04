@@ -100,7 +100,7 @@
     			
 			    <div class="col-xs-12 col-sm-12 col-md-12">
 			    	<div class="form-group">
-			        	<input type="text" name="street" id="street" class="form-control input-sm" placeholder="Street" required/>
+			        	<input type="text" name="street" maxlength="100" id="street" class="form-control input-sm" placeholder="Street" required/>
 			    	</div>
 			    </div>
 			  
@@ -108,7 +108,7 @@
 			<div class="row">
 				<div class="col-xs-4 col-sm-4 col-md-4">
 			    	<div class="form-group">
-			    		<input type="text" name="city" id="city" class="form-control input-sm" placeholder="City" required/>
+			    		<input type="text" name="city" id="city" maxlength="45" class="form-control input-sm" placeholder="City" required/>
 			    	</div>
 			    </div>
 			    <div class="col-xs-4 col-sm-4 col-md-4">
@@ -170,7 +170,7 @@
 			    </div>
 			    <div class="col-xs-4 col-sm-4 col-md-4">
 			    	<div class="form-group">
-			    		<input type="text" name="zip" id="zip" class="form-control input-sm" placeholder="Zip code" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
+			    		<input type="text" name="zip" id="zip" maxlength="45" class="form-control input-sm" placeholder="Zip code" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
 			    	</div>
 			    </div>
 			</div>

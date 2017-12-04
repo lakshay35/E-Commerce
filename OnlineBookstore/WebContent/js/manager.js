@@ -1,4 +1,4 @@
-// Checks to see if a user is logged in.
+// Checks the usertype.
 $(document).ready(function loadPage() {
 	$.ajax({
 		type: "POST",
@@ -9,7 +9,7 @@ $(document).ready(function loadPage() {
 		async:"false",
 		success: function(responseText) {
 			
-			if (responseText != '0')
+			if (responseText == "Manager" || responseText == "SystemAdmin")
 				{
 					$.ajax({
 						type: "POST",

@@ -1,3 +1,5 @@
+// Logs a user out from the website.
+
 $(document).on('click', ".logout", function () { 
 	$.ajax({
 		type: "POST",

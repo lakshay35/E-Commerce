@@ -22,7 +22,7 @@
 
   </head>
 
-  <body style="display: none;">
+  <body onload="showValue()">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -34,17 +34,17 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="CustomerServlet" method="post">
-						<input type="text" name="term" class="form-control" placeholder="Search here"/>
-						<select class="form-control" name="category" id="dropDown_search">
-							<option value="0">ISBN</option>
-							<option value="1">Author</option>
-							<option value="2">Title</option>
-							<option value="3">Subject</option>
-						</select>
-						<button type="submit" name="searchBooks" class="form-control">Search</button>
-					</form>
-				</li>
+				<form class="form-inline" action="BookstoreServlet" method="post">
+					<input type="text" class="form-control" placeholder="Search here">
+					<select class="form-control" id="dropDown_search">
+						<option>Search By</option>
+						<option>ISBN</option>
+						<option>Author</option>
+						<option>Name</option>
+					</select>
+					<button type="submit" class="form-control">Search</button>
+				</form>
+			</li>
             <li class="nav-item active">
               <a class="nav-link" href="Customer.html">Home
                 <span class="sr-only">(current)</span>
@@ -53,14 +53,14 @@
             <li class="nav-item"> 
             <form action="CustomerServlet" method="post">
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
+            </form>
             </li>
-             <li class="nav-item">
+             <li class="nav-item" style="margin-right: 10px;">
               <form role="form" action="CustomerServlet" class="test" method="post">
               	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">MyCart</button>
               </form>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="margin-right: 10px;">
             <form action="CustomerServlet" method="post">
             		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
             </form>
@@ -75,53 +75,72 @@
         </div>
       </div>
     </nav>
+    
+    <br/><br/>
 
-	<br/>
-	<br/>
-	
 	<#list error as error>
 		<div style="color:#800; margin: auto; text-align: center;" width="100%">
 			${error}
 			</div>
 	</#list>
 	<br/>
-    <!-- Page Content -->
+
     <div class="container">
-
-      <!-- Page Features -->
-      <div class="row text-center" id="bookRow">
-		<#list books as book>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="${book.getPicture()}" alt="${book.getTitle()}">
-            <div class="card-body">
-              <h4 class="card-title">${book.getTitle()}</h4>
-              <p class="card-text">${book.getDescription()}</p>
-            </div>
-            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
-	            <p class="card-text">Title: ${book.getTitle()}</p>
-	            <p class="card-text">Author: ${book.getAuthor()}</p>
-	            <p class="card-text">Edition: ${book.getEdition()}</p>
-	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
-	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
-	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
-	            <p class="card-text">Rating: ${book.getRating()?c}/5</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
-              <form role="form" action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
-              </form>
-            </div>
-          </div>
-        </div>
+    	<div class="row">
+    		<div class="col-sm-3"></div>
+			<div class="col-sm-3"><h4>Title</h4></div>
+			<div class="col-sm-3"><h4>Quantity</h4></div>
+			<div class="col-sm-3"><h4>Total</h4></div>
+		</div>
+		<#assign sum = 0>
+    	<#list cart as cart>
+    		<#assign sum = sum + cart.getTotal()>
+    		<form action="CustomerServlet" method="post">
+	    		<div class="row">
+	    			<div class="col-sm-3"><img class="img-thumbnail" src="${book[cart?index].getPicture()}" alt="${book[cart?index].getTitle()}"></div>
+	    			<div class="col-sm-3"><p>${book[cart?index].getTitle()}</p></div>
+	    			<div class="col-sm-3">
+	    				<select name="quantity">
+	    					<#list 1..20 as x>
+	    						${x}
+	    						<#if x == cart.getQty()>
+	    							<option selected=selected vlaue="${x}">${x}</option>
+								<#else>
+	    							<option value="${x}">${x}</option>
+	    						</#if>
+	    					</#list>
+	    				</select>
+	    				<input type="hidden" name="cartID" value="${cart.getCartID()}">
+	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="updateItem">Update</button>
+	    				<button class="btn btn-link" value="${cart.getIsbn()}" name="deleteItem">Delete</button>
+	    			</div>
+	    			<div class="col-sm-3"><p name="total">${cart.getTotal()?string.currency}</p></div>
+				</div>
+			</form>
 		</#list>
-      </div>
-      <!-- /.row -->
-
-    </div>
-    <!-- /.container -->
-
+	</div>
+	
+	<form action="CustomerServlet" method="post">
+		<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-3"></div>
+		<div class="col-sm-3"></div>
+		<div class="col-sm-3">
+				<span class="label label-default">Total = </span>
+				<input type="hidden" name="orderTotal" value="${total}"><span class="label label-default">${total?string.currency}</span>
+		</div>
+		</div>
+		<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-3">
+			<label>Enter Promo Code:</label>
+			<#list promo as promo><input type="text" maxlength="10" id="promoCode" name="promoCode" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="${promo}" placeholder="Promo Code"></#list>
+		</div>
+		<div class="col-sm-3"><button class="btn btn-link" value="applyPromo" name="applyPromo">Apply</button></div>
+		<div class="col-sm-3"><button class="btn btn-link" value="checkout" name="checkoutCart">Checkout</button></div>
+		</div>
+	</form>
+	
     <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">

@@ -22,7 +22,7 @@
 
   </head>
 
-  <body style="display: none;">
+  <body onload="showValue()">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-					<form class="form-inline" action="CustomerServlet" method="post">
+				<form class="form-inline" action="CustomerServlet" method="post">
 						<input type="text" name="term" class="form-control" placeholder="Search here"/>
 						<select class="form-control" name="category" id="dropDown_search">
 							<option value="0">ISBN</option>
@@ -44,7 +44,7 @@
 						</select>
 						<button type="submit" name="searchBooks" class="form-control">Search</button>
 					</form>
-				</li>
+			</li>
             <li class="nav-item active">
               <a class="nav-link" href="Customer.html">Home
                 <span class="sr-only">(current)</span>
@@ -53,11 +53,11 @@
             <li class="nav-item"> 
             <form action="CustomerServlet" method="post">
               <button type="submit"class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
-              </form>
+            </form>
             </li>
              <li class="nav-item">
-              <form role="form" action="CustomerServlet" class="test" method="post">
-              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">MyCart</button>
+              <form role="form" action="CustomerServlet" method="post">
+              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">My Cart</button>
               </form>
             </li>
             <li class="nav-item">
@@ -75,53 +75,54 @@
         </div>
       </div>
     </nav>
-
-	<br/>
-	<br/>
-	
-	<#list error as error>
-		<div style="color:#800; margin: auto; text-align: center;" width="100%">
-			${error}
-			</div>
-	</#list>
-	<br/>
-    <!-- Page Content -->
+    <br><br>
     <div class="container">
-
-      <!-- Page Features -->
-      <div class="row text-center" id="bookRow">
-		<#list books as book>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="${book.getPicture()}" alt="${book.getTitle()}">
-            <div class="card-body">
-              <h4 class="card-title">${book.getTitle()}</h4>
-              <p class="card-text">${book.getDescription()}</p>
-            </div>
-            <div class="card-block" style="display: none" id="${book.getIsbn()?c}">
-	            <p class="card-text">Title: ${book.getTitle()}</p>
-	            <p class="card-text">Author: ${book.getAuthor()}</p>
-	            <p class="card-text">Edition: ${book.getEdition()}</p>
-	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
-	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
-	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
-	            <p class="card-text">Rating: ${book.getRating()?c}/5</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
-              <form role="form" action="CustomerServlet" method="post">
-              <button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
-              </form>
-            </div>
-          </div>
-        </div>
-		</#list>
-      </div>
-      <!-- /.row -->
-
-    </div>
-    <!-- /.container -->
-
+		<form action="CustomerServlet" method="post">
+			<h5>Shipping Address</h5>
+			<#list shippingAddress as shippingAddress>
+				<input type="hidden" name="shipAddress" value="${shippingAddress.getStreet()}, ${shippingAddress.getCity()}, ${shippingAddress.getState()}, ${shippingAddress.getZip()}">
+				<span class="label label-default">${shippingAddress.getStreet()}, ${shippingAddress.getCity()}, ${shippingAddress.getState()}, ${shippingAddress.getZip()}</span>
+			</#list>
+			<br><br><h5>Billing Address</h5>
+			<#list billingAddress as billingAddress>
+				<input type="hidden" name="billAddress" value="${billingAddress.getStreet()}, ${billingAddress.getCity()}, ${billingAddress.getState()}, ${billingAddress.getZip()}">
+				<span class="label label-default">${billingAddress.getStreet()}, ${billingAddress.getCity()}, ${billingAddress.getState()}, ${billingAddress.getZip()}</span>
+			</#list>
+			<br><br><h5>Payment Type</h5>
+			<#list billingCard as billingCard>
+				<input type = "hidden" name="billCard" value="${billingCard.getType()}, ${billingCard.getExpirationDate()}, ${billingCard.getNumber()}">
+				<span class="label label-default">${billingCard.getType()}, ${billingCard.getExpirationDate()}, ${billingCard.getNumber()}</span>
+			</#list>
+			<br><br><h5>Cart</h5>
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-3"><h4>Title</h4></div>
+				<div class="col-sm-3"><h4>Quantity</h4></div>
+				<div class="col-sm-3"><h4>Total</h4></div>
+			</div>
+			<#list cart as cart>
+			<div class="row">
+				<div class="col-sm-3"><img class="img-thumbnail" src="${book[cart?index].getPicture()}" alt="${book[cart?index].getTitle()}"></div>
+				<div class="col-sm-3"><p>${book[cart?index].getTitle()}</p></div>
+				<div class="col-sm-3">
+					<span class="label label-default" name="cartTotal">${cart.getQty()}</span>
+					<input type="hidden" name="cartID" value="${cart.getCartID()}">
+				</div>
+				<div class="col-sm-3"><p name="total">${cart.getTotal()?string.currency}</p></div>
+			</div>
+			</#list>
+			<br><br>
+			<span class="label label-default">Total = </span>
+			<#list promo as promo>
+				<input type="hidden" name="promoCode" value="${promo}">
+			</#list>
+			<#list orderTotal as orderTotal>
+			<input type="hidden" name="orderTotal" value="${orderTotal}"><span class="label label-default">${orderTotal}</span>
+			</#list>
+			<button class="btn btn-link" value="completePurchase" name="completePurchase">Complete Purchase</button>
+		</form>
+	</div>
+	
     <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">

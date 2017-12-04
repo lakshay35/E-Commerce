@@ -56,10 +56,14 @@
               </form>
             </li>
               <li class="nav-item">
-              <a class="nav-link" href="MyCart.html">MyCart</a>
+              <form role="form" action="CustomerServlet" method="post">
+              	<button type="submit"class="btn btn-link browsebutton" name="getCart" id="getCart" value="Cart">MyCart</button>
+              </form>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="History.html">Order-History</a>
+            <form action="CustomerServlet" method="post">
+            		<button type="submit" class="btn btn-link browsebutton" name="viewHistory" id="viewHistory" value="View Order History">Order-History</button>
+            </form>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
@@ -73,6 +77,13 @@
     </nav>
 
 	<br/>
+	<br/>
+	
+	<#list error as error>
+		<div style="color:#800; margin: auto; text-align: center;" width="100%">
+			${error}
+			</div>
+	</#list>
 	<br/>
     <!-- Page Content -->
     <div class="container">
@@ -95,10 +106,13 @@
 	            <p class="card-text">Publisher: ${book.getPublisher()}</p>
 	            <p class="card-text">Publication Year: ${book.getYear()?c}</p>
 	            <p class="card-text">Price: ${book.getSellingPrice()?string.currency}</p>
+	            <p class="card-text">Rating: ${book.getRating()?c}/5</p>
             </div>
             <div class="card-footer">
               <button class="btn btn-primary view" value="${book.getIsbn()?c}">View Info</button>
-              <a href="#" class="btn btn-primary" id="add" value="${book.getIsbn()?c}">Add to Cart</a>
+              <form role="form" action="CustomerServlet" method="post">
+              <button type="submit" class="btn btn-primary" name="addtocart" id="addtocart" value="${book.getIsbn()}">Add To Cart</button>
+              </form>
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+// Checks the usertype to make sure that the user is a Customer.
 $(document).ready(function loadPage() {
 	$.ajax({
 		type: "POST",
@@ -31,6 +32,8 @@ $(document).ready(function loadPage() {
 	});
 });
 
+// Logs the user out.
+
 $(document).on('click', ".logout", function () { 
 	$.ajax({
 		type: "POST",
@@ -43,6 +46,8 @@ $(document).on('click', ".logout", function () {
 		}
 	});
 });
+
+// Toggles the focus onto an address on addressPage.ftl
 
 $(document).on('click', ".address", function () {
 	if ($(this).css("background-color") != "rgb(255, 255, 255)")
@@ -67,6 +72,8 @@ $(document).on('click', ".address", function () {
 			$("#zip").val($(this).find(".zipAddress").attr("value"));
 		}
 });
+
+// Shows the information for a book.
 
 $(document).on('click', ".view", function () {
 	var isbn = $(this).val();

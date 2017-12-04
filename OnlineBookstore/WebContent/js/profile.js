@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var check;
+	// Checks if the user is logged in.
 	$.ajax({
 		type: "POST",
 		url: "BookstoreServlet",
@@ -8,17 +9,20 @@ $(document).ready(function() {
 		}, dataType: "json",
 		async:"false",
 		success: function(responseText) {
-			console.log(responseText);
+			
+			// Removes some links depending on usertype.
 			if (responseText != "Customer")
 				{
 					$("#addressTab").remove();
 					$("#creditTab").remove();
 				}
+			// Redirect to login.html if the user is not logged in.
 			if (responseText == '0')
 				{
 				check = 0;
 				window.location.href = "login.html";
 				}
+			// Update the home tab to go to the correct user homepage.
 			else
 				{
 				$.ajax({
@@ -33,6 +37,7 @@ $(document).ready(function() {
 					}
 				});
 				
+				// Sets the values for the profile page.
 			  $.ajax({
 			    method : "post",
 			    url : "BookstoreServlet",
@@ -63,6 +68,8 @@ $(document).ready(function() {
 		}
 	});
 });
+
+// Saves the changes made to the user's profile.
 
 $(document).on('click', "#save", function() {
 		$("#messagePara").text("");
@@ -97,6 +104,8 @@ $(document).on('click', "#save", function() {
 		  });
 	}
 });
+
+// Logs the user out.
 
 $(document).on('click', ".logout", function () { 
 	$.ajax({

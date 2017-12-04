@@ -58,6 +58,16 @@
               <button type="submit" class="btn btn-link browsebutton" name="browse" id="browse" value="Browse Books">Browse Books</button>
               </form>
             </li>
+            <li class="nav-item"> 
+            		<form action="AdminServlet" method="post">
+              			<button type="submit" class="btn btn-link browsebutton" name="salesReport" id="salesReport" value="View EOD">View EOD</button>
+              		</form>
+            	</li>
+            	<li class="nav-item"> 
+            		<form action="AdminServlet" method="post">
+              			<button type="submit" class="btn btn-link browsebutton" name="lowQty" id="lowQty" value="View Low Quantity">Low Inventory</button>
+              		</form>
+            	</li>
             <li class="nav-item">
               <a class="nav-link" href="Settings.html">Settings</a>
             </li>

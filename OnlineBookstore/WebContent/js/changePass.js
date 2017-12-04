@@ -1,3 +1,4 @@
+// Changes the user's password.
 $(document).on('click', '#newPassword', function () {
 	var old = document.getElementById('oldPass').value;
 	var newP = document.getElementById('newPass').value;
