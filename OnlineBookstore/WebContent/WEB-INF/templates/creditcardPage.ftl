@@ -122,7 +122,7 @@
 			<div class="row">
 				<div class="col-xs-3 col-sm-6 col-md-3">
 					<div class="form-group">
-						<input type="password" name="security" minlength="3" maxlength="3" id="security" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CSC"/>
+						<input type="password" name="security" minlength="3" maxlength="3" id="security" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="CSC" required/>
 					</div>
 				</div>
 			</div>

@@ -90,12 +90,12 @@
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			                <input type="text" name="promoName" id="promoName" maxlength="45" class="form-control input-sm" placeholder="Promotion Name">
+			                <input type="text" name="promoName" id="promoName" maxlength="45" class="form-control input-sm" placeholder="Promotion Name" required>
 			    					</div>
 			    				</div>
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
-			    						<input type="text" name="percentage" minlength="1" maxlength="2" id="percentage" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion Percentage">
+			    						<input type="text" name="percentage" minlength="1" maxlength="2" id="percentage" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion Percentage" required>
 			    					</div>
 			    				</div>
 			    			</div>
@@ -103,7 +103,7 @@
 			    			<div class="row">
 			    				<div class="col-xs-8 col-sm-8 col-md-8">
 			    					<div class="form-group">
-			    						<input type="date" name="expiration" id="expiration" class="form-control input-sm" placeholder="Expiration Date">
+			    						<input type="date" name="expiration" id="expiration" class="form-control input-sm" placeholder="Expiration Date" required>
 			    					</div>
 			    				</div>
 			    			</div>
@@ -111,7 +111,7 @@
 			    			<div class="row">
 			    				<div class="col-xs-12 col-sm-12 col-md-12">
 			    					<div class="form-group">
-			                			<input type="text" name="promoID" minlength="1" maxlength="10" id="promoID" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion ID">
+			                			<input type="text" name="promoID" minlength="1" maxlength="10" id="promoID" class="form-control input-sm" onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Promotion ID" required>
 			    					</div>
 			    				</div>
 			    			</div>
